@@ -311,30 +311,16 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
   const nextTargetDay = useMemo(() => getNextTargetDayCode(fullDataset, lotteryType), [fullDataset, lotteryType]);
   const [activeDay, setActiveDay] = useState<string>(nextTargetDay);
-  const [viewMode, setViewMode] = useState<'VERIFY' | 'NEXT'>('VERIFY');
+
+  useEffect(() => {
+    setActiveDay(nextTargetDay);
+  }, [nextTargetDay]);
+
+  // Report (TOP 5 single digits and TOP 6 2D pairs) computed STRICTLY from active session dataset (data)!
+  const report = analyzeDayOfWeekStats(data, activeDay);
 
   // Draws on target date for hit verification fetched from fullDataset (includes all 3 Hanoi sessions on target date)!
   const { draws: targetDraws, isFuture, isAllRecorded } = getTargetDayDraws(fullDataset, activeDay, nextTargetDay);
-  const targetRecordedDate = targetDraws.length > 0 && targetDraws.some(d => Boolean(d.top3 && d.top3.trim() !== '')) ? targetDraws[0].date : undefined;
-
-  const handleSelectDay = (dayCode: string) => {
-    setActiveDay(dayCode);
-    const { draws } = getTargetDayDraws(fullDataset, dayCode, nextTargetDay);
-    const hasRecorded = draws.length > 0 && draws.some((d) => Boolean(d.top3 && d.top3.trim() !== ''));
-    setViewMode(hasRecorded ? 'VERIFY' : 'NEXT');
-  };
-
-  // Compute prediction dataset according to viewMode & targetRecordedDate
-  const predictionData = useMemo(() => {
-    if (targetRecordedDate && viewMode === 'VERIFY') {
-      // Exclude targetRecordedDate so today's prediction is NOT contaminated by today's own results!
-      return data.filter((d) => d.date !== targetRecordedDate);
-    }
-    return data;
-  }, [data, targetRecordedDate, viewMode]);
-
-  // Report (TOP 5 single digits and TOP 6 2D pairs) computed STRICTLY from predictionData!
-  const report = useMemo(() => analyzeDayOfWeekStats(predictionData, activeDay), [predictionData, activeDay]);
 
   const isHanoiAllRecorded = targetDraws.length > 0 && targetDraws.every((d) => Boolean(d.top3 && d.top3.trim() !== ''));
 
@@ -381,7 +367,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
   const renderDigitHits = (digit?: number | string) => {
     if (digit === undefined || digit === null) return null;
 
-    if (isFuture || targetDraws.length === 0 || viewMode === 'NEXT') {
+    if (isFuture || targetDraws.length === 0) {
       return (
         <span className="text-[9px] text-amber-300 font-bold bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30 flex items-center gap-1">
           ⏳ รอผลออกรางวัล
@@ -510,7 +496,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
             return (
               <button
                 key={item.code}
-                onClick={() => handleSelectDay(item.code)}
+                onClick={() => setActiveDay(item.code)}
                 className={`relative py-2.5 px-3 rounded-xl font-extrabold text-xs sm:text-sm border transition-all duration-300 bg-gradient-to-br shadow-sm cursor-pointer ${
                   item.color
                 } ${
@@ -533,40 +519,6 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
         </div>
       </div>
 
-      {/* Mode Switcher Bar when targetRecordedDate exists */}
-      {targetRecordedDate && (
-        <div className="flex flex-wrap items-center justify-between gap-3 bg-nikkei-dark/90 p-2.5 rounded-xl border border-amber-500/40">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-gray-300 flex items-center gap-1.5">
-              <Zap className="w-4 h-4 text-amber-400" />
-              📌 เลือกโหมดแสดงสถิติล่าสุด / งวดถัดไป:
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setViewMode('VERIFY')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
-                viewMode === 'VERIFY'
-                  ? 'bg-amber-400 text-black border-yellow-200 shadow-glow-gold scale-[1.02]'
-                  : 'bg-nikkei-card text-gray-300 border-gray-600/60 hover:text-white hover:border-amber-400/60'
-              }`}
-            >
-              ✅ ตรวจผลสถิติงวดล่าสุด ({formatIsoDateToThai(targetRecordedDate)})
-            </button>
-            <button
-              onClick={() => setViewMode('NEXT')}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer border ${
-                viewMode === 'NEXT'
-                  ? 'bg-cyan-400 text-black border-cyan-200 shadow-glow-gold scale-[1.02]'
-                  : 'bg-nikkei-card text-gray-300 border-gray-600/60 hover:text-white hover:border-cyan-400/60'
-              }`}
-            >
-              🔮 คาดการณ์งวดถัดไป (รวมผลวันนี้แล้ว)
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Recommended Single-Digit Run/Rood Banner */}
       {report.topSingleDigits.length >= 2 && (
         <div className="bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-emerald-500/20 border-2 border-amber-400 rounded-xl p-4 shadow-glow-gold flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -577,7 +529,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
             <div>
               <div className="flex items-center gap-2">
                 <span className="bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-wider">
-                  {viewMode === 'VERIFY' && targetRecordedDate ? `🎯 สรุปผลสถิติที่ใช้ทำนายงวด ${formatIsoDateToThai(targetRecordedDate)}` : `🎯 สรุปฟันธงเลขเด่นรูดประจำวัน${report.dayName}`}
+                  🎯 สรุปฟันธงเลขเด่นรูดประจำวัน{report.dayName}
                 </span>
                 {lotteryType === 'HANOI' && (
                   <span className="bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded">
@@ -589,7 +541,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                 ฟันเด่นวิ่ง-รูด 19 ประตู: <span className="text-amber-300 text-xl font-black">{report.topSingleDigits[0]?.digit}</span> และ <span className="text-cyan-300 text-xl font-black">{report.topSingleDigits[1]?.digit}</span>
               </h4>
               <p className="text-xs text-gray-300 mt-0.5">
-                จากสถิติสแกน {report.totalDrawsOnDay} งวด (วัน{report.dayName}{viewMode === 'VERIFY' && targetRecordedDate ? ' ก่อนออกผลวันนี้' : ' รวมผลวันนี้'}) เลข <span className="text-amber-400 font-bold">{report.topSingleDigits[0]?.digit}</span> ออกบ่อยสุด {report.topSingleDigits[0]?.count} ครั้ง ({report.topSingleDigits[0]?.percent}%) และ เลข <span className="text-cyan-400 font-bold">{report.topSingleDigits[1]?.digit}</span> ออก {report.topSingleDigits[1]?.count} ครั้ง ({report.topSingleDigits[1]?.percent}%)
+                จากสถิติสแกน {report.totalDrawsOnDay} งวด (วัน{report.dayName}) เลข <span className="text-amber-400 font-bold">{report.topSingleDigits[0]?.digit}</span> ออกบ่อยสุด {report.topSingleDigits[0]?.count} ครั้ง ({report.topSingleDigits[0]?.percent}%) และ เลข <span className="text-cyan-400 font-bold">{report.topSingleDigits[1]?.digit}</span> ออก {report.topSingleDigits[1]?.count} ครั้ง ({report.topSingleDigits[1]?.percent}%)
               </p>
 
               {/* Closed Markets Notice Bar (Positioned directly under the red line sentence) */}
@@ -710,7 +662,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
                   {/* Hit Badges for Pair */}
                   <div className="mt-1 flex flex-wrap items-center justify-center gap-0.5">
-                    {isFuture || targetDraws.length === 0 || viewMode === 'NEXT' ? (
+                    {isFuture || targetDraws.length === 0 ? (
                       <span className="text-[9px] text-amber-400/80 font-bold">
                         ⏳ รอผล
                       </span>
