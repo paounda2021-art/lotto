@@ -1,6 +1,6 @@
 name = "hengheng"
 main = "public/_worker.js"
-assets = "dist"
+assets = { directory = "dist" }
 compatibility_date = "2024-09-01"
 
 # Cloudflare KV Namespace Binding
