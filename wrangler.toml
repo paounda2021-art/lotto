@@ -1,9 +1,9 @@
-name = "lotto289"
+name = "hengheng"
 main = "public/_worker.js"
 assets = { directory = "dist" }
 compatibility_date = "2024-09-01"
 
-# Cloudflare KV Namespace Binding for lotto289
+# Cloudflare KV Namespace Binding for hengheng
 [[kv_namespaces]]
-binding = "LOTTO289"
-id = "8eb67f32e8f548dcb634c44055c0edcf"
+binding = "LOTTO_KV"
+id = "ae6e343df2dc49f3b5def86e9926bebd"
