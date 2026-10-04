@@ -14,11 +14,13 @@ export default {
         });
       }
 
-      if (!env.LOTTO_KV) {
+      const kvStore = env.LOTTO_KV || env.LOTTO289;
+
+      if (!kvStore) {
         return new Response(
           JSON.stringify({
             success: false,
-            message: 'LOTTO_KV binding not configured on Cloudflare'
+            message: 'LOTTO_KV or LOTTO289 binding not configured on Cloudflare'
           }),
           {
             headers: {
@@ -34,7 +36,7 @@ export default {
       if (request.method === 'GET') {
         const key = url.searchParams.get('key');
         if (key) {
-          const data = await env.LOTTO_KV.get(key, 'text');
+          const data = await kvStore.get(key, 'text');
           return new Response(
             JSON.stringify({ success: true, key, data: data ? JSON.parse(data) : null }),
             {
@@ -59,7 +61,7 @@ export default {
 
         const result = {};
         for (const k of keys) {
-          const val = await env.LOTTO_KV.get(k, 'text');
+          const val = await kvStore.get(k, 'text');
           if (val) {
             try {
               result[k] = JSON.parse(val);
@@ -97,7 +99,7 @@ export default {
               }
             );
           }
-          await env.LOTTO_KV.put(key, JSON.stringify(data));
+          await kvStore.put(key, JSON.stringify(data));
           return new Response(
             JSON.stringify({ success: true, message: `Saved ${key} to Cloudflare KV` }),
             {
