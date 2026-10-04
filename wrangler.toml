@@ -1,0 +1,11 @@
+name = "hengheng"
+main = "public/_worker.js"
+assets = "dist"
+compatibility_date = "2024-09-01"
+
+# Cloudflare KV Namespace Binding for global lottery draw persistence
+# Create a KV namespace on Cloudflare Dashboard (Workers & Pages -> KV) named 'LOTTO_KV'
+# and link it to this Worker project
+[[kv_namespaces]]
+binding = "LOTTO_KV"
+id = "LOTTO_KV"
