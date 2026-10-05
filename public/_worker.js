@@ -49,14 +49,26 @@ export default {
         }
 
         const keys = [
-          'lotto_data_nikkei',
+          'lotto_data_nikkei_morning',
+          'lotto_data_nikkei_afternoon',
+          'lotto_data_china_morning',
+          'lotto_data_china_afternoon',
+          'lotto_data_hangseng_morning',
+          'lotto_data_hangseng_afternoon',
+          'lotto_data_nikkei_vip_morning',
+          'lotto_data_nikkei_vip_afternoon',
+          'lotto_data_china_vip_morning',
+          'lotto_data_china_vip_afternoon',
+          'lotto_data_hangseng_vip_morning',
+          'lotto_data_hangseng_vip_afternoon',
           'lotto_data_laos',
           'lotto_data_dowjones',
           'lotto_data_hanoi_special',
           'lotto_data_hanoi',
           'lotto_data_hanoi_vip',
           'lotto_data_gsb',
-          'lotto_data_gov'
+          'lotto_data_gov',
+          'lotto_data_nikkei'
         ];
 
         const result = {};
