@@ -64,6 +64,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </button>
 
                   <button
+                    onClick={() => onSelectLotteryType('STOCK_VIP')}
+                    className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                      lotteryType === 'STOCK_VIP'
+                        ? 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-black shadow-glow-gold font-extrabold'
+                        : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    💎 หุ้น VIP
+                  </button>
+
+                  <button
                     onClick={() => onSelectLotteryType('HANOI')}
                     className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                       lotteryType === 'HANOI'
@@ -120,12 +131,14 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
 
                 <span className="bg-amber-500/10 border border-amber-500/30 text-amber-400 text-[11px] font-semibold px-2 py-0.5 rounded-full hidden sm:inline-block">
-                  {lotteryType === 'GSB' || lotteryType === 'GOVERNMENT' ? 'สถิติ 6 เดือน' : 'สถิติ 3 เดือน'}
+                  {lotteryType === 'GSB' || lotteryType === 'GOVERNMENT' ? 'สถิติ 6 เดือน' : lotteryType === 'STOCK_VIP' ? 'สถิติ 4 เดือน' : 'สถิติ 3 เดือน'}
                 </span>
               </div>
               <p className="text-xs text-gray-400 mt-1">
                 {lotteryType === 'NIKKEI'
                   ? 'วิเคราะห์สถิติหุ้นปกติย้อนหลัง (นิเคอิ, จีน, ฮั่งเส็ง รวม 6 รอบ) อ้างอิง exphuay'
+                  : lotteryType === 'STOCK_VIP'
+                  ? 'วิเคราะห์สถิติหวยหุ้น VIP ย้อนหลัง 4 เดือน (นิคเคอิ VIP, จีน VIP, ฮั่งเส็ง VIP รวม 6 รอบ ออกทุกวัน 7 วัน)'
                   : lotteryType === 'LAOS'
                   ? 'วิเคราะห์สถิติหวยลาวพัฒนาย้อนหลัง (ออกทุกวัน รอบ 20:30 น.) อ้างอิง LottoTH'
                   : lotteryType === 'DOWJONES'
@@ -133,8 +146,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   : lotteryType === 'HANOI'
                   ? 'วิเคราะห์สถิติหวยฮานอยปกติย้อนหลัง (ออกทุกวัน รอบ 18:30 น.) อ้างอิง exphuay (Minh Ngoc)'
                   : lotteryType === 'GSB'
-                  ? 'วิเคราะห์สถิติหวยออมสินย้อนหลัง 6 เดือน (ออกวันที่ 1 และ 16 เวลา 13:00 น.) อ้างอิง exphuay (GSB)'
-                  : 'วิเคราะห์สถิติหวยรัฐบาลไทยย้อนหลัง 6 เดือน (ออกวันที่ 1 และ 16 เวลา 15:30 น.) อ้างอิง exphuay'}
+                  ? 'วิเคราะห์สถิติหวยออมสินย้อนหลัง 6 เดือน (ออกวันที่ 1 และ 16 เวลา 13:00 น. - อ้างอิง GSB)'
+                  : 'วิเคราะห์สถิติหวยรัฐบาลไทยย้อนหลัง 6 เดือน (ออกวันที่ 1 และ 16 เวลา 15:30 น. - อ้างอิง GLO)'}
               </p>
             </div>
           </div>
@@ -187,6 +200,55 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   <span>⭐ รวมทุกหุ้นปกติ (6 รอบ)</span>
+                </button>
+              </div>
+            )}
+
+            {/* Session Switcher Buttons for Stock VIP Lotteries (หุ้น VIP) */}
+            {lotteryType === 'STOCK_VIP' && (
+              <div className="flex items-center bg-nikkei-card border border-amber-500/40 p-1 rounded-xl flex-wrap sm:flex-nowrap gap-1">
+                <button
+                  onClick={() => onSelectSession('NIKKEI_VIP_BOTH')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    ['NIKKEI_VIP_BOTH', 'NIKKEI_VIP_MORNING', 'NIKKEI_VIP_AFTERNOON'].includes(selectedSession)
+                      ? 'bg-amber-400 text-black shadow-glow-gold'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <span>🎌 นิคเคอิ VIP</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectSession('CHINA_VIP_BOTH')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    ['CHINA_VIP_BOTH', 'CHINA_VIP_MORNING', 'CHINA_VIP_AFTERNOON'].includes(selectedSession)
+                      ? 'bg-red-500 text-white shadow-glow-gold'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <span>🇨🇳 จีน VIP</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectSession('HANGSENG_VIP_BOTH')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    ['HANGSENG_VIP_BOTH', 'HANGSENG_VIP_MORNING', 'HANGSENG_VIP_AFTERNOON'].includes(selectedSession)
+                      ? 'bg-blue-500 text-white shadow-glow-cyan'
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  <span>🇭🇰 ฮั่งเส็ง VIP</span>
+                </button>
+
+                <button
+                  onClick={() => onSelectSession('STOCKS_VIP_ALL_3')}
+                  className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all ${
+                    selectedSession === 'STOCKS_VIP_ALL_3'
+                      ? 'bg-gradient-to-r from-amber-400 via-red-500 to-blue-500 text-white shadow-glow-gold font-black'
+                      : 'text-amber-300 hover:text-white'
+                  }`}
+                >
+                  <span>⭐ รวมทุกหุ้น VIP (6 รอบ)</span>
                 </button>
               </div>
             )}

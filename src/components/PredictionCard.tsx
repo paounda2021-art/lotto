@@ -32,21 +32,53 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
 }) => {
   const [copied, setCopied] = useState(false);
 
-  const getLotteryName = (type: LotteryType) => {
+  const getLotteryName = (type: LotteryType, session?: SessionType) => {
+    if (type === 'STOCK_VIP') {
+      if (session === 'CHINA_VIP_MORNING' || session === 'CHINA_VIP_AFTERNOON' || session === 'CHINA_VIP_BOTH') return '💎🇨🇳 หุ้นจีน VIP';
+      if (session === 'HANGSENG_VIP_MORNING' || session === 'HANGSENG_VIP_AFTERNOON' || session === 'HANGSENG_VIP_BOTH') return '💎🇭🇰 หุ้นฮั่งเส็ง VIP';
+      if (session === 'STOCKS_VIP_ALL_3') return '💎⭐ รวมทุกหุ้น VIP (6 รอบ)';
+      return '💎🎌 หุ้นนิเคอิ VIP';
+    }
+    if (type === 'NIKKEI') {
+      if (session === 'CHINA_MORNING' || session === 'CHINA_AFTERNOON' || session === 'CHINA_BOTH') return '🇨🇳 หุ้นจีน';
+      if (session === 'HANGSENG_MORNING' || session === 'HANGSENG_AFTERNOON' || session === 'HANGSENG_BOTH') return '🇭🇰 หุ้นฮั่งเส็ง';
+      if (session === 'STOCKS_ALL_3') return '⭐ รวมทุกหุ้นปกติ (6 รอบ)';
+      return '🎌 หุ้นนิเคอิ';
+    }
     switch (type) {
-      case 'NIKKEI': return 'หุ้นปกติ';
-      case 'DOWJONES': return 'หุ้นดาวโจนส์';
-      case 'LAOS': return 'ลาวพัฒนา';
-      case 'HANOI': return 'ฮานอย';
-      case 'GSB': return 'ออมสิน';
-      case 'GOVERNMENT': return 'รัฐบาลไทย';
+      case 'DOWJONES': return '🇺🇸 หุ้นดาวโจนส์';
+      case 'LAOS': return '🇱🇦 ลาวพัฒนา';
+      case 'HANOI': return '🇻🇳 ฮานอย';
+      case 'GSB': return '🏦 ออมสิน';
+      case 'GOVERNMENT': return '🇹🇭 รัฐบาลไทย';
       default: return 'หุ้นปกติ';
     }
   };
 
   const getLotterySubtitle = (type: LotteryType, session?: SessionType) => {
     switch (type) {
-      case 'NIKKEI': return 'ประมวลผลความสัมพันธ์ Correlation Matrix ระหว่างรอบเช้า (09:30) และรอบบ่าย (13:00)';
+      case 'STOCK_VIP':
+        if (session === 'CHINA_VIP_MORNING') return 'ประมวลผลสถิติหุ้นจีน VIP รอบเช้า (ปิดตลาด 09:30 น.) ออกผลทุกวัน';
+        if (session === 'CHINA_VIP_AFTERNOON') return 'ประมวลผลสถิติหุ้นจีน VIP รอบบ่าย (ปิดตลาด 13:00 น.) ออกผลทุกวัน';
+        if (session === 'CHINA_VIP_BOTH') return 'ประมวลผลสถิติหุ้นจีน VIP ควบเช้า-บ่าย (09:30 / 13:00 น.) ดักทางเลขเด่นวิ่ง-รูด 2 รอบ';
+        if (session === 'HANGSENG_VIP_MORNING') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง VIP รอบเช้า (ปิดตลาด 10:55 น.) ออกผลทุกวัน';
+        if (session === 'HANGSENG_VIP_AFTERNOON') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง VIP รอบบ่าย (ปิดตลาด 14:55 น.) ออกผลทุกวัน';
+        if (session === 'HANGSENG_VIP_BOTH') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง VIP ควบเช้า-บ่าย (10:55 / 14:55 น.) ดักทางเลขเด่นวิ่ง-รูด 2 รอบ';
+        if (session === 'STOCKS_VIP_ALL_3') return 'ประมวลผลสถิติรวมหุ้น VIP 3 ประเทศ (นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP รวม 6 รอบ)';
+        if (session === 'NIKKEI_VIP_MORNING') return 'ประมวลผลสถิติหุ้นนิเคอิ VIP รอบเช้า (ปิดตลาด 08:30 น.) ออกผลทุกวัน';
+        if (session === 'NIKKEI_VIP_AFTERNOON') return 'ประมวลผลสถิติหุ้นนิเคอิ VIP รอบบ่าย (ปิดตลาด 12:00 น.) ออกผลทุกวัน พร้อมวิเคราะห์เลขไหลจากเช้า';
+        return 'ประมวลผลสถิติหุ้นนิเคอิ VIP ควบเช้า-บ่าย (08:30 / 12:00 น.) ออกผลทุกวัน';
+      case 'NIKKEI':
+        if (session === 'CHINA_MORNING') return 'ประมวลผลสถิติหุ้นจีน รอบเช้า (ปิดตลาด 10:35 น.) อ้างอิง exphuay (SZSE)';
+        if (session === 'CHINA_AFTERNOON') return 'ประมวลผลสถิติหุ้นจีน รอบบ่าย (ปิดตลาด 14:00 น.) อ้างอิง exphuay (SZSE)';
+        if (session === 'CHINA_BOTH') return 'ประมวลผลสถิติหุ้นจีน ควบเช้า-บ่าย (10:35 / 14:00 น.) ดักทางเลขเด่นวิ่ง-รูด 2 รอบ';
+        if (session === 'HANGSENG_MORNING') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง รอบเช้า (ปิดตลาด 11:00 น.) อ้างอิง exphuay (HSI)';
+        if (session === 'HANGSENG_AFTERNOON') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง รอบบ่าย (ปิดตลาด 15:00 น.) อ้างอิง exphuay (HSI)';
+        if (session === 'HANGSENG_BOTH') return 'ประมวลผลสถิติหุ้นฮั่งเส็ง ควบเช้า-บ่าย (11:00 / 15:00 น.) ดักทางเลขเด่นวิ่ง-รูด 2 รอบ';
+        if (session === 'STOCKS_ALL_3') return 'ประมวลผลสถิติรวมหุ้นปกติ 3 ประเทศ (นิเคอิ / จีน / ฮั่งเส็ง รวม 6 รอบ)';
+        if (session === 'NIKKEI_MORNING' || session === 'MORNING') return 'ประมวลผลสถิติหุ้นนิเคอิ รอบเช้า (ปิดตลาด 09:30 น.)';
+        if (session === 'NIKKEI_AFTERNOON' || session === 'AFTERNOON') return 'ประมวลผลสถิติหุ้นนิเคอิ รอบบ่าย (ปิดตลาด 13:00 น.) พร้อมวิเคราะห์เลขไหลจากเช้า';
+        return 'ประมวลผลความสัมพันธ์ Correlation Matrix ระหว่างรอบเช้า (09:30) และรอบบ่าย (13:00)';
       case 'DOWJONES': return 'ประมวลผลสถิติดัชนีปิดตลาดหุ้นสหรัฐฯ ย้อนหลัง 3 เดือน อ้างอิง exphuay';
       case 'LAOS': return 'ประมวลผลสถิติหวยลาวพัฒนา ย้อนหลัง 3 เดือน อ้างอิง LottoTH';
       case 'HANOI':
@@ -60,7 +92,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
     }
   };
 
-  const lotteryName = getLotteryName(prediction.lotteryType);
+  const lotteryName = getLotteryName(prediction.lotteryType, prediction.session);
 
   const handleCopyText = () => {
     const textToCopy = `📌 [แนวทางคาดการณ์${lotteryName}]

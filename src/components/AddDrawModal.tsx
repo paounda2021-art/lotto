@@ -22,6 +22,8 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
   onEditDraw
 }) => {
   const [newSession, setNewSession] = useState<SessionType>('MORNING');
+  const [stockMarket, setStockMarket] = useState<'NIKKEI' | 'CHINA' | 'HANGSENG'>('NIKKEI');
+  const [stockRound, setStockRound] = useState<'MORNING' | 'AFTERNOON'>('MORNING');
   const [newDate, setNewDate] = useState('');
   const [newDayName, setNewDayName] = useState<'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun'>('Mon');
   const [newFull6D, setNewFull6D] = useState('');
@@ -31,6 +33,28 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
 
   const monthNamesThai = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
   const dayCodes: Array<'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat'> = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const handleSelectStock = (market: 'NIKKEI' | 'CHINA' | 'HANGSENG', round: 'MORNING' | 'AFTERNOON') => {
+    setStockMarket(market);
+    setStockRound(round);
+    if (lotteryType === 'STOCK_VIP') {
+      if (market === 'CHINA') {
+        setNewSession(round === 'MORNING' ? 'CHINA_VIP_MORNING' : 'CHINA_VIP_AFTERNOON');
+      } else if (market === 'HANGSENG') {
+        setNewSession(round === 'MORNING' ? 'HANGSENG_VIP_MORNING' : 'HANGSENG_VIP_AFTERNOON');
+      } else {
+        setNewSession(round === 'MORNING' ? 'NIKKEI_VIP_MORNING' : 'NIKKEI_VIP_AFTERNOON');
+      }
+    } else {
+      if (market === 'CHINA') {
+        setNewSession(round === 'MORNING' ? 'CHINA_MORNING' : 'CHINA_AFTERNOON');
+      } else if (market === 'HANGSENG') {
+        setNewSession(round === 'MORNING' ? 'HANGSENG_MORNING' : 'HANGSENG_AFTERNOON');
+      } else {
+        setNewSession(round === 'MORNING' ? 'NIKKEI_MORNING' : 'NIKKEI_AFTERNOON');
+      }
+    }
+  };
 
   const handlePickerDateChange = (dateValStr: string) => {
     setPickerDate(dateValStr);
@@ -67,6 +91,44 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
         const todayStr = new Date().toISOString().split('T')[0];
         setPickerDate(todayStr);
       }
+
+      if (initialData.session === 'CHINA_VIP_MORNING') {
+        setStockMarket('CHINA');
+        setStockRound('MORNING');
+      } else if (initialData.session === 'CHINA_VIP_AFTERNOON') {
+        setStockMarket('CHINA');
+        setStockRound('AFTERNOON');
+      } else if (initialData.session === 'HANGSENG_VIP_MORNING') {
+        setStockMarket('HANGSENG');
+        setStockRound('MORNING');
+      } else if (initialData.session === 'HANGSENG_VIP_AFTERNOON') {
+        setStockMarket('HANGSENG');
+        setStockRound('AFTERNOON');
+      } else if (initialData.session === 'NIKKEI_VIP_AFTERNOON') {
+        setStockMarket('NIKKEI');
+        setStockRound('AFTERNOON');
+      } else if (initialData.session === 'NIKKEI_VIP_MORNING') {
+        setStockMarket('NIKKEI');
+        setStockRound('MORNING');
+      } else if (initialData.session === 'CHINA_MORNING') {
+        setStockMarket('CHINA');
+        setStockRound('MORNING');
+      } else if (initialData.session === 'CHINA_AFTERNOON') {
+        setStockMarket('CHINA');
+        setStockRound('AFTERNOON');
+      } else if (initialData.session === 'HANGSENG_MORNING') {
+        setStockMarket('HANGSENG');
+        setStockRound('MORNING');
+      } else if (initialData.session === 'HANGSENG_AFTERNOON') {
+        setStockMarket('HANGSENG');
+        setStockRound('AFTERNOON');
+      } else if (initialData.session === 'NIKKEI_AFTERNOON' || initialData.session === 'AFTERNOON') {
+        setStockMarket('NIKKEI');
+        setStockRound('AFTERNOON');
+      } else {
+        setStockMarket('NIKKEI');
+        setStockRound('MORNING');
+      }
     } else {
       const todayStr = new Date().toISOString().split('T')[0];
       setPickerDate(todayStr);
@@ -80,8 +142,74 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
             ? 'HANOI_VIP'
             : 'HANOI_EVENING'
         );
+      } else if (lotteryType === 'STOCK_VIP') {
+        if (selectedSession === 'CHINA_VIP_MORNING') {
+          setStockMarket('CHINA');
+          setStockRound('MORNING');
+          setNewSession('CHINA_VIP_MORNING');
+        } else if (selectedSession === 'CHINA_VIP_AFTERNOON') {
+          setStockMarket('CHINA');
+          setStockRound('AFTERNOON');
+          setNewSession('CHINA_VIP_AFTERNOON');
+        } else if (selectedSession === 'CHINA_VIP_BOTH') {
+          setStockMarket('CHINA');
+          setStockRound('MORNING');
+          setNewSession('CHINA_VIP_MORNING');
+        } else if (selectedSession === 'HANGSENG_VIP_MORNING') {
+          setStockMarket('HANGSENG');
+          setStockRound('MORNING');
+          setNewSession('HANGSENG_VIP_MORNING');
+        } else if (selectedSession === 'HANGSENG_VIP_AFTERNOON') {
+          setStockMarket('HANGSENG');
+          setStockRound('AFTERNOON');
+          setNewSession('HANGSENG_VIP_AFTERNOON');
+        } else if (selectedSession === 'HANGSENG_VIP_BOTH') {
+          setStockMarket('HANGSENG');
+          setStockRound('MORNING');
+          setNewSession('HANGSENG_VIP_MORNING');
+        } else if (selectedSession === 'NIKKEI_VIP_AFTERNOON') {
+          setStockMarket('NIKKEI');
+          setStockRound('AFTERNOON');
+          setNewSession('NIKKEI_VIP_AFTERNOON');
+        } else {
+          setStockMarket('NIKKEI');
+          setStockRound('MORNING');
+          setNewSession('NIKKEI_VIP_MORNING');
+        }
       } else if (lotteryType === 'NIKKEI') {
-        setNewSession(selectedSession === 'AFTERNOON' ? 'AFTERNOON' : 'MORNING');
+        if (selectedSession === 'CHINA_MORNING') {
+          setStockMarket('CHINA');
+          setStockRound('MORNING');
+          setNewSession('CHINA_MORNING');
+        } else if (selectedSession === 'CHINA_AFTERNOON') {
+          setStockMarket('CHINA');
+          setStockRound('AFTERNOON');
+          setNewSession('CHINA_AFTERNOON');
+        } else if (selectedSession === 'CHINA_BOTH') {
+          setStockMarket('CHINA');
+          setStockRound('MORNING');
+          setNewSession('CHINA_MORNING');
+        } else if (selectedSession === 'HANGSENG_MORNING') {
+          setStockMarket('HANGSENG');
+          setStockRound('MORNING');
+          setNewSession('HANGSENG_MORNING');
+        } else if (selectedSession === 'HANGSENG_AFTERNOON') {
+          setStockMarket('HANGSENG');
+          setStockRound('AFTERNOON');
+          setNewSession('HANGSENG_AFTERNOON');
+        } else if (selectedSession === 'HANGSENG_BOTH') {
+          setStockMarket('HANGSENG');
+          setStockRound('MORNING');
+          setNewSession('HANGSENG_MORNING');
+        } else if (selectedSession === 'NIKKEI_AFTERNOON' || selectedSession === 'AFTERNOON') {
+          setStockMarket('NIKKEI');
+          setStockRound('AFTERNOON');
+          setNewSession('NIKKEI_AFTERNOON');
+        } else {
+          setStockMarket('NIKKEI');
+          setStockRound('MORNING');
+          setNewSession('NIKKEI_MORNING');
+        }
       } else if (lotteryType === 'LAOS') {
         setNewSession('LAOS_EVENING');
       } else if (lotteryType === 'DOWJONES') {
@@ -167,43 +295,139 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
         <h4 className="text-lg font-bold text-white flex items-center gap-2 mb-4">
           {initialData ? <Edit3 className="w-5 h-5 text-amber-400" /> : <Sparkles className="w-5 h-5 text-amber-400" />}
           {initialData ? 'แก้ไขผลรางวัลที่ป้อนไว้' : 'เพิ่มผลการออกรางวัล'} {
-            lotteryType === 'NIKKEI' ? '🎌 หุ้นนิเคอิ'
-            : lotteryType === 'DOWJONES' ? '🇺🇸 หุ้นดาวโจนส์'
-            : lotteryType === 'LAOS' ? '🇱🇦 ลาวพัฒนา'
-            : lotteryType === 'HANOI' ? '🇻🇳 ฮานอย'
-            : lotteryType === 'GSB' ? '🏦 ออมสิน'
-            : '🇹🇭 รัฐบาลไทย'
+            lotteryType === 'STOCK_VIP'
+              ? stockMarket === 'CHINA'
+                ? '💎🇨🇳 หุ้นจีน VIP'
+                : stockMarket === 'HANGSENG'
+                ? '💎🇭🇰 หุ้นฮั่งเส็ง VIP'
+                : '💎🎌 หุ้นนิเคอิ VIP'
+              : lotteryType === 'NIKKEI'
+              ? stockMarket === 'CHINA'
+                ? '🇨🇳 หุ้นจีน'
+                : stockMarket === 'HANGSENG'
+                ? '🇭🇰 หุ้นฮั่งเส็ง'
+                : '🎌 หุ้นนิเคอิ'
+              : lotteryType === 'DOWJONES' ? '🇺🇸 หุ้นดาวโจนส์'
+              : lotteryType === 'LAOS' ? '🇱🇦 ลาวพัฒนา'
+              : lotteryType === 'HANOI' ? '🇻🇳 ฮานอย'
+              : lotteryType === 'GSB' ? '🏦 ออมสิน'
+              : '🇹🇭 รัฐบาลไทย'
           }
         </h4>
 
         <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-          {lotteryType === 'NIKKEI' ? (
-            <div>
-              <label className="block text-gray-300 font-semibold mb-1">เลือกรอบการออกรางวัล:</label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setNewSession('MORNING')}
-                  className={`py-2.5 rounded-xl font-bold transition-all ${
-                    newSession === 'MORNING'
-                      ? 'bg-amber-400 text-black shadow-glow-gold'
-                      : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
-                  }`}
-                >
-                  ☀️ รอบเช้า (09:30 น.)
-                </button>
+          {lotteryType === 'NIKKEI' || lotteryType === 'STOCK_VIP' ? (
+            <div className="space-y-3">
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1.5 flex items-center justify-between">
+                  <span>เลือกตลาดหุ้น:</span>
+                  <span className="text-[10px] text-amber-400 font-normal">
+                    {lotteryType === 'STOCK_VIP' ? 'นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP' : 'นิเคอิ / จีน / ฮั่งเส็ง'}
+                  </span>
+                </label>
+                <div className="grid grid-cols-3 gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectStock('NIKKEI', stockRound)}
+                    className={`py-2 px-1 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 ${
+                      stockMarket === 'NIKKEI'
+                        ? 'bg-amber-400 text-black shadow-glow-gold font-extrabold'
+                        : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
+                    }`}
+                  >
+                    <span>🎌</span>
+                    <span>{lotteryType === 'STOCK_VIP' ? 'นิเคอิ VIP' : 'นิเคอิ'}</span>
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setNewSession('AFTERNOON')}
-                  className={`py-2.5 rounded-xl font-bold transition-all ${
-                    newSession === 'AFTERNOON'
-                      ? 'bg-cyan-400 text-black shadow-glow-cyan'
-                      : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
-                  }`}
-                >
-                  🌤️ รอบบ่าย (13:00 น.)
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectStock('CHINA', stockRound)}
+                    className={`py-2 px-1 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 ${
+                      stockMarket === 'CHINA'
+                        ? 'bg-red-500 text-white shadow-glow-gold font-extrabold'
+                        : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
+                    }`}
+                  >
+                    <span>🇨🇳</span>
+                    <span>{lotteryType === 'STOCK_VIP' ? 'จีน VIP' : 'หุ้นจีน'}</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSelectStock('HANGSENG', stockRound)}
+                    className={`py-2 px-1 rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-1 ${
+                      stockMarket === 'HANGSENG'
+                        ? 'bg-blue-500 text-white shadow-glow-cyan font-extrabold'
+                        : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
+                    }`}
+                  >
+                    <span>🇭🇰</span>
+                    <span>{lotteryType === 'STOCK_VIP' ? 'ฮั่งเส็ง VIP' : 'ฮั่งเส็ง'}</span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-gray-300 font-semibold mb-1">เลือกรอบการออกรางวัล:</label>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectStock(stockMarket, 'MORNING')}
+                    className={`py-2.5 px-2 rounded-xl font-bold transition-all text-xs flex flex-col items-center justify-center gap-0.5 ${
+                      stockRound === 'MORNING'
+                        ? stockMarket === 'CHINA'
+                          ? 'bg-red-500 text-white shadow-glow-gold font-extrabold'
+                          : stockMarket === 'HANGSENG'
+                          ? 'bg-blue-500 text-white shadow-glow-cyan font-extrabold'
+                          : 'bg-amber-400 text-black shadow-glow-gold font-extrabold'
+                        : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
+                    }`}
+                  >
+                    <span>☀️ รอบเช้า</span>
+                    <span className="text-[10px] opacity-85">
+                      {lotteryType === 'STOCK_VIP'
+                        ? stockMarket === 'CHINA'
+                          ? '09:30 น.'
+                          : stockMarket === 'HANGSENG'
+                          ? '10:55 น.'
+                          : '08:30 น.'
+                        : stockMarket === 'CHINA'
+                        ? '10:35 น.'
+                        : stockMarket === 'HANGSENG'
+                        ? '11:00 น.'
+                        : '09:30 น.'}
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => handleSelectStock(stockRound === 'MORNING' ? stockMarket : stockMarket, 'AFTERNOON')}
+                    className={`py-2.5 px-2 rounded-xl font-bold transition-all text-xs flex flex-col items-center justify-center gap-0.5 ${
+                      stockRound === 'AFTERNOON'
+                        ? stockMarket === 'CHINA'
+                          ? 'bg-rose-500 text-white shadow-glow-gold font-extrabold'
+                          : stockMarket === 'HANGSENG'
+                          ? 'bg-indigo-500 text-white shadow-glow-cyan font-extrabold'
+                          : 'bg-cyan-400 text-black shadow-glow-cyan font-extrabold'
+                        : 'bg-nikkei-dark text-gray-400 border border-nikkei-border hover:text-white'
+                    }`}
+                  >
+                    <span>🌤️ รอบบ่าย</span>
+                    <span className="text-[10px] opacity-85">
+                      {lotteryType === 'STOCK_VIP'
+                        ? stockMarket === 'CHINA'
+                          ? '13:00 น.'
+                          : stockMarket === 'HANGSENG'
+                          ? '14:55 น.'
+                          : '12:00 น.'
+                        : stockMarket === 'CHINA'
+                        ? '14:00 น.'
+                        : stockMarket === 'HANGSENG'
+                        ? '15:00 น.'
+                        : '13:00 น.'}
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           ) : lotteryType === 'HANOI' ? (

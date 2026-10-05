@@ -17,6 +17,14 @@ import {
   INITIAL_HANGSENG_AFTERNOON_DATA,
   ALL_STOCKS_DATA
 } from './data/nikkeiData';
+import {
+  INITIAL_NIKKEI_VIP_MORNING_DATA,
+  INITIAL_NIKKEI_VIP_AFTERNOON_DATA,
+  INITIAL_CHINA_VIP_MORNING_DATA,
+  INITIAL_CHINA_VIP_AFTERNOON_DATA,
+  INITIAL_HANGSENG_VIP_MORNING_DATA,
+  INITIAL_HANGSENG_VIP_AFTERNOON_DATA
+} from './data/stockVipData';
 import { DrawResult, SessionType, LotteryType, ThemeMode } from './types';
 import { getDigitStatistics, predictNextDraw, calculateFormulas } from './utils/calculator';
 
@@ -111,6 +119,25 @@ export default function App() {
     loadPersistedData('lotto_data_hangseng_afternoon', INITIAL_HANGSENG_AFTERNOON_DATA)
   );
 
+  const [nikkeiVipMorningData, setNikkeiVipMorningData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_nikkei_vip_morning', INITIAL_NIKKEI_VIP_MORNING_DATA)
+  );
+  const [nikkeiVipAfternoonData, setNikkeiVipAfternoonData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_nikkei_vip_afternoon', INITIAL_NIKKEI_VIP_AFTERNOON_DATA)
+  );
+  const [chinaVipMorningData, setChinaVipMorningData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_china_vip_morning', INITIAL_CHINA_VIP_MORNING_DATA)
+  );
+  const [chinaVipAfternoonData, setChinaVipAfternoonData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_china_vip_afternoon', INITIAL_CHINA_VIP_AFTERNOON_DATA)
+  );
+  const [hangsengVipMorningData, setHangsengVipMorningData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_hangseng_vip_morning', INITIAL_HANGSENG_VIP_MORNING_DATA)
+  );
+  const [hangsengVipAfternoonData, setHangsengVipAfternoonData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_hangseng_vip_afternoon', INITIAL_HANGSENG_VIP_AFTERNOON_DATA)
+  );
+
   const [laosData, setLaosData] = useState<DrawResult[]>(() =>
     loadPersistedData('lotto_data_laos', INITIAL_LAOS_DATA)
   );
@@ -152,7 +179,7 @@ export default function App() {
 
   // Sync engine version
   useEffect(() => {
-    const currentVersion = '10.0.0_update_thai_government_txt_file';
+    const currentVersion = '11.0.0_add_stock_vip';
     const savedVersion = localStorage.getItem('lotto_engine_version');
     if (savedVersion !== currentVersion) {
       localStorage.setItem('lotto_engine_version', currentVersion);
@@ -162,6 +189,12 @@ export default function App() {
       localStorage.removeItem('lotto_data_china_afternoon');
       localStorage.removeItem('lotto_data_hangseng_morning');
       localStorage.removeItem('lotto_data_hangseng_afternoon');
+      localStorage.removeItem('lotto_data_nikkei_vip_morning');
+      localStorage.removeItem('lotto_data_nikkei_vip_afternoon');
+      localStorage.removeItem('lotto_data_china_vip_morning');
+      localStorage.removeItem('lotto_data_china_vip_afternoon');
+      localStorage.removeItem('lotto_data_hangseng_vip_morning');
+      localStorage.removeItem('lotto_data_hangseng_vip_afternoon');
       localStorage.removeItem('lotto_data_laos');
       localStorage.removeItem('lotto_data_dowjones');
       localStorage.removeItem('lotto_data_hanoi_special');
@@ -176,6 +209,12 @@ export default function App() {
       setChinaAfternoonData(INITIAL_CHINA_AFTERNOON_DATA);
       setHangsengMorningData(INITIAL_HANGSENG_MORNING_DATA);
       setHangsengAfternoonData(INITIAL_HANGSENG_AFTERNOON_DATA);
+      setNikkeiVipMorningData(INITIAL_NIKKEI_VIP_MORNING_DATA);
+      setNikkeiVipAfternoonData(INITIAL_NIKKEI_VIP_AFTERNOON_DATA);
+      setChinaVipMorningData(INITIAL_CHINA_VIP_MORNING_DATA);
+      setChinaVipAfternoonData(INITIAL_CHINA_VIP_AFTERNOON_DATA);
+      setHangsengVipMorningData(INITIAL_HANGSENG_VIP_MORNING_DATA);
+      setHangsengVipAfternoonData(INITIAL_HANGSENG_VIP_AFTERNOON_DATA);
       setLaosData(INITIAL_LAOS_DATA);
       setDowjonesData(INITIAL_DOWJONES_DATA);
       setHanoiSpecialData(INITIAL_HANOI_SPECIAL_DATA);
@@ -190,6 +229,9 @@ export default function App() {
     localStorage.setItem('lotto_active_lottery_type', lotteryType);
     if (lotteryType === 'HANOI' && !['HANOI_SPECIAL', 'HANOI_EVENING', 'HANOI_VIP', 'HANOI_ALL_3'].includes(selectedSession)) {
       setSelectedSession('HANOI_ALL_3');
+    }
+    if (lotteryType === 'STOCK_VIP' && !['NIKKEI_VIP_BOTH', 'NIKKEI_VIP_MORNING', 'NIKKEI_VIP_AFTERNOON', 'CHINA_VIP_BOTH', 'CHINA_VIP_MORNING', 'CHINA_VIP_AFTERNOON', 'HANGSENG_VIP_BOTH', 'HANGSENG_VIP_MORNING', 'HANGSENG_VIP_AFTERNOON', 'STOCKS_VIP_ALL_3'].includes(selectedSession)) {
+      setSelectedSession('NIKKEI_VIP_BOTH');
     }
     if (lotteryType === 'NIKKEI' && !['NIKKEI_BOTH', 'NIKKEI_MORNING', 'NIKKEI_AFTERNOON', 'CHINA_BOTH', 'CHINA_MORNING', 'CHINA_AFTERNOON', 'HANGSENG_BOTH', 'HANGSENG_MORNING', 'HANGSENG_AFTERNOON', 'STOCKS_ALL_3', 'MORNING', 'AFTERNOON', 'BOTH'].includes(selectedSession)) {
       setSelectedSession('NIKKEI_BOTH');
@@ -208,30 +250,66 @@ export default function App() {
     localStorage.setItem('lotto_theme_mode', themeMode);
   }, [themeMode]);
 
-  // Persist stock dataset states to localStorage
+  // Persist stock dataset states to localStorage & Cloud
   useEffect(() => {
     localStorage.setItem('lotto_data_nikkei_morning', JSON.stringify(nikkeiMorningData));
+    syncSaveToCloud('lotto_data_nikkei_morning', nikkeiMorningData);
   }, [nikkeiMorningData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_nikkei_afternoon', JSON.stringify(nikkeiAfternoonData));
+    syncSaveToCloud('lotto_data_nikkei_afternoon', nikkeiAfternoonData);
   }, [nikkeiAfternoonData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_china_morning', JSON.stringify(chinaMorningData));
+    syncSaveToCloud('lotto_data_china_morning', chinaMorningData);
   }, [chinaMorningData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_china_afternoon', JSON.stringify(chinaAfternoonData));
+    syncSaveToCloud('lotto_data_china_afternoon', chinaAfternoonData);
   }, [chinaAfternoonData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_hangseng_morning', JSON.stringify(hangsengMorningData));
+    syncSaveToCloud('lotto_data_hangseng_morning', hangsengMorningData);
   }, [hangsengMorningData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_hangseng_afternoon', JSON.stringify(hangsengAfternoonData));
+    syncSaveToCloud('lotto_data_hangseng_afternoon', hangsengAfternoonData);
   }, [hangsengAfternoonData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_nikkei_vip_morning', JSON.stringify(nikkeiVipMorningData));
+    syncSaveToCloud('lotto_data_nikkei_vip_morning', nikkeiVipMorningData);
+  }, [nikkeiVipMorningData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_nikkei_vip_afternoon', JSON.stringify(nikkeiVipAfternoonData));
+    syncSaveToCloud('lotto_data_nikkei_vip_afternoon', nikkeiVipAfternoonData);
+  }, [nikkeiVipAfternoonData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_china_vip_morning', JSON.stringify(chinaVipMorningData));
+    syncSaveToCloud('lotto_data_china_vip_morning', chinaVipMorningData);
+  }, [chinaVipMorningData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_china_vip_afternoon', JSON.stringify(chinaVipAfternoonData));
+    syncSaveToCloud('lotto_data_china_vip_afternoon', chinaVipAfternoonData);
+  }, [chinaVipAfternoonData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_hangseng_vip_morning', JSON.stringify(hangsengVipMorningData));
+    syncSaveToCloud('lotto_data_hangseng_vip_morning', hangsengVipMorningData);
+  }, [hangsengVipMorningData]);
+
+  useEffect(() => {
+    localStorage.setItem('lotto_data_hangseng_vip_afternoon', JSON.stringify(hangsengVipAfternoonData));
+    syncSaveToCloud('lotto_data_hangseng_vip_afternoon', hangsengVipAfternoonData);
+  }, [hangsengVipAfternoonData]);
 
   useEffect(() => {
     localStorage.setItem('lotto_data_laos', JSON.stringify(laosData));
@@ -356,6 +434,60 @@ export default function App() {
     });
   }, [nikkeiMorningData, nikkeiAfternoonData, chinaMorningData, chinaAfternoonData, hangsengMorningData, hangsengAfternoonData]);
 
+  const nikkeiVipBothData = useMemo(() => {
+    return [...nikkeiVipMorningData, ...nikkeiVipAfternoonData].sort((a, b) => {
+      const timeA = a.date ? new Date(a.date).getTime() : 0;
+      const timeB = b.date ? new Date(b.date).getTime() : 0;
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      return b.session === 'NIKKEI_VIP_AFTERNOON' ? 1 : -1;
+    });
+  }, [nikkeiVipMorningData, nikkeiVipAfternoonData]);
+
+  const chinaVipBothData = useMemo(() => {
+    return [...chinaVipMorningData, ...chinaVipAfternoonData].sort((a, b) => {
+      const timeA = a.date ? new Date(a.date).getTime() : 0;
+      const timeB = b.date ? new Date(b.date).getTime() : 0;
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      return b.session === 'CHINA_VIP_AFTERNOON' ? 1 : -1;
+    });
+  }, [chinaVipMorningData, chinaVipAfternoonData]);
+
+  const hangsengVipBothData = useMemo(() => {
+    return [...hangsengVipMorningData, ...hangsengVipAfternoonData].sort((a, b) => {
+      const timeA = a.date ? new Date(a.date).getTime() : 0;
+      const timeB = b.date ? new Date(b.date).getTime() : 0;
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      return b.session === 'HANGSENG_VIP_AFTERNOON' ? 1 : -1;
+    });
+  }, [hangsengVipMorningData, hangsengVipAfternoonData]);
+
+  const allStockVipData = useMemo(() => {
+    const combined = [
+      ...nikkeiVipMorningData, ...nikkeiVipAfternoonData,
+      ...chinaVipMorningData, ...chinaVipAfternoonData,
+      ...hangsengVipMorningData, ...hangsengVipAfternoonData
+    ];
+    const sessionWeight = (s?: SessionType) => {
+      if (s === 'HANGSENG_VIP_AFTERNOON') return 6;
+      if (s === 'CHINA_VIP_AFTERNOON') return 5;
+      if (s === 'NIKKEI_VIP_AFTERNOON') return 4;
+      if (s === 'HANGSENG_VIP_MORNING') return 3;
+      if (s === 'CHINA_VIP_MORNING') return 2;
+      if (s === 'NIKKEI_VIP_MORNING') return 1;
+      return 0;
+    };
+    return combined.sort((a, b) => {
+      const timeA = a.date ? new Date(a.date).getTime() : 0;
+      const timeB = b.date ? new Date(b.date).getTime() : 0;
+      const timeDiff = timeB - timeA;
+      if (timeDiff !== 0) return timeDiff;
+      return sessionWeight(b.session) - sessionWeight(a.session);
+    });
+  }, [nikkeiVipMorningData, nikkeiVipAfternoonData, chinaVipMorningData, chinaVipAfternoonData, hangsengVipMorningData, hangsengVipAfternoonData]);
+
   // Active dataset according to selected lottery type and session
   const activeDataset = useMemo(() => {
     if (lotteryType === 'LAOS') {
@@ -376,6 +508,19 @@ export default function App() {
     if (lotteryType === 'GOVERNMENT') {
       return govData;
     }
+    if (lotteryType === 'STOCK_VIP') {
+      if (selectedSession === 'NIKKEI_VIP_MORNING') return nikkeiVipMorningData;
+      if (selectedSession === 'NIKKEI_VIP_AFTERNOON') return nikkeiVipAfternoonData;
+      if (selectedSession === 'NIKKEI_VIP_BOTH') return nikkeiVipBothData;
+      if (selectedSession === 'CHINA_VIP_MORNING') return chinaVipMorningData;
+      if (selectedSession === 'CHINA_VIP_AFTERNOON') return chinaVipAfternoonData;
+      if (selectedSession === 'CHINA_VIP_BOTH') return chinaVipBothData;
+      if (selectedSession === 'HANGSENG_VIP_MORNING') return hangsengVipMorningData;
+      if (selectedSession === 'HANGSENG_VIP_AFTERNOON') return hangsengVipAfternoonData;
+      if (selectedSession === 'HANGSENG_VIP_BOTH') return hangsengVipBothData;
+      if (selectedSession === 'STOCKS_VIP_ALL_3') return allStockVipData;
+      return nikkeiVipBothData;
+    }
     if (lotteryType === 'NIKKEI') {
       if (selectedSession === 'NIKKEI_MORNING' || selectedSession === 'MORNING') return nikkeiMorningData;
       if (selectedSession === 'NIKKEI_AFTERNOON' || selectedSession === 'AFTERNOON') return nikkeiAfternoonData;
@@ -390,7 +535,14 @@ export default function App() {
       return nikkeiBothData;
     }
     return nikkeiBothData;
-  }, [lotteryType, selectedSession, nikkeiMorningData, nikkeiAfternoonData, chinaMorningData, chinaAfternoonData, hangsengMorningData, hangsengAfternoonData, nikkeiBothData, chinaBothData, hangsengBothData, allStockData, laosData, dowjonesData, hanoiSpecialData, hanoiData, hanoiVipData, gsbData, govData]);
+  }, [
+    lotteryType, selectedSession,
+    nikkeiMorningData, nikkeiAfternoonData, chinaMorningData, chinaAfternoonData, hangsengMorningData, hangsengAfternoonData,
+    nikkeiBothData, chinaBothData, hangsengBothData, allStockData,
+    nikkeiVipMorningData, nikkeiVipAfternoonData, chinaVipMorningData, chinaVipAfternoonData, hangsengVipMorningData, hangsengVipAfternoonData,
+    nikkeiVipBothData, chinaVipBothData, hangsengVipBothData, allStockVipData,
+    laosData, dowjonesData, hanoiSpecialData, hanoiData, hanoiVipData, gsbData, govData
+  ]);
 
   const [drawOffset, setDrawOffset] = useState<number>(0);
 
@@ -501,57 +653,191 @@ export default function App() {
   const [editingDraw, setEditingDraw] = useState<DrawResult | null>(null);
 
   const handleAddDraw = (newDraw: Omit<DrawResult, 'id'>) => {
+    const sessionPrefix = newDraw.session ? newDraw.session.toLowerCase() : newDraw.lotteryType.toLowerCase();
     const created: DrawResult = {
       ...newDraw,
-      id: `${newDraw.lotteryType}_${Date.now()}`
+      id: `${sessionPrefix}_${Date.now()}`
     };
 
+    const sortByDateDesc = (list: DrawResult[]) => [...list].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
     if (newDraw.lotteryType === 'LAOS') {
-      setLaosData([created, ...laosData]);
+      setLaosData((prev) => sortByDateDesc([created, ...prev]));
     } else if (newDraw.lotteryType === 'DOWJONES') {
-      setDowjonesData([created, ...dowjonesData]);
+      setDowjonesData((prev) => sortByDateDesc([created, ...prev]));
     } else if (newDraw.lotteryType === 'HANOI') {
       if (newDraw.session === 'HANOI_SPECIAL') {
-        setHanoiSpecialData([created, ...hanoiSpecialData]);
+        setHanoiSpecialData((prev) => sortByDateDesc([created, ...prev]));
       } else if (newDraw.session === 'HANOI_VIP') {
-        setHanoiVipData([created, ...hanoiVipData]);
+        setHanoiVipData((prev) => sortByDateDesc([created, ...prev]));
       } else {
-        setHanoiData([created, ...hanoiData]);
+        setHanoiData((prev) => sortByDateDesc([created, ...prev]));
       }
     } else if (newDraw.lotteryType === 'GSB') {
-      setGsbData([created, ...gsbData]);
+      setGsbData((prev) => sortByDateDesc([created, ...prev]));
     } else if (newDraw.lotteryType === 'GOVERNMENT') {
-      setGovData([created, ...govData]);
+      setGovData((prev) => sortByDateDesc([created, ...prev]));
+    } else if (newDraw.lotteryType === 'STOCK_VIP') {
+      if (newDraw.session === 'CHINA_VIP_MORNING') setChinaVipMorningData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'CHINA_VIP_AFTERNOON') setChinaVipAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'HANGSENG_VIP_MORNING') setHangsengVipMorningData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'HANGSENG_VIP_AFTERNOON') setHangsengVipAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'NIKKEI_VIP_AFTERNOON') setNikkeiVipAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else setNikkeiVipMorningData((prev) => sortByDateDesc([created, ...prev]));
     } else {
-      if (newDraw.session === 'CHINA_MORNING') setChinaMorningData([created, ...chinaMorningData]);
-      else if (newDraw.session === 'CHINA_AFTERNOON') setChinaAfternoonData([created, ...chinaAfternoonData]);
-      else if (newDraw.session === 'HANGSENG_MORNING') setHangsengMorningData([created, ...hangsengMorningData]);
-      else if (newDraw.session === 'HANGSENG_AFTERNOON') setHangsengAfternoonData([created, ...hangsengAfternoonData]);
-      else if (newDraw.session === 'NIKKEI_AFTERNOON' || newDraw.session === 'AFTERNOON') setNikkeiAfternoonData([created, ...nikkeiAfternoonData]);
-      else setNikkeiMorningData([created, ...nikkeiMorningData]);
+      if (newDraw.session === 'CHINA_MORNING') setChinaMorningData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'CHINA_AFTERNOON') setChinaAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'HANGSENG_MORNING') setHangsengMorningData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'HANGSENG_AFTERNOON') setHangsengAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else if (newDraw.session === 'NIKKEI_AFTERNOON' || newDraw.session === 'AFTERNOON') setNikkeiAfternoonData((prev) => sortByDateDesc([created, ...prev]));
+      else setNikkeiMorningData((prev) => sortByDateDesc([created, ...prev]));
     }
 
-    addToast('success', 'บันทึกผลสำเร็จ!', `เพิ่มผลรางวัลวันที่ ${newDraw.dateFormatted} เรียบร้อยแล้ว`);
+    const sessionLabels: Record<string, string> = {
+      NIKKEI_MORNING: 'นิเคอิ เช้า',
+      NIKKEI_AFTERNOON: 'นิเคอิ บ่าย',
+      MORNING: 'นิเคอิ เช้า',
+      AFTERNOON: 'นิเคอิ บ่าย',
+      CHINA_MORNING: 'หุ้นจีน เช้า',
+      CHINA_AFTERNOON: 'หุ้นจีน บ่าย',
+      HANGSENG_MORNING: 'หุ้นฮั่งเส็ง เช้า',
+      HANGSENG_AFTERNOON: 'หุ้นฮั่งเส็ง บ่าย',
+      NIKKEI_VIP_MORNING: 'นิเคอิ VIP เช้า',
+      NIKKEI_VIP_AFTERNOON: 'นิเคอิ VIP บ่าย',
+      CHINA_VIP_MORNING: 'จีน VIP เช้า',
+      CHINA_VIP_AFTERNOON: 'จีน VIP บ่าย',
+      HANGSENG_VIP_MORNING: 'ฮั่งเส็ง VIP เช้า',
+      HANGSENG_VIP_AFTERNOON: 'ฮั่งเส็ง VIP บ่าย',
+      LAOS_EVENING: 'ลาวพัฒนา',
+      DOWJONES_NIGHT: 'ดาวโจนส์',
+      HANOI_SPECIAL: 'ฮานอยพิเศษ',
+      HANOI_EVENING: 'ฮานอยปกติ',
+      HANOI_VIP: 'ฮานอย VIP',
+      GSB_BIWEEKLY: 'ออมสิน',
+      GOV_BIWEEKLY: 'รัฐบาลไทย'
+    };
+    const sName = sessionLabels[newDraw.session] || 'ผลรางวัล';
+    addToast('success', 'บันทึกผลสำเร็จ!', `เพิ่มผลรางวัล [${sName}] วันที่ ${newDraw.dateFormatted} เรียบร้อยแล้ว`);
   };
 
   const handleEditDraw = (updatedDraw: DrawResult) => {
-    const updateList = (list: DrawResult[]) => list.map((item) => (item.id === updatedDraw.id ? updatedDraw : item));
-    if (updatedDraw.lotteryType === 'LAOS') setLaosData(updateList(laosData));
-    else if (updatedDraw.lotteryType === 'DOWJONES') setDowjonesData(updateList(dowjonesData));
+    const removeDraw = (list: DrawResult[]) => list.filter((item) => item.id !== updatedDraw.id);
+    const updateOrAdd = (list: DrawResult[]) => {
+      const exists = list.some((item) => item.id === updatedDraw.id);
+      if (exists) {
+        return list.map((item) => (item.id === updatedDraw.id ? updatedDraw : item));
+      }
+      return [updatedDraw, ...list].sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    };
+
+    if (updatedDraw.lotteryType === 'LAOS') setLaosData(updateOrAdd);
+    else if (updatedDraw.lotteryType === 'DOWJONES') setDowjonesData(updateOrAdd);
     else if (updatedDraw.lotteryType === 'HANOI') {
-      if (updatedDraw.session === 'HANOI_SPECIAL') setHanoiSpecialData(updateList(hanoiSpecialData));
-      else if (updatedDraw.session === 'HANOI_VIP') setHanoiVipData(updateList(hanoiVipData));
-      else setHanoiData(updateList(hanoiData));
+      if (updatedDraw.session === 'HANOI_SPECIAL') {
+        setHanoiSpecialData(updateOrAdd);
+        setHanoiData(removeDraw);
+        setHanoiVipData(removeDraw);
+      } else if (updatedDraw.session === 'HANOI_VIP') {
+        setHanoiVipData(updateOrAdd);
+        setHanoiData(removeDraw);
+        setHanoiSpecialData(removeDraw);
+      } else {
+        setHanoiData(updateOrAdd);
+        setHanoiSpecialData(removeDraw);
+        setHanoiVipData(removeDraw);
+      }
     }
-    else if (updatedDraw.lotteryType === 'GSB') setGsbData(updateList(gsbData));
-    else if (updatedDraw.lotteryType === 'GOVERNMENT') setGovData(updateList(govData));
+    else if (updatedDraw.lotteryType === 'GSB') setGsbData(updateOrAdd);
+    else if (updatedDraw.lotteryType === 'GOVERNMENT') setGovData(updateOrAdd);
+    else if (updatedDraw.lotteryType === 'STOCK_VIP') {
+      if (updatedDraw.session === 'CHINA_VIP_MORNING') {
+        setChinaVipMorningData(updateOrAdd);
+        setChinaVipAfternoonData(removeDraw);
+        setHangsengVipMorningData(removeDraw);
+        setHangsengVipAfternoonData(removeDraw);
+        setNikkeiVipMorningData(removeDraw);
+        setNikkeiVipAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'CHINA_VIP_AFTERNOON') {
+        setChinaVipAfternoonData(updateOrAdd);
+        setChinaVipMorningData(removeDraw);
+        setHangsengVipMorningData(removeDraw);
+        setHangsengVipAfternoonData(removeDraw);
+        setNikkeiVipMorningData(removeDraw);
+        setNikkeiVipAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'HANGSENG_VIP_MORNING') {
+        setHangsengVipMorningData(updateOrAdd);
+        setHangsengVipAfternoonData(removeDraw);
+        setChinaVipMorningData(removeDraw);
+        setChinaVipAfternoonData(removeDraw);
+        setNikkeiVipMorningData(removeDraw);
+        setNikkeiVipAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'HANGSENG_VIP_AFTERNOON') {
+        setHangsengVipAfternoonData(updateOrAdd);
+        setHangsengVipMorningData(removeDraw);
+        setChinaVipMorningData(removeDraw);
+        setChinaVipAfternoonData(removeDraw);
+        setNikkeiVipMorningData(removeDraw);
+        setNikkeiVipAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'NIKKEI_VIP_AFTERNOON') {
+        setNikkeiVipAfternoonData(updateOrAdd);
+        setNikkeiVipMorningData(removeDraw);
+        setChinaVipMorningData(removeDraw);
+        setChinaVipAfternoonData(removeDraw);
+        setHangsengVipMorningData(removeDraw);
+        setHangsengVipAfternoonData(removeDraw);
+      } else {
+        setNikkeiVipMorningData(updateOrAdd);
+        setNikkeiVipAfternoonData(removeDraw);
+        setChinaVipMorningData(removeDraw);
+        setChinaVipAfternoonData(removeDraw);
+        setHangsengVipMorningData(removeDraw);
+        setHangsengVipAfternoonData(removeDraw);
+      }
+    }
     else {
-      if (updatedDraw.session === 'CHINA_MORNING') setChinaMorningData(updateList(chinaMorningData));
-      else if (updatedDraw.session === 'CHINA_AFTERNOON') setChinaAfternoonData(updateList(chinaAfternoonData));
-      else if (updatedDraw.session === 'HANGSENG_MORNING') setHangsengMorningData(updateList(hangsengMorningData));
-      else if (updatedDraw.session === 'HANGSENG_AFTERNOON') setHangsengAfternoonData(updateList(hangsengAfternoonData));
-      else if (updatedDraw.session === 'NIKKEI_AFTERNOON' || updatedDraw.session === 'AFTERNOON') setNikkeiAfternoonData(updateList(nikkeiAfternoonData));
-      else setNikkeiMorningData(updateList(nikkeiMorningData));
+      if (updatedDraw.session === 'CHINA_MORNING') {
+        setChinaMorningData(updateOrAdd);
+        setChinaAfternoonData(removeDraw);
+        setHangsengMorningData(removeDraw);
+        setHangsengAfternoonData(removeDraw);
+        setNikkeiMorningData(removeDraw);
+        setNikkeiAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'CHINA_AFTERNOON') {
+        setChinaAfternoonData(updateOrAdd);
+        setChinaMorningData(removeDraw);
+        setHangsengMorningData(removeDraw);
+        setHangsengAfternoonData(removeDraw);
+        setNikkeiMorningData(removeDraw);
+        setNikkeiAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'HANGSENG_MORNING') {
+        setHangsengMorningData(updateOrAdd);
+        setHangsengAfternoonData(removeDraw);
+        setChinaMorningData(removeDraw);
+        setChinaAfternoonData(removeDraw);
+        setNikkeiMorningData(removeDraw);
+        setNikkeiAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'HANGSENG_AFTERNOON') {
+        setHangsengAfternoonData(updateOrAdd);
+        setHangsengMorningData(removeDraw);
+        setChinaMorningData(removeDraw);
+        setChinaAfternoonData(removeDraw);
+        setNikkeiMorningData(removeDraw);
+        setNikkeiAfternoonData(removeDraw);
+      } else if (updatedDraw.session === 'NIKKEI_AFTERNOON' || updatedDraw.session === 'AFTERNOON') {
+        setNikkeiAfternoonData(updateOrAdd);
+        setNikkeiMorningData(removeDraw);
+        setChinaMorningData(removeDraw);
+        setChinaAfternoonData(removeDraw);
+        setHangsengMorningData(removeDraw);
+        setHangsengAfternoonData(removeDraw);
+      } else {
+        setNikkeiMorningData(updateOrAdd);
+        setNikkeiAfternoonData(removeDraw);
+        setChinaMorningData(removeDraw);
+        setChinaAfternoonData(removeDraw);
+        setHangsengMorningData(removeDraw);
+        setHangsengAfternoonData(removeDraw);
+      }
     }
 
     addToast('success', 'แก้ไขผลสำเร็จ!', `แก้ไขผลรางวัลวันที่ ${updatedDraw.dateFormatted} เรียบร้อยแล้ว`);
@@ -569,6 +855,14 @@ export default function App() {
       }
       else if (lottery === 'GSB') setGsbData(filterList(gsbData));
       else if (lottery === 'GOVERNMENT') setGovData(filterList(govData));
+      else if (lottery === 'STOCK_VIP') {
+        setNikkeiVipMorningData(filterList(nikkeiVipMorningData));
+        setNikkeiVipAfternoonData(filterList(nikkeiVipAfternoonData));
+        setChinaVipMorningData(filterList(chinaVipMorningData));
+        setChinaVipAfternoonData(filterList(chinaVipAfternoonData));
+        setHangsengVipMorningData(filterList(hangsengVipMorningData));
+        setHangsengVipAfternoonData(filterList(hangsengVipAfternoonData));
+      }
       else {
         setNikkeiMorningData(filterList(nikkeiMorningData));
         setNikkeiAfternoonData(filterList(nikkeiAfternoonData));
@@ -603,6 +897,19 @@ export default function App() {
       } else if (lotteryType === 'GOVERNMENT') {
         localStorage.removeItem('lotto_data_gov');
         setGovData(INITIAL_GOVERNMENT_DATA);
+      } else if (lotteryType === 'STOCK_VIP') {
+        localStorage.removeItem('lotto_data_nikkei_vip_morning');
+        localStorage.removeItem('lotto_data_nikkei_vip_afternoon');
+        localStorage.removeItem('lotto_data_china_vip_morning');
+        localStorage.removeItem('lotto_data_china_vip_afternoon');
+        localStorage.removeItem('lotto_data_hangseng_vip_morning');
+        localStorage.removeItem('lotto_data_hangseng_vip_afternoon');
+        setNikkeiVipMorningData(INITIAL_NIKKEI_VIP_MORNING_DATA);
+        setNikkeiVipAfternoonData(INITIAL_NIKKEI_VIP_AFTERNOON_DATA);
+        setChinaVipMorningData(INITIAL_CHINA_VIP_MORNING_DATA);
+        setChinaVipAfternoonData(INITIAL_CHINA_VIP_AFTERNOON_DATA);
+        setHangsengVipMorningData(INITIAL_HANGSENG_VIP_MORNING_DATA);
+        setHangsengVipAfternoonData(INITIAL_HANGSENG_VIP_AFTERNOON_DATA);
       } else {
         localStorage.removeItem('lotto_data_nikkei_morning');
         localStorage.removeItem('lotto_data_nikkei_afternoon');
@@ -626,6 +933,7 @@ export default function App() {
     const nowStr = new Date().toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
     const nameMap: Record<LotteryType, string> = {
       NIKKEI: 'หุ้นปกติ',
+      STOCK_VIP: 'หุ้น VIP',
       DOWJONES: 'ดาวโจนส์',
       LAOS: 'ลาวพัฒนา',
       HANOI: 'ฮานอย',
@@ -697,6 +1005,24 @@ export default function App() {
 
       const hangsengA = mergeDataset(hangsengAfternoonData, 'HANGSENG_AFTERNOON', 'NIKKEI');
       if (hangsengA.updatedCount > 0) { setHangsengAfternoonData(hangsengA.list); updatedTotalCount += hangsengA.updatedCount; }
+
+      const nikkeiVipM = mergeDataset(nikkeiVipMorningData, 'NIKKEI_VIP_MORNING', 'STOCK_VIP');
+      if (nikkeiVipM.updatedCount > 0) { setNikkeiVipMorningData(nikkeiVipM.list); updatedTotalCount += nikkeiVipM.updatedCount; }
+
+      const nikkeiVipA = mergeDataset(nikkeiVipAfternoonData, 'NIKKEI_VIP_AFTERNOON', 'STOCK_VIP');
+      if (nikkeiVipA.updatedCount > 0) { setNikkeiVipAfternoonData(nikkeiVipA.list); updatedTotalCount += nikkeiVipA.updatedCount; }
+
+      const chinaVipM = mergeDataset(chinaVipMorningData, 'CHINA_VIP_MORNING', 'STOCK_VIP');
+      if (chinaVipM.updatedCount > 0) { setChinaVipMorningData(chinaVipM.list); updatedTotalCount += chinaVipM.updatedCount; }
+
+      const chinaVipA = mergeDataset(chinaVipAfternoonData, 'CHINA_VIP_AFTERNOON', 'STOCK_VIP');
+      if (chinaVipA.updatedCount > 0) { setChinaVipAfternoonData(chinaVipA.list); updatedTotalCount += chinaVipA.updatedCount; }
+
+      const hangsengVipM = mergeDataset(hangsengVipMorningData, 'HANGSENG_VIP_MORNING', 'STOCK_VIP');
+      if (hangsengVipM.updatedCount > 0) { setHangsengVipMorningData(hangsengVipM.list); updatedTotalCount += hangsengVipM.updatedCount; }
+
+      const hangsengVipA = mergeDataset(hangsengVipAfternoonData, 'HANGSENG_VIP_AFTERNOON', 'STOCK_VIP');
+      if (hangsengVipA.updatedCount > 0) { setHangsengVipAfternoonData(hangsengVipA.list); updatedTotalCount += hangsengVipA.updatedCount; }
 
       const laos = mergeDataset(laosData, 'LAOS_EVENING', 'LAOS');
       if (laos.updatedCount > 0) { setLaosData(laos.list); updatedTotalCount += laos.updatedCount; }
@@ -781,11 +1107,25 @@ export default function App() {
                 ? '🏦'
                 : lotteryType === 'GOVERNMENT'
                 ? '🇹🇭'
-                : selectedSession === 'MORNING'
+                : lotteryType === 'STOCK_VIP'
+                ? selectedSession?.startsWith('CHINA_VIP')
+                  ? '💎🇨🇳'
+                  : selectedSession?.startsWith('HANGSENG_VIP')
+                  ? '💎🇭🇰'
+                  : selectedSession === 'STOCKS_VIP_ALL_3'
+                  ? '💎⭐'
+                  : '💎🎌'
+                : selectedSession === 'CHINA_BOTH' || selectedSession === 'CHINA_MORNING' || selectedSession === 'CHINA_AFTERNOON'
+                ? '🇨🇳'
+                : selectedSession === 'HANGSENG_BOTH' || selectedSession === 'HANGSENG_MORNING' || selectedSession === 'HANGSENG_AFTERNOON'
+                ? '🇭🇰'
+                : selectedSession === 'STOCKS_ALL_3'
+                ? '⭐'
+                : selectedSession === 'MORNING' || selectedSession === 'NIKKEI_MORNING'
                 ? '☀️'
-                : selectedSession === 'AFTERNOON'
+                : selectedSession === 'AFTERNOON' || selectedSession === 'NIKKEI_AFTERNOON'
                 ? '🌤️'
-                : '🔄'}
+                : '🎌'}
             </span>
             <div>
               <h2 className="text-lg font-extrabold text-white">
@@ -806,11 +1146,45 @@ export default function App() {
                     ? 'หวยออมสิน (ออกวันที่ 1 และ 16 เวลา 13:00 น. - อ้างอิง exphuay GSB)'
                     : lotteryType === 'GOVERNMENT'
                     ? 'หวยรัฐบาลไทย (ออกวันที่ 1 และ 16 เวลา 15:30 น. - อ้างอิง exphuay)'
-                    : selectedSession === 'MORNING'
+                    : lotteryType === 'STOCK_VIP'
+                    ? selectedSession === 'CHINA_VIP_MORNING'
+                      ? 'หวยหุ้นจีน VIP รอบเช้า (09:30 น.)'
+                      : selectedSession === 'CHINA_VIP_AFTERNOON'
+                      ? 'หวยหุ้นจีน VIP รอบบ่าย (13:00 น.)'
+                      : selectedSession === 'CHINA_VIP_BOTH'
+                      ? 'หวยหุ้นจีน VIP ควบ 2 รอบ (เช้า 09:30 / บ่าย 13:00 น.)'
+                      : selectedSession === 'HANGSENG_VIP_MORNING'
+                      ? 'หวยหุ้นฮั่งเส็ง VIP รอบเช้า (10:55 น.)'
+                      : selectedSession === 'HANGSENG_VIP_AFTERNOON'
+                      ? 'หวยหุ้นฮั่งเส็ง VIP รอบบ่าย (14:55 น.)'
+                      : selectedSession === 'HANGSENG_VIP_BOTH'
+                      ? 'หวยหุ้นฮั่งเส็ง VIP ควบ 2 รอบ (เช้า 10:55 / บ่าย 14:55 น.)'
+                      : selectedSession === 'STOCKS_VIP_ALL_3'
+                      ? 'รวมทุกหุ้น VIP 3 ตลาด (นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP รวม 6 รอบ)'
+                      : selectedSession === 'NIKKEI_VIP_MORNING'
+                      ? 'หวยหุ้นนิคเคอิ VIP เช้า (รอบ 08:30 น.)'
+                      : selectedSession === 'NIKKEI_VIP_AFTERNOON'
+                      ? 'หวยหุ้นนิคเคอิ VIP บ่าย (รอบ 12:00 น.)'
+                      : 'วิเคราะห์รวมนิคเคอิ VIP 2 รอบ (เช้า 08:30 / บ่าย 12:00 น.)'
+                    : selectedSession === 'CHINA_MORNING'
+                    ? 'หวยหุ้นจีน รอบเช้า (10:35 น.)'
+                    : selectedSession === 'CHINA_AFTERNOON'
+                    ? 'หวยหุ้นจีน รอบบ่าย (14:00 น.)'
+                    : selectedSession === 'CHINA_BOTH'
+                    ? 'หวยหุ้นจีน ควบ 2 รอบ (เช้า 10:35 / บ่าย 14:00 น.)'
+                    : selectedSession === 'HANGSENG_MORNING'
+                    ? 'หวยหุ้นฮั่งเส็ง รอบเช้า (11:00 น.)'
+                    : selectedSession === 'HANGSENG_AFTERNOON'
+                    ? 'หวยหุ้นฮั่งเส็ง รอบบ่าย (15:00 น.)'
+                    : selectedSession === 'HANGSENG_BOTH'
+                    ? 'หวยหุ้นฮั่งเส็ง ควบ 2 รอบ (เช้า 11:00 / บ่าย 15:00 น.)'
+                    : selectedSession === 'STOCKS_ALL_3'
+                    ? 'รวมทุกหุ้นปกติ 3 ตลาด (นิเคอิ / จีน / ฮั่งเส็ง รวม 6 รอบ)'
+                    : selectedSession === 'MORNING' || selectedSession === 'NIKKEI_MORNING'
                     ? 'หวยหุ้นนิคเคอิเช้า (รอบ 09:30 น.)'
-                    : selectedSession === 'AFTERNOON'
+                    : selectedSession === 'AFTERNOON' || selectedSession === 'NIKKEI_AFTERNOON'
                     ? 'หวยหุ้นนิคเคอิบ่าย (รอบ 13:00 น.)'
-                    : 'วิเคราะห์รวมนิคเคอิ 2 รอบ'}
+                    : 'วิเคราะห์รวมนิคเคอิ 2 รอบ (เช้า 09:30 / บ่าย 13:00 น.)'}
                 </span>
               </h2>
               <p className="text-xs text-gray-400">
@@ -824,17 +1198,267 @@ export default function App() {
                   ? 'คำนวณแนวทางสถิติหวยออมสิน ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay (GSB)'
                   : lotteryType === 'GOVERNMENT'
                   ? 'คำนวณแนวทางสถิติหวยรัฐบาลไทย ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay'
-                  : selectedSession === 'AFTERNOON'
+                  : lotteryType === 'STOCK_VIP'
+                  ? selectedSession === 'CHINA_VIP_MORNING'
+                    ? 'คำนวณแนวทางหุ้นจีน VIP รอบเช้า ปิดตลาด 09:30 น. ออกผลทุกวัน'
+                    : selectedSession === 'CHINA_VIP_AFTERNOON'
+                    ? 'คำนวณแนวทางหุ้นจีน VIP รอบบ่าย ปิดตลาด 13:00 น. ออกผลทุกวัน'
+                    : selectedSession === 'CHINA_VIP_BOTH'
+                    ? 'คำนวณแนวทางหุ้นจีน VIP ควบเช้า-บ่าย 2 รอบ (09:30 / 13:00 น.)'
+                    : selectedSession === 'HANGSENG_VIP_MORNING'
+                    ? 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบเช้า ปิดตลาด 10:55 น. ออกผลทุกวัน'
+                    : selectedSession === 'HANGSENG_VIP_AFTERNOON'
+                    ? 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบบ่าย ปิดตลาด 14:55 น. ออกผลทุกวัน'
+                    : selectedSession === 'HANGSENG_VIP_BOTH'
+                    ? 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP ควบเช้า-บ่าย 2 รอบ (10:55 / 14:55 น.)'
+                    : selectedSession === 'STOCKS_VIP_ALL_3'
+                    ? 'วิเคราะห์ความน่าจะเป็นรวมทุกหุ้น VIP 3 ประเทศ (นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP)'
+                    : selectedSession === 'NIKKEI_VIP_AFTERNOON'
+                    ? 'คำนวณแนวทางรอบบ่าย พร้อมวิเคราะห์เลขไหลต่อเนื่องจากรอบเช้า'
+                    : 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นนิเคอิ VIP เปิดรอบแรก'
+                  : selectedSession === 'CHINA_MORNING'
+                  ? 'คำนวณแนวทางหุ้นจีนรอบเช้า ปิดตลาด 10:35 น. อ้างอิง exphuay (SZSE)'
+                  : selectedSession === 'CHINA_AFTERNOON'
+                  ? 'คำนวณแนวทางหุ้นจีนรอบบ่าย ปิดตลาด 14:00 น. อ้างอิง exphuay (SZSE)'
+                  : selectedSession === 'CHINA_BOTH'
+                  ? 'คำนวณแนวทางหุ้นจีนควบเช้า-บ่าย 2 รอบ (10:35 / 14:00 น.)'
+                  : selectedSession === 'HANGSENG_MORNING'
+                  ? 'คำนวณแนวทางหุ้นฮั่งเส็งรอบเช้า ปิดตลาด 11:00 น. อ้างอิง exphuay (HSI)'
+                  : selectedSession === 'HANGSENG_AFTERNOON'
+                  ? 'คำนวณแนวทางหุ้นฮั่งเส็งรอบบ่าย ปิดตลาด 15:00 น. อ้างอิง exphuay (HSI)'
+                  : selectedSession === 'HANGSENG_BOTH'
+                  ? 'คำนวณแนวทางหุ้นฮั่งเส็งควบเช้า-บ่าย 2 รอบ (11:00 / 15:00 น.)'
+                  : selectedSession === 'STOCKS_ALL_3'
+                  ? 'วิเคราะห์ความน่าจะเป็นรวมทุกหุ้นปกติ 3 ประเทศ (นิเคอิ / จีน / ฮั่งเส็ง)'
+                  : selectedSession === 'AFTERNOON' || selectedSession === 'NIKKEI_AFTERNOON'
                   ? 'คำนวณแนวทางรอบบ่าย พร้อมวิเคราะห์เลขไหลต่อเนื่องจากรอบเช้า'
                   : 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นญี่ปุ่นเปิดรอบแรก'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            {lotteryType === 'STOCK_VIP' && (
+              <div className="flex items-center gap-1 bg-nikkei-dark/80 border border-nikkei-border p-1 rounded-xl text-xs">
+                {selectedSession.startsWith('CHINA_VIP') ? (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_VIP_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_VIP_BOTH'
+                          ? 'bg-red-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      💎🇨🇳 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_VIP_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_VIP_MORNING'
+                          ? 'bg-red-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 09:30
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_VIP_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_VIP_AFTERNOON'
+                          ? 'bg-rose-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 13:00
+                    </button>
+                  </>
+                ) : selectedSession.startsWith('HANGSENG_VIP') ? (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_VIP_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_VIP_BOTH'
+                          ? 'bg-blue-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      💎🇭🇰 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_VIP_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_VIP_MORNING'
+                          ? 'bg-blue-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 10:55
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_VIP_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_VIP_AFTERNOON'
+                          ? 'bg-indigo-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 14:55
+                    </button>
+                  </>
+                ) : selectedSession === 'STOCKS_VIP_ALL_3' ? (
+                  <span className="text-[11px] text-amber-300 font-extrabold px-2 py-0.5">
+                    💎 รวมทั้ง 3 หุ้น VIP (6 รอบ)
+                  </span>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_VIP_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_VIP_BOTH'
+                          ? 'bg-purple-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      💎🎌 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_VIP_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_VIP_MORNING'
+                          ? 'bg-purple-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 08:30
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_VIP_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_VIP_AFTERNOON'
+                          ? 'bg-purple-600 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 12:00
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
+            {lotteryType === 'NIKKEI' && (
+              <div className="flex items-center gap-1 bg-nikkei-dark/80 border border-nikkei-border p-1 rounded-xl text-xs">
+                {selectedSession.startsWith('CHINA') ? (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_BOTH'
+                          ? 'bg-red-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🇨🇳 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_MORNING'
+                          ? 'bg-red-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 10:35
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('CHINA_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'CHINA_AFTERNOON'
+                          ? 'bg-rose-500 text-white shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 14:00
+                    </button>
+                  </>
+                ) : selectedSession.startsWith('HANGSENG') ? (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_BOTH'
+                          ? 'bg-blue-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🇭🇰 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_MORNING'
+                          ? 'bg-blue-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 11:00
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('HANGSENG_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'HANGSENG_AFTERNOON'
+                          ? 'bg-indigo-500 text-white shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 15:00
+                    </button>
+                  </>
+                ) : selectedSession === 'STOCKS_ALL_3' ? (
+                  <span className="text-[11px] text-amber-300 font-extrabold px-2 py-0.5">
+                    รวมทั้ง 3 หุ้นปกติ (6 รอบ)
+                  </span>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_BOTH')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_BOTH' || selectedSession === 'BOTH'
+                          ? 'bg-amber-400 text-black shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🎌 ควบเช้า-บ่าย
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_MORNING')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_MORNING' || selectedSession === 'MORNING'
+                          ? 'bg-amber-400 text-black shadow-glow-gold'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      ☀️ เช้า 09:30
+                    </button>
+                    <button
+                      onClick={() => setSelectedSession('NIKKEI_AFTERNOON')}
+                      className={`px-2.5 py-1 rounded-lg font-bold transition-all ${
+                        selectedSession === 'NIKKEI_AFTERNOON' || selectedSession === 'AFTERNOON'
+                          ? 'bg-cyan-400 text-black shadow-glow-cyan'
+                          : 'text-gray-400 hover:text-white'
+                      }`}
+                    >
+                      🌤️ บ่าย 13:00
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
+
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors shadow-glow-gold"
+              className="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-3.5 py-2.5 rounded-xl flex items-center gap-1.5 transition-colors shadow-glow-gold cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>+ ใส่ผลรางวัลใหม่</span>
@@ -934,7 +1558,7 @@ export default function App() {
         {/* Day of Week Frequency Analyzer (Positioned directly under the 6 Navigation Tabs) */}
         <DayOfWeekAnalyzer
           data={activeDataset}
-          allData={lotteryType === 'HANOI' ? allHanoiData : (lotteryType === 'NIKKEI' ? allStockData : activeDataset)}
+          allData={lotteryType === 'HANOI' ? allHanoiData : (lotteryType === 'STOCK_VIP' ? allStockVipData : (lotteryType === 'NIKKEI' ? allStockData : activeDataset))}
           lotteryType={lotteryType}
         />
 
@@ -958,6 +1582,7 @@ export default function App() {
               <HistoryTable
                 data={activeDataset}
                 lotteryType={lotteryType}
+                selectedSession={selectedSession}
                 onAddDraw={handleAddDraw}
                 onOpenAddModal={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
                 onOpenEditModal={(draw) => { setEditingDraw(draw); setIsAddModalOpen(true); }}
@@ -991,6 +1616,7 @@ export default function App() {
             <HistoryTable
               data={activeDataset}
               lotteryType={lotteryType}
+              selectedSession={selectedSession}
               onAddDraw={handleAddDraw}
               onOpenAddModal={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
               onOpenEditModal={(draw) => { setEditingDraw(draw); setIsAddModalOpen(true); }}

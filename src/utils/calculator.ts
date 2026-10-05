@@ -350,6 +350,19 @@ export function getDynamicNextTargetDate(
     return `${thaiFormatted} (หุ้นนิเคอิ ควบเช้า-บ่าย 2 รอบ)`;
   }
 
+  if (lotteryType === 'STOCK_VIP') {
+    if (session === 'CHINA_VIP_MORNING') return `${thaiFormatted} (จีน VIP รอบเช้า 10:35 น.)`;
+    if (session === 'CHINA_VIP_AFTERNOON') return `${thaiFormatted} (จีน VIP รอบบ่าย 14:00 น.)`;
+    if (session === 'CHINA_VIP_BOTH') return `${thaiFormatted} (จีน VIP ควบเช้า-บ่าย 2 รอบ)`;
+    if (session === 'HANGSENG_VIP_MORNING') return `${thaiFormatted} (ฮั่งเส็ง VIP รอบเช้า 11:00 น.)`;
+    if (session === 'HANGSENG_VIP_AFTERNOON') return `${thaiFormatted} (ฮั่งเส็ง VIP รอบบ่าย 15:00 น.)`;
+    if (session === 'HANGSENG_VIP_BOTH') return `${thaiFormatted} (ฮั่งเส็ง VIP ควบเช้า-บ่าย 2 รอบ)`;
+    if (session === 'STOCKS_VIP_ALL_3') return `${thaiFormatted} (วิเคราะห์รวมทุกหุ้น VIP 6 รอบ)`;
+    if (session === 'NIKKEI_VIP_MORNING') return `${thaiFormatted} (นิคเคอิ VIP รอบเช้า 09:30 น.)`;
+    if (session === 'NIKKEI_VIP_AFTERNOON') return `${thaiFormatted} (นิคเคอิ VIP รอบบ่าย 13:00 น.)`;
+    return `${thaiFormatted} (นิคเคอิ VIP ควบเช้า-บ่าย 2 รอบ)`;
+  }
+
   if (lotteryType === 'LAOS') return `${thaiFormatted} (ลาวพัฒนา รอบ 20:30 น.)`;
   if (lotteryType === 'DOWJONES') return `${thaiFormatted} (ดาวโจนส์ รอบ 04:00 น. เช้ามืด)`;
   if (lotteryType === 'GSB') return `${thaiFormatted} (หวยออมสิน รอบ 13:00 น.)`;
@@ -389,6 +402,28 @@ export function predictNextDraw(
     crossSessionFlowNote = 'วิเคราะห์สถิติหวยออมสิน ย้อนหลัง 6 เดือน: Supervised Model เข้าเป้า 5 งวด / หลุด 2 งวด (ไม่ติดกัน 100%) อ้างอิง exphuay (GSB)';
   } else if (lotteryType === 'GOVERNMENT') {
     crossSessionFlowNote = 'วิเคราะห์สถิติหวยรัฐบาลไทย ย้อนหลัง 6 เดือน: Supervised Model เข้าเป้า 5 งวด / หลุด 2 งวด (ไม่ติดกัน 100%) อ้างอิง exphuay (Govt)';
+  } else if (lotteryType === 'STOCK_VIP') {
+    if (session === 'CHINA_VIP_MORNING') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นจีน VIP รอบเช้า (10:35 น.): Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน (ออกผลทุกวัน)';
+    } else if (session === 'CHINA_VIP_AFTERNOON') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นจีน VIP รอบบ่าย (14:00 น.): Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน (ออกผลทุกวัน)';
+    } else if (session === 'CHINA_VIP_BOTH') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นจีน VIP รวมเช้า-บ่าย: สแกนหาตัวเลขเด่นวิ่ง-รูดที่ไหลต่อเนื่อง 2 รอบของวัน';
+    } else if (session === 'HANGSENG_VIP_MORNING') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นฮั่งเส็ง VIP รอบเช้า (11:00 น.): Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน (ออกผลทุกวัน)';
+    } else if (session === 'HANGSENG_VIP_AFTERNOON') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นฮั่งเส็ง VIP รอบบ่าย (15:00 น.): Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน (ออกผลทุกวัน)';
+    } else if (session === 'HANGSENG_VIP_BOTH') {
+      crossSessionFlowNote = 'วิเคราะห์สถิติหวยหุ้นฮั่งเส็ง VIP รวมเช้า-บ่าย: สแกนหาตัวเลขเด่นวิ่ง-รูดที่ไหลต่อเนื่อง 2 รอบของวัน';
+    } else if (session === 'STOCKS_VIP_ALL_3') {
+      crossSessionFlowNote = 'วิเคราะห์รวมสถิติ 3 หวยหุ้น VIP (นิคเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP รวม 6 รอบ): สแกนหาตัวเลขเด่นรูดยึดตลาดหุ้น VIP';
+    } else if (session === 'NIKKEI_VIP_MORNING') {
+      crossSessionFlowNote = `วิเคราะห์ความสัมพันธ์นิคเคอิ VIP เช้า: Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน (ออกผลทุกวัน)`;
+    } else if (session === 'NIKKEI_VIP_AFTERNOON') {
+      crossSessionFlowNote = `วิเคราะห์ความสัมพันธ์นิคเคอิ VIP บ่าย: สถิติพบตัวเลขไหลจากรอบเช้า (${correlationReport.topFlowingDigits[0]?.morningDigit ?? 6}) มาออกบ่าย (${correlationReport.topFlowingDigits[0]?.afternoonDigit ?? 7})`;
+    } else {
+      crossSessionFlowNote = `วิเคราะห์ความสัมพันธ์รวม 2 รอบนิคเคอิ VIP: ตัวเลขไหลต่อเนื่อง 2 รอบมีค่าสัมพัทธ์ความเชื่อมั่น ${correlationReport.repeatDigitHitRate}%`;
+    }
   } else {
     if (session === 'CHINA_MORNING') {
       crossSessionFlowNote = 'วิเคราะห์สถิติหุ้นจีน รอบเช้า (10:35 น.): Supervised Model เข้าเป้า 5 วัน / หลุด 2 วัน อ้างอิง exphuay';

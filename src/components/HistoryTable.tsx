@@ -5,13 +5,14 @@ import { Table, Calendar, Search, Filter, PlusCircle, Sparkles, X, Sun, Sunset, 
 interface HistoryTableProps {
   data: DrawResult[];
   lotteryType: LotteryType;
+  selectedSession?: SessionType;
   onAddDraw: (newDraw: Omit<DrawResult, 'id'>) => void;
   onOpenAddModal?: () => void;
   onOpenEditModal?: (draw: DrawResult) => void;
   onDeleteDraw?: (drawId: string, drawDate: string, lottery: LotteryType) => void;
 }
 
-export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, onAddDraw, onOpenAddModal, onOpenEditModal, onDeleteDraw }) => {
+export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, selectedSession, onAddDraw, onOpenAddModal, onOpenEditModal, onDeleteDraw }) => {
   const [selectedSessionFilter, setSelectedSessionFilter] = useState<SessionType>('BOTH');
   const [selectedMonth, setSelectedMonth] = useState<string>('ALL');
   const [selectedDay, setSelectedDay] = useState<string>('ALL');
@@ -20,7 +21,18 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
 
   // Filter Data
   const filteredData = data.filter((item) => {
-    if (lotteryType === 'NIKKEI' && selectedSessionFilter !== 'BOTH' && item.session !== selectedSessionFilter) return false;
+    if (lotteryType === 'STOCK_VIP' && selectedSessionFilter !== 'BOTH') {
+      if (item.session !== selectedSessionFilter) return false;
+    }
+    if (lotteryType === 'NIKKEI' && selectedSessionFilter !== 'BOTH') {
+      if (selectedSessionFilter === 'MORNING') {
+        if (item.session !== 'MORNING' && item.session !== 'NIKKEI_MORNING') return false;
+      } else if (selectedSessionFilter === 'AFTERNOON') {
+        if (item.session !== 'AFTERNOON' && item.session !== 'NIKKEI_AFTERNOON') return false;
+      } else {
+        if (item.session !== selectedSessionFilter) return false;
+      }
+    }
     if (lotteryType === 'HANOI' && selectedSessionFilter !== 'BOTH' && item.session !== selectedSessionFilter) return false;
     if (selectedMonth === 'OCT' && !item.dateFormatted.includes('ต.ค.')) return false;
     if (selectedMonth === 'SEP' && !item.dateFormatted.includes('ก.ย.')) return false;
@@ -72,8 +84,22 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
             <Table className="w-5 h-5 text-amber-400" />
             <h3 className="text-xl font-extrabold text-white">
               ตารางสถิติผลการออกรางวัล {
-                lotteryType === 'NIKKEI'
-                  ? '📈 หุ้นปกติ (นิเคอิ / จีน / ฮั่งเส็ง)'
+                lotteryType === 'STOCK_VIP'
+                  ? selectedSession?.startsWith('CHINA_VIP')
+                    ? '💎🇨🇳 หุ้นจีน VIP (เช้า 09:30 / บ่าย 13:00 น.)'
+                    : selectedSession?.startsWith('HANGSENG_VIP')
+                    ? '💎🇭🇰 หุ้นฮั่งเส็ง VIP (เช้า 10:55 / บ่าย 14:55 น.)'
+                    : selectedSession === 'STOCKS_VIP_ALL_3'
+                    ? '💎⭐ รวมทุกหุ้น VIP (นิเคอิ / จีน / ฮั่งเส็ง)'
+                    : '💎🎌 หุ้นนิเคอิ VIP (เช้า 08:30 / บ่าย 12:00 น.)'
+                  : lotteryType === 'NIKKEI'
+                  ? selectedSession?.startsWith('CHINA')
+                    ? '🇨🇳 หุ้นจีน (เช้า 10:35 / บ่าย 14:00 น.)'
+                    : selectedSession?.startsWith('HANGSENG')
+                    ? '🇭🇰 หุ้นฮั่งเส็ง (เช้า 11:00 / บ่าย 15:00 น.)'
+                    : selectedSession === 'STOCKS_ALL_3'
+                    ? '⭐ รวมทุกหุ้นปกติ (นิเคอิ / จีน / ฮั่งเส็ง)'
+                    : '🎌 หุ้นนิเคอิ (เช้า 09:30 / บ่าย 13:00 น.)'
                   : lotteryType === 'DOWJONES'
                   ? '🇺🇸 หุ้นดาวโจนส์ (เช้ามืด 04:00 น.)'
                   : lotteryType === 'LAOS'
@@ -87,8 +113,22 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
             </h3>
           </div>
           <p className="text-xs text-gray-400 mt-0.5">
-            {lotteryType === 'NIKKEI'
-              ? 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง แยกตามรอบการปิดตลาด (เช้า 09:30 น. / บ่าย 13:00 น.)'
+            {lotteryType === 'STOCK_VIP'
+              ? selectedSession?.startsWith('CHINA_VIP')
+                ? 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง ของหุ้นจีน VIP แยกตามรอบเช้า 09:30 น. และรอบบ่าย 13:00 น. ออกผลทุกวัน'
+                : selectedSession?.startsWith('HANGSENG_VIP')
+                ? 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง ของหุ้นฮั่งเส็ง VIP แยกตามรอบเช้า 10:55 น. และรอบบ่าย 14:55 น. ออกผลทุกวัน'
+                : selectedSession === 'STOCKS_VIP_ALL_3'
+                ? 'แสดงผลย้อนหลังรวมทุกหุ้น VIP 3 ตลาด (นิเคอิ VIP, จีน VIP, ฮั่งเส็ง VIP รวม 6 รอบ)'
+                : 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง ของหุ้นนิเคอิ VIP แยกตามรอบเช้า 08:30 น. และรอบบ่าย 12:00 น. ออกผลทุกวัน'
+              : lotteryType === 'NIKKEI'
+              ? selectedSession?.startsWith('CHINA')
+                ? 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง ของหุ้นจีน แยกตามรอบเช้า 10:35 น. และรอบบ่าย 14:00 น.'
+                : selectedSession?.startsWith('HANGSENG')
+                ? 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง ของหุ้นฮั่งเส็ง แยกตามรอบเช้า 11:00 น. และรอบบ่าย 15:00 น.'
+                : selectedSession === 'STOCKS_ALL_3'
+                ? 'แสดงผลย้อนหลังรวมทุกหุ้นปกติ 3 ตลาด (นิเคอิ, จีน, ฮั่งเส็ง รวม 6 รอบ)'
+                : 'แสดงผลย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง แยกตามรอบการปิดตลาด (เช้า 09:30 น. / บ่าย 13:00 น.)'
               : lotteryType === 'DOWJONES'
               ? 'แสดงผลหวยหุ้นดาวโจนส์ย้อนหลัง ดัชนีปิดตลาดสหรัฐฯ อ้างอิง exphuay'
               : lotteryType === 'LAOS'
@@ -143,8 +183,48 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
       {/* Search & Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 my-4">
         
-        {/* Session Filter for Nikkei & Hanoi */}
-        {lotteryType === 'NIKKEI' ? (
+        {/* Session Filter for Nikkei, VIP Stocks & Hanoi */}
+        {lotteryType === 'STOCK_VIP' ? (
+          <div className="flex items-center gap-2 bg-nikkei-dark/60 border border-nikkei-border px-3 py-2 rounded-xl text-xs">
+            <Filter className="w-4 h-4 text-purple-400 shrink-0" />
+            <span className="text-gray-400 shrink-0">รอบ:</span>
+            <select
+              value={selectedSessionFilter}
+              onChange={(e) => setSelectedSessionFilter(e.target.value as any)}
+              className="bg-transparent text-gray-200 font-semibold focus:outline-none w-full cursor-pointer"
+            >
+              {selectedSession?.startsWith('CHINA_VIP') ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">💎🇨🇳 รวมหุ้นจีน VIP (เช้า+บ่าย)</option>
+                  <option value="CHINA_VIP_MORNING" className="bg-nikkei-card">🇨🇳 เฉพาะรอบเช้า (09:30 น.)</option>
+                  <option value="CHINA_VIP_AFTERNOON" className="bg-nikkei-card">🇨🇳 เฉพาะรอบบ่าย (13:00 น.)</option>
+                </>
+              ) : selectedSession?.startsWith('HANGSENG_VIP') ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">💎🇭🇰 รวมหุ้นฮั่งเส็ง VIP (เช้า+บ่าย)</option>
+                  <option value="HANGSENG_VIP_MORNING" className="bg-nikkei-card">🇭🇰 เฉพาะรอบเช้า (10:55 น.)</option>
+                  <option value="HANGSENG_VIP_AFTERNOON" className="bg-nikkei-card">🇭🇰 เฉพาะรอบบ่าย (14:55 น.)</option>
+                </>
+              ) : selectedSession === 'STOCKS_VIP_ALL_3' ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">💎⭐ รวมทุกหุ้น VIP (6 รอบ)</option>
+                  <option value="NIKKEI_VIP_MORNING" className="bg-nikkei-card">💎🎌 นิเคอิ VIP เช้า (08:30 น.)</option>
+                  <option value="NIKKEI_VIP_AFTERNOON" className="bg-nikkei-card">💎🎌 นิเคอิ VIP บ่าย (12:00 น.)</option>
+                  <option value="CHINA_VIP_MORNING" className="bg-nikkei-card">💎🇨🇳 จีน VIP เช้า (09:30 น.)</option>
+                  <option value="CHINA_VIP_AFTERNOON" className="bg-nikkei-card">💎🇨🇳 จีน VIP บ่าย (13:00 น.)</option>
+                  <option value="HANGSENG_VIP_MORNING" className="bg-nikkei-card">💎🇭🇰 ฮั่งเส็ง VIP เช้า (10:55 น.)</option>
+                  <option value="HANGSENG_VIP_AFTERNOON" className="bg-nikkei-card">💎🇭🇰 ฮั่งเส็ง VIP บ่าย (14:55 น.)</option>
+                </>
+              ) : (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">💎🎌 ทั้ง 2 รอบ (เช้า+บ่าย)</option>
+                  <option value="NIKKEI_VIP_MORNING" className="bg-nikkei-card">🎌 เฉพาะรอบเช้า (08:30 น.)</option>
+                  <option value="NIKKEI_VIP_AFTERNOON" className="bg-nikkei-card">🎌 เฉพาะรอบบ่าย (12:00 น.)</option>
+                </>
+              )}
+            </select>
+          </div>
+        ) : lotteryType === 'NIKKEI' ? (
           <div className="flex items-center gap-2 bg-nikkei-dark/60 border border-nikkei-border px-3 py-2 rounded-xl text-xs">
             <Filter className="w-4 h-4 text-amber-400 shrink-0" />
             <span className="text-gray-400 shrink-0">รอบ:</span>
@@ -153,9 +233,35 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
               onChange={(e) => setSelectedSessionFilter(e.target.value as any)}
               className="bg-transparent text-gray-200 font-semibold focus:outline-none w-full cursor-pointer"
             >
-              <option value="BOTH" className="bg-nikkei-card">ทั้ง 2 รอบ (เช้า+บ่าย)</option>
-              <option value="MORNING" className="bg-nikkei-card">เฉพาะรอบเช้า (09:30)</option>
-              <option value="AFTERNOON" className="bg-nikkei-card">เฉพาะรอบบ่าย (13:00)</option>
+              {selectedSession?.startsWith('CHINA') ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">🇨🇳 รวมหุ้นจีน (เช้า+บ่าย)</option>
+                  <option value="CHINA_MORNING" className="bg-nikkei-card">🇨🇳 เฉพาะรอบเช้า (10:35 น.)</option>
+                  <option value="CHINA_AFTERNOON" className="bg-nikkei-card">🇨🇳 เฉพาะรอบบ่าย (14:00 น.)</option>
+                </>
+              ) : selectedSession?.startsWith('HANGSENG') ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">🇭🇰 รวมหุ้นฮั่งเส็ง (เช้า+บ่าย)</option>
+                  <option value="HANGSENG_MORNING" className="bg-nikkei-card">🇭🇰 เฉพาะรอบเช้า (11:00 น.)</option>
+                  <option value="HANGSENG_AFTERNOON" className="bg-nikkei-card">🇭🇰 เฉพาะรอบบ่าย (15:00 น.)</option>
+                </>
+              ) : selectedSession === 'STOCKS_ALL_3' ? (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">⭐ รวมทุกหุ้นปกติ (6 รอบ)</option>
+                  <option value="NIKKEI_MORNING" className="bg-nikkei-card">🎌 นิเคอิ เช้า (09:30 น.)</option>
+                  <option value="NIKKEI_AFTERNOON" className="bg-nikkei-card">🎌 นิเคอิ บ่าย (13:00 น.)</option>
+                  <option value="CHINA_MORNING" className="bg-nikkei-card">🇨🇳 จีน เช้า (10:35 น.)</option>
+                  <option value="CHINA_AFTERNOON" className="bg-nikkei-card">🇨🇳 จีน บ่าย (14:00 น.)</option>
+                  <option value="HANGSENG_MORNING" className="bg-nikkei-card">🇭🇰 ฮั่งเส็ง เช้า (11:00 น.)</option>
+                  <option value="HANGSENG_AFTERNOON" className="bg-nikkei-card">🇭🇰 ฮั่งเส็ง บ่าย (15:00 น.)</option>
+                </>
+              ) : (
+                <>
+                  <option value="BOTH" className="bg-nikkei-card">🎌 ทั้ง 2 รอบ (เช้า+บ่าย)</option>
+                  <option value="MORNING" className="bg-nikkei-card">🎌 เฉพาะรอบเช้า (09:30 น.)</option>
+                  <option value="AFTERNOON" className="bg-nikkei-card">🎌 เฉพาะรอบบ่าย (13:00 น.)</option>
+                </>
+              )}
             </select>
           </div>
         ) : lotteryType === 'HANOI' ? (
@@ -274,7 +380,33 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({ data, lotteryType, o
                     className="hover:bg-nikkei-cardHover/60 transition-colors"
                   >
                     <td className="py-3 px-4 font-bold text-xs">
-                      {lotteryType === 'NIKKEI' ? (
+                      {lotteryType === 'STOCK_VIP' ? (
+                        item.session === 'CHINA_VIP_MORNING' ? (
+                          <span className="inline-flex items-center gap-1 bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded font-extrabold">
+                            💎🇨🇳 จีน VIP เช้า (09:30)
+                          </span>
+                        ) : item.session === 'CHINA_VIP_AFTERNOON' ? (
+                          <span className="inline-flex items-center gap-1 bg-rose-500/20 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded font-extrabold">
+                            💎🇨🇳 จีน VIP บ่าย (13:00)
+                          </span>
+                        ) : item.session === 'HANGSENG_VIP_MORNING' ? (
+                          <span className="inline-flex items-center gap-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2 py-0.5 rounded font-extrabold">
+                            💎🇭🇰 ฮั่งเส็ง VIP เช้า (10:55)
+                          </span>
+                        ) : item.session === 'HANGSENG_VIP_AFTERNOON' ? (
+                          <span className="inline-flex items-center gap-1 bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-0.5 rounded font-extrabold">
+                            💎🇭🇰 ฮั่งเส็ง VIP บ่าย (14:55)
+                          </span>
+                        ) : item.session === 'NIKKEI_VIP_MORNING' ? (
+                          <span className="inline-flex items-center gap-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded font-extrabold">
+                            <Sun className="w-3 h-3 text-purple-400" /> นิเคอิ VIP เช้า (08:30)
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-purple-600/20 text-purple-300 border border-purple-600/30 px-2 py-0.5 rounded font-extrabold">
+                            <Sunset className="w-3 h-3 text-purple-400" /> นิเคอิ VIP บ่าย (12:00)
+                          </span>
+                        )
+                      ) : lotteryType === 'NIKKEI' ? (
                         item.session === 'CHINA_MORNING' ? (
                           <span className="inline-flex items-center gap-1 bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded font-extrabold">
                             🇨🇳 จีน เช้า (10:35)

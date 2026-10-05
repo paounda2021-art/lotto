@@ -55,7 +55,14 @@ const LOTTO_NAME_MAP: Record<string, { lotteryType: LotteryType; session: Sessio
   'mlnhngo': { lotteryType: 'HANOI', session: 'HANOI_VIP' },
 
   'gsb': { lotteryType: 'GSB', session: 'GSB_BIWEEKLY' },
-  'goverment': { lotteryType: 'GOVERNMENT', session: 'GOV_BIWEEKLY' }
+  'goverment': { lotteryType: 'GOVERNMENT', session: 'GOV_BIWEEKLY' },
+
+  'nikkei-vip-morning': { lotteryType: 'STOCK_VIP', session: 'NIKKEI_VIP_MORNING' },
+  'nikkei-vip-afternoon': { lotteryType: 'STOCK_VIP', session: 'NIKKEI_VIP_AFTERNOON' },
+  'szse-vip-morning': { lotteryType: 'STOCK_VIP', session: 'CHINA_VIP_MORNING' },
+  'szse-vip-afternoon': { lotteryType: 'STOCK_VIP', session: 'CHINA_VIP_AFTERNOON' },
+  'hsi-vip-morning': { lotteryType: 'STOCK_VIP', session: 'HANGSENG_VIP_MORNING' },
+  'hsi-vip-afternoon': { lotteryType: 'STOCK_VIP', session: 'HANGSENG_VIP_AFTERNOON' }
 };
 
 const BACKWARD_SLUGS_MAP: Record<LotteryType, string[]> = {
@@ -63,6 +70,7 @@ const BACKWARD_SLUGS_MAP: Record<LotteryType, string[]> = {
   DOWJONES: ['dji'],
   HANOI: ['xsthm', 'minhngoc', 'mlnhngo'],
   NIKKEI: ['nikkei-morning', 'nikkei-afternoon', 'szse-morning', 'szse-afternoon', 'hsi-morning', 'hsi-afternoon'],
+  STOCK_VIP: ['nikkei-vip-morning', 'nikkei-vip-afternoon', 'szse-vip-morning', 'szse-vip-afternoon', 'hsi-vip-morning', 'hsi-vip-afternoon'],
   GSB: ['gsb'],
   GOVERNMENT: ['goverment']
 };

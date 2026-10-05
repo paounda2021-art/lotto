@@ -137,6 +137,12 @@ const SESSION_CHRONO_ORDER: Record<string, number> = {
   HANOI_SPECIAL: 10,
   HANOI_EVENING: 11,
   HANOI_VIP: 12,
+  NIKKEI_VIP_MORNING: 21,
+  NIKKEI_VIP_AFTERNOON: 22,
+  CHINA_VIP_MORNING: 23,
+  CHINA_VIP_AFTERNOON: 24,
+  HANGSENG_VIP_MORNING: 25,
+  HANGSENG_VIP_AFTERNOON: 26,
 };
 
 const STOCK_SESSION_MAP: Record<string, { label: string; badgeColor: string }> = {
@@ -148,6 +154,12 @@ const STOCK_SESSION_MAP: Record<string, { label: string; badgeColor: string }> =
   CHINA_AFTERNOON: { label: '🏮 จีน บ่าย', badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-500/40' },
   HANGSENG_MORNING: { label: '🐉 ฮั่งเส็ง เช้า', badgeColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' },
   HANGSENG_AFTERNOON: { label: '🏛️ ฮั่งเส็ง บ่าย', badgeColor: 'bg-teal-500/20 text-teal-300 border-teal-500/40' },
+  NIKKEI_VIP_MORNING: { label: '💎☀️ นิเคอิ VIP เช้า', badgeColor: 'bg-purple-500/20 text-purple-300 border-purple-500/40' },
+  NIKKEI_VIP_AFTERNOON: { label: '💎🌤️ นิเคอิ VIP บ่าย', badgeColor: 'bg-purple-600/20 text-purple-300 border-purple-600/40' },
+  CHINA_VIP_MORNING: { label: '💎🧧 จีน VIP เช้า', badgeColor: 'bg-rose-500/20 text-rose-300 border-rose-500/40' },
+  CHINA_VIP_AFTERNOON: { label: '💎🏮 จีน VIP บ่าย', badgeColor: 'bg-pink-500/20 text-pink-300 border-pink-500/40' },
+  HANGSENG_VIP_MORNING: { label: '💎🐉 ฮั่งเส็ง VIP เช้า', badgeColor: 'bg-blue-500/20 text-blue-300 border-blue-500/40' },
+  HANGSENG_VIP_AFTERNOON: { label: '💎🏛️ ฮั่งเส็ง VIP บ่าย', badgeColor: 'bg-indigo-500/20 text-indigo-300 border-indigo-500/40' },
 };
 
 const getHanoiHitsForDigit = (digit: number | string, targetDraws: DrawResult[]) => {
@@ -300,9 +312,9 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
   const expectedSessionCount = useMemo(() => {
     if (lotteryType === 'HANOI') return 3;
-    if (lotteryType === 'NIKKEI') {
-      const hasChina = fullDataset.some((d) => d.session === 'CHINA_MORNING' || d.session === 'CHINA_AFTERNOON');
-      const hasHangseng = fullDataset.some((d) => d.session === 'HANGSENG_MORNING' || d.session === 'HANGSENG_AFTERNOON');
+    if (lotteryType === 'NIKKEI' || lotteryType === 'STOCK_VIP') {
+      const hasChina = fullDataset.some((d) => d.session === 'CHINA_MORNING' || d.session === 'CHINA_AFTERNOON' || d.session === 'CHINA_VIP_MORNING' || d.session === 'CHINA_VIP_AFTERNOON');
+      const hasHangseng = fullDataset.some((d) => d.session === 'HANGSENG_MORNING' || d.session === 'HANGSENG_AFTERNOON' || d.session === 'HANGSENG_VIP_MORNING' || d.session === 'HANGSENG_VIP_AFTERNOON');
       if (hasChina && hasHangseng) return 6;
       return 2;
     }
@@ -403,7 +415,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           ))}
         </div>
       );
-    } else if (lotteryType === 'NIKKEI') {
+    } else if (lotteryType === 'NIKKEI' || lotteryType === 'STOCK_VIP') {
       const hits = getNikkeiHitsForDigit(digit, targetDraws);
       if (hits.length === 0) {
         if (!isAllRecorded) {

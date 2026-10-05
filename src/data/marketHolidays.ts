@@ -90,6 +90,14 @@ export const getPerMarketStatusBreakdown = (
     }];
   }
 
+  if (lotteryType === 'STOCK_VIP') {
+    return [
+      { key: 'NIKKEI_VIP', label: '💎🎌 นิเคอิ VIP', shortClosedLabel: 'นิเคอิ VIP ปิด', status: 'OPEN', statusText: '🟢 เปิดออกรางวัลทุกวัน' },
+      { key: 'CHINA_VIP', label: '💎🇨🇳 จีน VIP', shortClosedLabel: 'จีน VIP ปิด', status: 'OPEN', statusText: '🟢 เปิดออกรางวัลทุกวัน' },
+      { key: 'HANGSENG_VIP', label: '💎🇭🇰 ฮั่งเส็ง VIP', shortClosedLabel: 'ฮั่งเส็ง VIP ปิด', status: 'OPEN', statusText: '🟢 เปิดออกรางวัลทุกวัน' }
+    ];
+  }
+
   if (lotteryType === 'HANOI') {
     return [
       { key: 'HANOI_SPECIAL', label: '🇻🇳 พิเศษ (17:30)', shortClosedLabel: 'ฮานอยพิเศษปิด', status: 'OPEN', statusText: '🟢 เปิด' },
