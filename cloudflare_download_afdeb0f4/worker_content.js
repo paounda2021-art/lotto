@@ -1,0 +1,44 @@
+{
+  "result": {
+    "id": "afdeb0f4-cdc6-47d6-8a18-d53b3ef3a861",
+    "number": 10,
+    "metadata": {
+      "created_on": "2026-10-05T16:34:26.117148Z",
+      "source": "wrangler",
+      "author_id": "5479e4ca4a9a54b6ba1b5c7995b8720e",
+      "author_email": "paounda2021@gmail.com",
+      "has_preview": true
+    },
+    "annotations": {
+      "workers/triggered_by": "version_upload"
+    },
+    "resources": {
+      "script": {
+        "etag": "512f72a1b61e22e205f57567c833cfb2a5487845f77e1cc0b0e9a7549747619e",
+        "handlers": [
+          "fetch"
+        ],
+        "last_deployed_from": "wrangler"
+      },
+      "script_runtime": {
+        "assets": {
+          "serve_directly": true,
+          "raw_run_worker_first": false,
+          "base_path": "/"
+        },
+        "compatibility_date": "2024-09-01",
+        "usage_model": "standard"
+      },
+      "bindings": [
+        {
+          "name": "LOTTO289",
+          "namespace_id": "ae6e343df2dc49f3b5def86e9926bebd",
+          "type": "kv_namespace"
+        }
+      ]
+    }
+  },
+  "success": true,
+  "errors": [],
+  "messages": []
+}
