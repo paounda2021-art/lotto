@@ -1298,10 +1298,11 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                         </span>
                         {stockSessions.map((s, idx) => {
                           const draw = targetDraws.find((d) => d.session === s.key || (s.altKeys && s.altKeys.includes(d.session)));
+                          const isAfternoon = s.key.includes('AFTERNOON') || s.label.includes('บ่าย');
                           return (
-                            <div key={idx} className="bg-black/50 p-1 rounded-lg border border-emerald-500/30">
+                            <div key={idx} className={isAfternoon ? "bg-purple-900/40 p-1 rounded-lg border border-purple-400/60 shadow-sm shadow-purple-950/40" : "bg-black/50 p-1 rounded-lg border border-emerald-500/30"}>
                               <div className="flex justify-between items-center mb-0.5">
-                                <span className="text-[10px] font-bold text-amber-300">{s.label}</span>
+                                <span className={isAfternoon ? "text-[10px] font-bold text-purple-200" : "text-[10px] font-bold text-amber-300"}>{s.label}</span>
                               </div>
                               {draw && draw.top3 ? (
                                 <div className="flex justify-between items-center text-[10px]">
@@ -1310,7 +1311,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                                   <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider">{draw.bottom2}</strong></span>
                                 </div>
                               ) : (
-                                <span className="text-[10px] text-amber-300/80 font-semibold italic">⏳ รอประกาศผล</span>
+                                <span className={isAfternoon ? "text-[10px] text-purple-300/80 font-semibold italic" : "text-[10px] text-amber-300/80 font-semibold italic"}>⏳ รอประกาศผล</span>
                               )}
                             </div>
                           );
@@ -1327,10 +1328,11 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                         </span>
                         {sortedDraws.map((d, idx) => {
                           const sessLabel = getThaiSessionLabel(d.session);
+                          const isAfternoon = (d.session && d.session.includes('AFTERNOON')) || sessLabel.includes('บ่าย');
                           return (
-                            <div key={idx} className="bg-black/50 p-1 rounded-lg border border-emerald-500/30">
+                            <div key={idx} className={isAfternoon ? "bg-purple-900/40 p-1 rounded-lg border border-purple-400/60 shadow-sm shadow-purple-950/40" : "bg-black/50 p-1 rounded-lg border border-emerald-500/30"}>
                               <div className="flex justify-between items-center mb-0.5">
-                                <span className="text-[10px] font-bold text-amber-300">{sessLabel}</span>
+                                <span className={isAfternoon ? "text-[10px] font-bold text-purple-200" : "text-[10px] font-bold text-amber-300"}>{sessLabel}</span>
                               </div>
                               {d && d.top3 ? (
                                 <div className="flex justify-between items-center text-[10px]">
@@ -1339,7 +1341,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                                   <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider">{d.bottom2}</strong></span>
                                 </div>
                               ) : (
-                                <span className="text-[10px] text-amber-300/80 font-semibold italic">⏳ รอประกาศผล</span>
+                                <span className={isAfternoon ? "text-[10px] text-purple-300/80 font-semibold italic" : "text-[10px] text-amber-300/80 font-semibold italic"}>⏳ รอประกาศผล</span>
                               )}
                             </div>
                           );
