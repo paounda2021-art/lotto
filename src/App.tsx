@@ -1866,7 +1866,7 @@ export default function App() {
             malayData,
             dowjonesData,
             gsbData,
-            governmentData,
+            governmentData: govData,
             activeDataset
           }}
         />
