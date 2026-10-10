@@ -551,19 +551,33 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           }
         } catch (e) {}
       }
+
+      let specialD = allD.filter((d) => d.session === 'HANOI_SPECIAL');
+      if (specialD.length === 0) {
+        try {
+          const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_data_hanoi_special') : null;
+          if (raw) specialD = JSON.parse(raw);
+          if (viewMode === 'VERIFY' && targetRecordedDate) {
+            specialD = specialD.filter((d) => d.date !== targetRecordedDate);
+          }
+        } catch (e) {}
+      }
+
       let all3D = allD.filter((d) => ['HANOI_SPECIAL', 'HANOI_EVENING', 'HANOI_VIP'].includes(d.session));
       if (all3D.length === 0) all3D = allD;
 
       const vipReport = analyzeDayOfWeekStats(vipD, activeDay);
+      const specialReport = analyzeDayOfWeekStats(specialD, activeDay);
       const all3Report = analyzeDayOfWeekStats(all3D, activeDay);
 
-      const v0 = vipReport.topSingleDigits?.[0]?.digit ?? null;
-      const v1 = vipReport.topSingleDigits?.[1]?.digit ?? null;
-      const a0 = all3Report.topSingleDigits?.[0]?.digit ?? null;
-      const a1 = all3Report.topSingleDigits?.[1]?.digit ?? null;
+      // เด่นวี เด่นพิ เด่นรวม รองรวม
+      const denVip = vipReport.topSingleDigits?.[0]?.digit ?? null;
+      const denPhi = specialReport.topSingleDigits?.[0]?.digit ?? null;
+      const denRuam = all3Report.topSingleDigits?.[0]?.digit ?? null;
+      const rongRuam = all3Report.topSingleDigits?.[1]?.digit ?? null;
 
-      // ตรวจสอบเลขชนกันตามกฎ 0-1-2-3 ของผู้ใช้ (เช่น 6160 ชน 6 แทนด้วย 2 เพราะมี 0 และ 1 แล้ว -> ได้ 0126)
-      const raw4 = [v0, v1, a0, a1];
+      // ตรวจสอบเลขชนกันตามสูตรแทนที่เดิม (เช่น ชน 0 แทนด้วย 2)
+      const raw4 = [denVip, denPhi, denRuam, rongRuam];
       const candidates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
       const currentSet = new Set(raw4.filter((x): x is number => x !== null && x !== undefined));
       const seen = new Set<number>();
@@ -627,7 +641,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
         });
       });
 
-      return { v0, v1, a0, a1, digits, pairs2D, triples3D, replacedDuplicates, winning2D, winning3D, winningDigits };
+      return { denVip, denPhi, denRuam, rongRuam, digits, pairs2D, triples3D, replacedDuplicates, winning2D, winning3D, winningDigits };
     } catch (err) {
       return null;
     }
@@ -1437,10 +1451,13 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           {/* Sources info */}
           <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-gray-300">
             <span className="bg-purple-500/20 text-purple-200 border border-purple-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-              🟣 นอย VIP: เด่นหลัก <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.v0 ?? '-'}</strong> / เด่นรอง <strong className="text-cyan-300 font-black">{hanoiSpecialWinSet.v1 ?? '-'}</strong>
+              🟣 เด่น VIP: <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.denVip ?? '-'}</strong>
+            </span>
+            <span className="bg-orange-500/20 text-orange-200 border border-orange-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1">
+              🟠 เด่นพิเศษ: <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.denPhi ?? '-'}</strong>
             </span>
             <span className="bg-amber-500/20 text-amber-200 border border-amber-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-              🌐 รวม 3 นอย: เด่นหลัก <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.a0 ?? '-'}</strong> / เด่นรอง <strong className="text-cyan-300 font-black">{hanoiSpecialWinSet.a1 ?? '-'}</strong>
+              🌐 รวม 3 นอย: เด่นรวม <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.denRuam ?? '-'}</strong> / รองรวม <strong className="text-cyan-300 font-black">{hanoiSpecialWinSet.rongRuam ?? '-'}</strong>
             </span>
             <span className="bg-black/40 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-md">
               🗓️ ประจำ: วัน{report.dayName}
@@ -1465,7 +1482,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
               ))}
             </div>
             <div className="text-xs text-amber-300/90 font-semibold pl-1">
-              เน้นตัดตรง 4 เลขเด่นสูงสุดจากเอนจินสถิติ (คัดจากเด่น นอย VIP + รวม 3 นอย)
+              เน้นตัดตรง 4 เลขเด่นสูงสุดจากเอนจินสถิติ (คัดจาก เด่นวี + เด่นพิ + เด่นรวม + รองรวม)
             </div>
           </div>
 
