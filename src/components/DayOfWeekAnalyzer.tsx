@@ -533,6 +533,74 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
   // Report (TOP 5 single digits and TOP 6 2D pairs) computed STRICTLY from predictionData!
   const report = useMemo(() => analyzeDayOfWeekStats(predictionData, activeDay), [predictionData, activeDay]);
 
+  // ชุดคัดเน้นพิเศษ 4 เลข (เด่น นอย VIP + รวม 3 นอย)
+  const hanoiSpecialWinSet = useMemo(() => {
+    if (lotteryType !== 'HANOI') return null;
+    try {
+      let allD = fullDataset || [];
+      if (viewMode === 'VERIFY' && targetRecordedDate) {
+        allD = allD.filter((d) => d.date !== targetRecordedDate);
+      }
+      let vipD = allD.filter((d) => d.session === 'HANOI_VIP');
+      if (vipD.length === 0) {
+        try {
+          const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_data_hanoi_vip') : null;
+          if (raw) vipD = JSON.parse(raw);
+          if (viewMode === 'VERIFY' && targetRecordedDate) {
+            vipD = vipD.filter((d) => d.date !== targetRecordedDate);
+          }
+        } catch (e) {}
+      }
+      let all3D = allD.filter((d) => ['HANOI_SPECIAL', 'HANOI_EVENING', 'HANOI_VIP'].includes(d.session));
+      if (all3D.length === 0) all3D = allD;
+
+      const vipReport = analyzeDayOfWeekStats(vipD, activeDay);
+      const all3Report = analyzeDayOfWeekStats(all3D, activeDay);
+
+      const v0 = vipReport.topSingleDigits?.[0]?.digit ?? null;
+      const v1 = vipReport.topSingleDigits?.[1]?.digit ?? null;
+      const a0 = all3Report.topSingleDigits?.[0]?.digit ?? null;
+      const a1 = all3Report.topSingleDigits?.[1]?.digit ?? null;
+
+      let digits: number[] = Array.from(new Set([v0, v1, a0, a1].filter((x): x is number => x !== null && x !== undefined)));
+
+      if (all3Report.topSingleDigits) {
+        for (const item of all3Report.topSingleDigits) {
+          if (!digits.includes(item.digit)) digits.push(item.digit);
+          if (digits.length >= 4) break;
+        }
+      }
+      if (vipReport.topSingleDigits && digits.length < 4) {
+        for (const item of vipReport.topSingleDigits) {
+          if (!digits.includes(item.digit)) digits.push(item.digit);
+          if (digits.length >= 4) break;
+        }
+      }
+
+      digits = digits.slice(0, 4).sort((x, y) => x - y);
+
+      const pairs2D: string[] = [];
+      for (let i = 0; i < digits.length; i++) {
+        for (let j = 0; j < digits.length; j++) {
+          if (i !== j) pairs2D.push(`${digits[i]}${digits[j]}`);
+        }
+      }
+
+      const triples3D: string[] = [];
+      for (let i = 0; i < digits.length; i++) {
+        for (let j = i + 1; j < digits.length; j++) {
+          for (let k = j + 1; k < digits.length; k++) {
+            triples3D.push(`${digits[i]}${digits[j]}${digits[k]}`);
+          }
+        }
+      }
+
+      return { v0, v1, a0, a1, digits, pairs2D, triples3D };
+    } catch (err) {
+      return null;
+    }
+  }, [lotteryType, fullDataset, viewMode, targetRecordedDate, activeDay]);
+
   const isHanoiAllRecorded = targetDraws.length > 0 && targetDraws.every((d) => Boolean(d.top3 && d.top3.trim() !== ''));
 
   const isNikkeiAllRecorded = targetDraws.length > 0 && targetDraws.every((d) => Boolean(d.top3 && d.top3.trim() !== ''));
@@ -1309,6 +1377,128 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
               </div>
             </div>
 
+          </div>
+
+        </div>
+      )}
+
+      {/* 🔥 ชุดคัดเน้นพิเศษ 4 เลข (นอย VIP + รวม 3 นอย) */}
+      {lotteryType === 'HANOI' && hanoiSpecialWinSet && (
+        <div className="border-2 border-amber-400/60 rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 shadow-glow-gold relative overflow-hidden space-y-3.5">
+          <div className="absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none" />
+          
+          {/* Header row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-500/20 pb-2.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="bg-amber-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
+                🔥 ชุดคัดเน้นพิเศษ {hanoiSpecialWinSet.digits.length} เลข
+              </span>
+              <h4 className="text-sm sm:text-base font-extrabold text-amber-200">
+                ชุดเลขวินเน้น {hanoiSpecialWinSet.digits.length} ตัว (ใช้ได้ทั้ง บน-ล่าง & 3 ตัวตรง-โต๊ด)
+              </h4>
+            </div>
+            <span className="text-[10px] sm:text-xs text-amber-300 font-bold bg-amber-900/60 border border-amber-500/40 px-2.5 py-1 rounded-lg self-start sm:self-auto">
+              ⚡ 2 ตัว (บน-ล่าง): {hanoiSpecialWinSet.pairs2D.length} ชุด | 3 ตัวตรง: {hanoiSpecialWinSet.triples3D.length} ชุด (24 โต๊ด)
+            </span>
+          </div>
+
+          {/* Sources info */}
+          <div className="flex flex-wrap items-center gap-2 text-[11px] font-bold text-gray-300">
+            <span className="bg-purple-500/20 text-purple-200 border border-purple-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1">
+              🟣 นอย VIP: เด่นหลัก <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.v0 ?? '-'}</strong> / เด่นรอง <strong className="text-cyan-300 font-black">{hanoiSpecialWinSet.v1 ?? '-'}</strong>
+            </span>
+            <span className="bg-amber-500/20 text-amber-200 border border-amber-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1">
+              🌐 รวม 3 นอย: เด่นหลัก <strong className="text-amber-300 font-black">{hanoiSpecialWinSet.a0 ?? '-'}</strong> / เด่นรอง <strong className="text-cyan-300 font-black">{hanoiSpecialWinSet.a1 ?? '-'}</strong>
+            </span>
+            <span className="bg-black/40 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-md">
+              🗓️ ประจำ: วัน{report.dayName}
+            </span>
+          </div>
+
+          {/* 4 Balls */}
+          <div className="flex items-center gap-3 flex-wrap py-1">
+            <div className="flex items-center gap-2 sm:gap-2.5">
+              {hanoiSpecialWinSet.digits.map(d => (
+                <div
+                  key={d}
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform"
+                >
+                  {d}
+                </div>
+              ))}
+            </div>
+            <div className="text-xs text-amber-300/90 font-semibold pl-1">
+              เน้นตัดตรง 4 เลขเด่นสูงสุดจากเอนจินสถิติ (คัดจากเด่น นอย VIP + รวม 3 นอย)
+            </div>
+          </div>
+
+          {/* Win 2D & 3D */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-amber-500/20">
+            {/* 2D */}
+            <div className="bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                  ⚡ ชุดเลขวิน 2 ตัว บน-ล่าง ({hanoiSpecialWinSet.pairs2D.length} ชุด):
+                </span>
+                <button
+                  onClick={(e) => {
+                    const btn = e.currentTarget;
+                    if (navigator.clipboard) {
+                      navigator.clipboard.writeText(hanoiSpecialWinSet.pairs2D.join(', '));
+                      const oldText = btn.innerText;
+                      btn.innerText = '✓ คัดลอกแล้ว!';
+                      setTimeout(() => { btn.innerText = oldText; }, 1500);
+                    }
+                  }}
+                  className="text-[10px] bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95"
+                >
+                  📋 คัดลอก 2 ตัว
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {hanoiSpecialWinSet.pairs2D.map(p => (
+                  <span
+                    key={p}
+                    className="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-black font-mono text-xs sm:text-sm tracking-wider hover:bg-amber-500/30 transition-colors"
+                  >
+                    {p}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* 3D */}
+            <div className="bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                  ⚡ ชุดเลขวิน 3 ตัวตรง ({hanoiSpecialWinSet.triples3D.length} ชุด / 24 โต๊ด):
+                </span>
+                <button
+                  onClick={(e) => {
+                    const btn = e.currentTarget;
+                    if (navigator.clipboard) {
+                      navigator.clipboard.writeText(hanoiSpecialWinSet.triples3D.join(', '));
+                      const oldText = btn.innerText;
+                      btn.innerText = '✓ คัดลอกแล้ว!';
+                      setTimeout(() => { btn.innerText = oldText; }, 1500);
+                    }
+                  }}
+                  className="text-[10px] bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95"
+                >
+                  📋 คัดลอก 3 ตัว
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {hanoiSpecialWinSet.triples3D.map(t => (
+                  <span
+                    key={t}
+                    className="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-black font-mono text-xs sm:text-sm tracking-wider hover:bg-cyan-500/30 transition-colors"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
 
         </div>
