@@ -562,22 +562,34 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
       const a0 = all3Report.topSingleDigits?.[0]?.digit ?? null;
       const a1 = all3Report.topSingleDigits?.[1]?.digit ?? null;
 
-      let digits: number[] = Array.from(new Set([v0, v1, a0, a1].filter((x): x is number => x !== null && x !== undefined)));
+      // ตรวจสอบเลขชนกันตามกฎ 0-1-2-3 ของผู้ใช้ (เช่น 6160 ชน 6 แทนด้วย 2 เพราะมี 0 และ 1 แล้ว -> ได้ 0126)
+      const raw4 = [v0, v1, a0, a1];
+      const candidates = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      const currentSet = new Set(raw4.filter((x): x is number => x !== null && x !== undefined));
+      const seen = new Set<number>();
+      const resolved: number[] = [];
+      const replacedDuplicates: { original: number; replacement: number }[] = [];
 
-      if (all3Report.topSingleDigits) {
-        for (const item of all3Report.topSingleDigits) {
-          if (!digits.includes(item.digit)) digits.push(item.digit);
-          if (digits.length >= 4) break;
+      for (let i = 0; i < raw4.length; i++) {
+        const val = raw4[i];
+        if (val === null || val === undefined) continue;
+        if (!seen.has(val)) {
+          seen.add(val);
+          resolved.push(val);
+        } else {
+          // แทนตัวซ้ำด้วยเลขจาก [0, 1, 2, 3...] ที่ยังไม่มีในชุด
+          for (const cand of candidates) {
+            if (!currentSet.has(cand)) {
+              resolved.push(cand);
+              currentSet.add(cand);
+              replacedDuplicates.push({ original: val, replacement: cand });
+              break;
+            }
+          }
         }
       }
-      if (vipReport.topSingleDigits && digits.length < 4) {
-        for (const item of vipReport.topSingleDigits) {
-          if (!digits.includes(item.digit)) digits.push(item.digit);
-          if (digits.length >= 4) break;
-        }
-      }
 
-      digits = digits.slice(0, 4).sort((x, y) => x - y);
+      const digits: number[] = resolved.slice(0, 4).sort((x, y) => x - y);
 
       const pairs2D: string[] = [];
       for (let i = 0; i < digits.length; i++) {
@@ -595,7 +607,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
         }
       }
 
-      return { v0, v1, a0, a1, digits, pairs2D, triples3D };
+      return { v0, v1, a0, a1, digits, pairs2D, triples3D, replacedDuplicates };
     } catch (err) {
       return null;
     }
@@ -1413,6 +1425,11 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
             <span className="bg-black/40 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-md">
               🗓️ ประจำ: วัน{report.dayName}
             </span>
+            {hanoiSpecialWinSet.replacedDuplicates && hanoiSpecialWinSet.replacedDuplicates.length > 0 && (
+              <span className="bg-amber-500/20 text-yellow-300 border border-amber-500/40 px-2 py-0.5 rounded-md flex items-center gap-1">
+                ⚡ ชนเลข {hanoiSpecialWinSet.replacedDuplicates.map((d) => `${d.original} ➔ แทนด้วย ${d.replacement}`).join(', ')}
+              </span>
+            )}
           </div>
 
           {/* 4 Balls */}
