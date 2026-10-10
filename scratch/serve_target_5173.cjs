@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PUBLIC_DIR = path.join(__dirname, '..', 'dist');
+const PUBLIC_DIR = path.join(__dirname, '..', 'downloaded_target_worker');
 const KV_DIR = path.join(__dirname, '..', 'downloaded_target_worker', 'kv_data');
 
 if (!fs.existsSync(KV_DIR)) {
