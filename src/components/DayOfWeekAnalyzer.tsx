@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DrawResult, LotteryType } from '../types';
 import { analyzeDayOfWeekStats } from '../utils/calculator';
-import { Calendar, Flame, Zap, Award, CheckCircle2, Copy, Check, Trophy, XCircle } from 'lucide-react';
+import { Calendar, Flame, Zap, Award, CheckCircle2, Copy, Check, Trophy, XCircle, Download } from 'lucide-react';
 import { getPerMarketStatusBreakdown } from '../data/marketHolidays';
 import confetti from 'canvas-confetti';
+import { ExportPredictionModal } from './ExportPredictionModal';
 
 interface DayOfWeekAnalyzerProps {
   data: DrawResult[];
   allData?: DrawResult[];
   lotteryType: LotteryType;
   selectedSession?: string;
+  allDatasets?: any;
 }
 
 const formatIsoDateToThai = (isoDate: string): string => {
@@ -483,7 +485,8 @@ const getStockHitsForPair = (pair: string, targetDraws: DrawResult[]) => {
   return hits;
 };
 
-export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allData, lotteryType, selectedSession }) => {
+export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allData, lotteryType, selectedSession, allDatasets }) => {
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const fullDataset = useMemo(() => allData || data, [allData, data]);
 
   const expectedSessionCount = useMemo(() => {
@@ -784,7 +787,16 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           </p>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto">
+        <div className="flex items-center gap-2 shrink-0 self-start sm:self-auto flex-wrap">
+          <button
+            onClick={() => setIsExportModalOpen(true)}
+            className="px-3.5 py-2 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-1.5 cursor-pointer shadow-lg bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 text-black border border-emerald-300 hover:brightness-110 hover:scale-105 active:scale-95 shadow-glow-emerald"
+            title="ดาวน์โหลดสรุปฟันธงเป็น Excel / CSV"
+          >
+            <Download className="w-4 h-4 text-black stroke-[2.5]" />
+            <span>📥 ดาวน์โหลด Excel / CSV</span>
+          </button>
+
           <button
             onClick={handleCopyGuide}
             className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-1.5 cursor-pointer shadow-lg ${
@@ -911,18 +923,29 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
               </div>
             </div>
 
-            {/* Copy Button (PredictionCard pattern) */}
-            <button
-              onClick={handleCopyGuide}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 shrink-0 cursor-pointer shadow-lg ${
-                copied
-                  ? 'bg-emerald-500 text-black border border-emerald-300 scale-105 shadow-glow-emerald'
-                  : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-black border border-amber-200 hover:brightness-110 hover:scale-105 active:scale-95 shadow-glow-gold'
-              }`}
-            >
-              {copied ? <Check className="w-4 h-4 text-black stroke-[3]" /> : <Copy className="w-4 h-4 text-black stroke-[3]" />}
-              <span>{copied ? '✓ คัดลอกแนวทางแล้ว!' : 'คัดลอกแนวทาง'}</span>
-            </button>
+            {/* Action Buttons: Download + Copy */}
+            <div className="flex items-center gap-2 shrink-0 flex-wrap sm:flex-nowrap">
+              <button
+                onClick={() => setIsExportModalOpen(true)}
+                className="px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 shrink-0 cursor-pointer shadow-lg bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-600 text-black border border-emerald-300 hover:brightness-110 hover:scale-105 active:scale-95 shadow-glow-emerald"
+                title="ดาวน์โหลดสรุปฟันธงเป็น Excel / CSV"
+              >
+                <Download className="w-4 h-4 text-black stroke-[2.5]" />
+                <span>📥 ดาวน์โหลด Excel / CSV</span>
+              </button>
+
+              <button
+                onClick={handleCopyGuide}
+                className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 shrink-0 cursor-pointer shadow-lg ${
+                  copied
+                    ? 'bg-emerald-500 text-black border border-emerald-300 scale-105 shadow-glow-emerald'
+                    : 'bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-black border border-amber-200 hover:brightness-110 hover:scale-105 active:scale-95 shadow-glow-gold'
+                }`}
+              >
+                {copied ? <Check className="w-4 h-4 text-black stroke-[3]" /> : <Copy className="w-4 h-4 text-black stroke-[3]" />}
+                <span>{copied ? '✓ คัดลอกแนวทางแล้ว!' : 'คัดลอกแนวทาง'}</span>
+              </button>
+            </div>
           </div>
 
           {/* THREE SIDE-BY-SIDE CARDS (👈 กล่อง 1: เด่น/รอง [แคบลง] | 🤛 กล่อง 2: ชุด TOP 6 คู่เน้น | 👉 กล่อง 3: เปรียบเทียบผล) */}
@@ -1290,6 +1313,15 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
         </div>
       )}
+
+      {/* Modal ดาวน์โหลด Excel / CSV สรุปฟันธงเด่นรูด */}
+      <ExportPredictionModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        currentLotteryType={lotteryType}
+        currentSession={selectedSession}
+        allDatasets={allDatasets || { activeDataset: fullDataset }}
+      />
 
     </div>
   );

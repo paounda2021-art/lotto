@@ -1,5 +1,17 @@
 [
   {
+    "id": "STOCK_VIP_CHINA_VIP_AFTERNOON_2026-10-10",
+    "lotteryType": "STOCK_VIP",
+    "session": "CHINA_VIP_AFTERNOON",
+    "date": "2026-10-10",
+    "dateFormatted": "10 ต.ค. 2569",
+    "dayOfWeek": "Sat",
+    "dayNameThai": "เสาร์",
+    "top3": "636",
+    "top2": "36",
+    "bottom2": "89"
+  },
+  {
     "id": "STOCK_VIP_CHINA_VIP_AFTERNOON_2026-10-09",
     "lotteryType": "STOCK_VIP",
     "session": "CHINA_VIP_AFTERNOON",

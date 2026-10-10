@@ -1304,23 +1304,23 @@ export default function App() {
       }
     } else if (lotteryType === 'STOCKS_VIP') {
       if (selectedSession === 'CHINA_VIP_MORNING') {
-        title = 'หวยหุ้นจีน VIP รอบเช้า (09:30 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบเช้า ปิดตลาด 09:30 น. ออกผลทุกวัน';
+        title = 'หวยหุ้นจีน VIP รอบเช้า (10:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบเช้า ปิดตลาด 10:00 น. ออกผลทุกวัน';
       } else if (selectedSession === 'CHINA_VIP_AFTERNOON') {
-        title = 'หวยหุ้นจีน VIP รอบบ่าย (13:00 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบบ่าย ปิดตลาด 13:00 น. ออกผลทุกวัน';
+        title = 'หวยหุ้นจีน VIP รอบบ่าย (14:20 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบบ่าย ปิดตลาด 14:20 น. ออกผลทุกวัน';
       } else if (selectedSession === 'CHINA_VIP_BOTH') {
-        title = 'หวยหุ้นจีน VIP ควบ 2 รอบ (เช้า 09:30 / บ่าย 13:00 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นจีน VIP ควบเช้า-บ่าย 2 รอบ (09:30 / 13:00 น.)';
+        title = 'หวยหุ้นจีน VIP ควบ 2 รอบ (เช้า 10:00 / บ่าย 14:20 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP ควบเช้า-บ่าย 2 รอบ (10:00 / 14:20 น.)';
       } else if (selectedSession === 'HANGSENG_VIP_MORNING') {
-        title = 'หวยหุ้นฮั่งเส็ง VIP รอบเช้า (10:55 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบเช้า ปิดตลาด 10:55 น. ออกผลทุกวัน';
+        title = 'หวยหุ้นฮั่งเส็ง VIP รอบเช้า (10:30 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบเช้า ปิดตลาด 10:30 น. ออกผลทุกวัน';
       } else if (selectedSession === 'HANGSENG_VIP_AFTERNOON') {
-        title = 'หวยหุ้นฮั่งเส็ง VIP รอบบ่าย (14:55 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบบ่าย ปิดตลาด 14:55 น. ออกผลทุกวัน';
+        title = 'หวยหุ้นฮั่งเส็ง VIP รอบบ่าย (15:20 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบบ่าย ปิดตลาด 15:20 น. ออกผลทุกวัน';
       } else if (selectedSession === 'HANGSENG_VIP_BOTH') {
-        title = 'หวยหุ้นฮั่งเส็ง VIP ควบ 2 รอบ (เช้า 10:55 / บ่าย 14:55 น.)';
-        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP ควบเช้า-บ่าย 2 รอบ (10:55 / 14:55 น.)';
+        title = 'หวยหุ้นฮั่งเส็ง VIP ควบ 2 รอบ (เช้า 10:30 / บ่าย 15:20 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP ควบเช้า-บ่าย 2 รอบ (10:30 / 15:20 น.)';
       } else if (selectedSession === 'NIKKEI_VIP_MORNING') {
         title = 'หวยหุ้นนิคเคอิ VIP เช้า (รอบ 08:30 น.)';
         subtitle = 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นนิเคอิ VIP เปิดรอบแรก';
@@ -1858,6 +1858,17 @@ export default function App() {
           }
           lotteryType={lotteryType}
           selectedSession={selectedSession}
+          allDatasets={{
+            allStockData,
+            allStockVipData,
+            allHanoiData,
+            laosData,
+            malayData,
+            dowjonesData,
+            gsbData,
+            governmentData,
+            activeDataset
+          }}
         />
 
         {/* Tab Content Display */}
