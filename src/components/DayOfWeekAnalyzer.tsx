@@ -1306,12 +1306,12 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                               </div>
                               {draw && draw.top3 ? (
                                 <div className="flex justify-between items-center text-[10px]">
-                                  <span className="text-gray-300">3 บน: <strong className={isAfternoon ? "text-cyan-300 text-base font-black font-mono tracking-wider" : "text-yellow-300 text-base font-black font-mono tracking-wider"} style={{ color: isAfternoon ? '#67e8f9' : '#fde047' }}>{draw.top3}</strong></span>
-                                  <span className="text-gray-300">2 บน: <strong className={isAfternoon ? "text-cyan-300 text-base font-black font-mono tracking-wider" : "text-amber-300 text-base font-black font-mono tracking-wider"} style={{ color: isAfternoon ? '#67e8f9' : '#fcd34d' }}>{draw.top2 || draw.top3.slice(1)}</strong></span>
-                                  <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider" style={{ color: '#67e8f9' }}>{draw.bottom2}</strong></span>
+                                  <span className="text-gray-300">3 บน: <strong className="text-yellow-300 text-base font-black font-mono tracking-wider">{draw.top3}</strong></span>
+                                  <span className="text-gray-300">2 บน: <strong className="text-amber-300 text-base font-black font-mono tracking-wider">{draw.top2 || draw.top3.slice(1)}</strong></span>
+                                  <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider">{draw.bottom2}</strong></span>
                                 </div>
                               ) : (
-                                <span className={isAfternoon ? "text-[10px] text-cyan-300 font-semibold italic" : "text-[10px] text-amber-300/80 font-semibold italic"} style={{ color: isAfternoon ? '#67e8f9' : undefined }}>⏳ รอประกาศผล</span>
+                                <span className="text-[10px] text-amber-300/80 font-semibold italic">⏳ รอประกาศผล</span>
                               )}
                             </div>
                           );
@@ -1336,12 +1336,12 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                               </div>
                               {d && d.top3 ? (
                                 <div className="flex justify-between items-center text-[10px]">
-                                  <span className="text-gray-300">3 บน: <strong className={isAfternoon ? "text-cyan-300 text-base font-black font-mono tracking-wider" : "text-yellow-300 text-base font-black font-mono tracking-wider"} style={{ color: isAfternoon ? '#67e8f9' : '#fde047' }}>{d.top3}</strong></span>
-                                  <span className="text-gray-300">2 บน: <strong className={isAfternoon ? "text-cyan-300 text-base font-black font-mono tracking-wider" : "text-amber-300 text-base font-black font-mono tracking-wider"} style={{ color: isAfternoon ? '#67e8f9' : '#fcd34d' }}>{d.top2 || d.top3.slice(1)}</strong></span>
-                                  <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider" style={{ color: '#67e8f9' }}>{d.bottom2}</strong></span>
+                                  <span className="text-gray-300">3 บน: <strong className="text-yellow-300 text-base font-black font-mono tracking-wider">{d.top3}</strong></span>
+                                  <span className="text-gray-300">2 บน: <strong className="text-amber-300 text-base font-black font-mono tracking-wider">{d.top2 || d.top3.slice(1)}</strong></span>
+                                  <span className="text-gray-300">2 ล่าง: <strong className="text-cyan-300 text-base font-black font-mono tracking-wider">{d.bottom2}</strong></span>
                                 </div>
                               ) : (
-                                <span className={isAfternoon ? "text-[10px] text-cyan-300 font-semibold italic" : "text-[10px] text-amber-300/80 font-semibold italic"} style={{ color: isAfternoon ? '#67e8f9' : undefined }}>⏳ รอประกาศผล</span>
+                                <span className="text-[10px] text-amber-300/80 font-semibold italic">⏳ รอประกาศผล</span>
                               )}
                             </div>
                           );
