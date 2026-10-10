@@ -40,7 +40,7 @@ export const ManualRecordsModal: React.FC<ManualRecordsModalProps> = ({
     if (s === 'CHINA_MORNING') return '🇨🇳 จีน เช้า (10:35)';
     if (s === 'CHINA_AFTERNOON') return '🇨🇳 จีน บ่าย (14:00)';
     if (s === 'HANGSENG_MORNING') return '🇭🇰 ฮั่งเส็ง เช้า (11:00)';
-    if (s === 'HANGSENG_AFTERNOON') return '🇭🇰 ฮั่งเส็ง บ่าย (15:30)';
+    if (s === 'HANGSENG_AFTERNOON') return '🇭🇰 ฮั่งเส็ง บ่าย (15:00)';
 
     if (s === 'NIKKEI_VIP_MORNING') return '🎌 นิคเคอิ VIP เช้า (09:30)';
     if (s === 'NIKKEI_VIP_AFTERNOON') return '🎌 นิคเคอิ VIP บ่าย (13:00)';

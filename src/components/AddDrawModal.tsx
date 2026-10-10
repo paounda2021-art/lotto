@@ -100,6 +100,8 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
         );
       } else if (lotteryType === 'LAOS') {
         setNewSession('LAOS_EVENING');
+      } else if (lotteryType === 'MALAY') {
+        setNewSession('MALAY_EVENING');
       } else if (lotteryType === 'DOWJONES') {
         setNewSession('DOWJONES_NIGHT');
       } else if (lotteryType === 'GSB') {
@@ -129,6 +131,8 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
     let targetSession =
       lotteryType === 'LAOS'
         ? 'LAOS_EVENING'
+        : lotteryType === 'MALAY'
+        ? 'MALAY_EVENING'
         : lotteryType === 'DOWJONES'
         ? 'DOWJONES_NIGHT'
         : lotteryType === 'GSB'
@@ -192,6 +196,7 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
             : lotteryType === 'NIKKEI' ? '🎌 หุ้นปกติ'
             : lotteryType === 'DOWJONES' ? '🇺🇸 หุ้นดาวโจนส์'
             : lotteryType === 'LAOS' ? '🇱🇦 ลาวพัฒนา'
+            : lotteryType === 'MALAY' ? '🇲🇾 หวยมาเลย์'
             : lotteryType === 'HANOI' ? '🇻🇳 ฮานอย'
             : lotteryType === 'GSB' ? '🏦 ออมสิน'
             : '🇹🇭 รัฐบาลไทย'
@@ -308,7 +313,7 @@ export const AddDrawModal: React.FC<AddDrawModalProps> = ({
                       : 'bg-white/[0.04] text-gray-400 border border-white/[0.08] hover:text-white'
                   }`}
                 >
-                  🇨🇳 จีน เช้า (10:30)
+                  🇨🇳 จีน เช้า (10:35)
                 </button>
 
                 <button

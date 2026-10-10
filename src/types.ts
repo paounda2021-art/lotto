@@ -1,4 +1,4 @@
-export type LotteryType = 'NIKKEI' | 'STOCKS_VIP' | 'LAOS' | 'DOWJONES' | 'HANOI' | 'GSB' | 'GOVERNMENT';
+export type LotteryType = 'NIKKEI' | 'STOCKS_VIP' | 'LAOS' | 'MALAY' | 'DOWJONES' | 'HANOI' | 'GSB' | 'GOVERNMENT';
 export type SessionType = 
   | 'MORNING' | 'AFTERNOON' | 'BOTH'
   | 'NIKKEI_MORNING' | 'NIKKEI_AFTERNOON' | 'NIKKEI_BOTH'
@@ -9,7 +9,7 @@ export type SessionType =
   | 'CHINA_VIP_MORNING' | 'CHINA_VIP_AFTERNOON' | 'CHINA_VIP_BOTH'
   | 'HANGSENG_VIP_MORNING' | 'HANGSENG_VIP_AFTERNOON' | 'HANGSENG_VIP_BOTH'
   | 'STOCKS_VIP_ALL_3'
-  | 'LAOS_EVENING' | 'DOWJONES_NIGHT' 
+  | 'LAOS_EVENING' | 'MALAY_EVENING' | 'DOWJONES_NIGHT' 
   | 'HANOI_EVENING' | 'HANOI_SPECIAL' | 'HANOI_VIP' | 'HANOI_ALL_3' 
   | 'GSB_BIWEEKLY' | 'GOV_BIWEEKLY';
 export type DayOfWeekType = 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';

@@ -49,6 +49,9 @@ const LOTTO_NAME_MAP: Record<string, { lotteryType: LotteryType; session: Sessio
 
   'dji': { lotteryType: 'DOWJONES', session: 'DOWJONES_NIGHT' },
   'laosdevelops': { lotteryType: 'LAOS', session: 'LAOS_EVENING' },
+  'magnum4d': { lotteryType: 'MALAY', session: 'MALAY_EVENING' },
+  'magnum': { lotteryType: 'MALAY', session: 'MALAY_EVENING' },
+  'malay': { lotteryType: 'MALAY', session: 'MALAY_EVENING' },
 
   'xsthm': { lotteryType: 'HANOI', session: 'HANOI_SPECIAL' },
   'minhngoc': { lotteryType: 'HANOI', session: 'HANOI_EVENING' },
@@ -67,6 +70,7 @@ const LOTTO_NAME_MAP: Record<string, { lotteryType: LotteryType; session: Sessio
 
 const BACKWARD_SLUGS_MAP: Record<LotteryType, string[]> = {
   LAOS: ['laosdevelops'],
+  MALAY: ['magnum4d', 'magnum'],
   DOWJONES: ['dji'],
   HANOI: ['xsthm', 'minhngoc', 'mlnhngo'],
   NIKKEI: ['nikkei-morning', 'nikkei-afternoon', 'szse-morning', 'szse-afternoon', 'hsi-morning', 'hsi-afternoon'],
@@ -183,10 +187,10 @@ async function fetchWithFallback(targetUrl: string): Promise<any> {
 
   const strategies = [
     tryProxyRoute,
-    tryDirect,
     tryAllOriginsRaw,
     tryAllOriginsGet,
-    tryCorsProxyIo
+    tryCorsProxyIo,
+    tryDirect
   ];
 
   for (const strat of strategies) {

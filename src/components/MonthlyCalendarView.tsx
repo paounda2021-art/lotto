@@ -171,6 +171,7 @@ export const MonthlyCalendarView: React.FC<MonthlyCalendarViewProps> = ({
         if (selectedSession === 'STOCKS_VIP_ALL_3') return 'รวมทุกหวยหุ้น VIP (6 รอบ)';
         return 'หวยหุ้นนิคเคอิ VIP';
       case 'LAOS': return 'หวยลาวพัฒนา';
+      case 'MALAY': return 'หวยมาเลย์';
       case 'DOWJONES': return 'หวยหุ้นดาวโจนส์';
       case 'HANOI': return 'หวยฮานอย';
       case 'GSB': return 'หวยออมสิน';

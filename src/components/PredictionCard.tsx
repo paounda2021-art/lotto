@@ -38,6 +38,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       case 'STOCKS_VIP': return 'หวยหุ้น VIP';
       case 'DOWJONES': return 'หุ้นดาวโจนส์';
       case 'LAOS': return 'ลาวพัฒนา';
+      case 'MALAY': return 'หวยมาเลย์';
       case 'HANOI': return 'ฮานอย';
       case 'GSB': return 'ออมสิน';
       case 'GOVERNMENT': return 'รัฐบาลไทย';
@@ -61,6 +62,7 @@ export const PredictionCard: React.FC<PredictionCardProps> = ({
       case 'NIKKEI': return 'ประมวลผลความสัมพันธ์ Correlation Matrix ระหว่างรอบเช้า (09:30) และรอบบ่าย (13:00)';
       case 'DOWJONES': return 'ประมวลผลสถิติดัชนีปิดตลาดหุ้นสหรัฐฯ ย้อนหลัง 3 เดือน อ้างอิง exphuay';
       case 'LAOS': return 'ประมวลผลสถิติหวยลาวพัฒนา ย้อนหลัง 3 เดือน อ้างอิง LottoTH';
+      case 'MALAY': return 'ประมวลผลสถิติหวยมาเลย์ (Magnum 4D) ย้อนหลัง (รอบ 18:30 น.)';
       case 'HANOI':
         if (session === 'HANOI_SPECIAL') return 'ประมวลผลสถิติหวยฮานอยพิเศษ (รอบ 17:30 น.) ย้อนหลัง 3 เดือน อ้างอิง exphuay (xsthm)';
         if (session === 'HANOI_VIP') return 'ประมวลผลสถิติหวยฮานอย VIP (รอบ 19:30 น.) ย้อนหลัง 3 เดือน อ้างอิง exphuay (mlnhngo)';

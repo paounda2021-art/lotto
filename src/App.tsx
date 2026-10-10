@@ -9,6 +9,8 @@ import {
   ALL_HANOI_DATA, 
   INITIAL_GSB_DATA, 
   INITIAL_GOVERNMENT_DATA,
+  INITIAL_LAOS_STAR_DATA,
+  INITIAL_MALAY_DATA,
   INITIAL_NIKKEI_MORNING_DATA,
   INITIAL_NIKKEI_AFTERNOON_DATA,
   INITIAL_CHINA_MORNING_DATA,
@@ -244,6 +246,9 @@ export default function App() {
   const [laosData, setLaosData] = useState<DrawResult[]>(() =>
     loadPersistedData('lotto_data_laos', INITIAL_LAOS_DATA, 'LAOS', 'LAOS_EVENING')
   );
+  const [malayData, setMalayData] = useState<DrawResult[]>(() =>
+    loadPersistedData('lotto_data_malay', INITIAL_MALAY_DATA, 'MALAY', 'MALAY_EVENING')
+  );
   const [dowjonesData, setDowjonesData] = useState<DrawResult[]>(() =>
     loadPersistedData('lotto_data_dowjones', INITIAL_DOWJONES_DATA, 'DOWJONES', 'DOWJONES_NIGHT')
   );
@@ -286,7 +291,7 @@ export default function App() {
 
   // Sync engine version with manual protection
   useEffect(() => {
-    const currentVersion = '14.0.0_afdeb0f4_pure_data';
+    const currentVersion = '15.0.0_laos_star_malay_support';
     const savedVersion = localStorage.getItem('lotto_engine_version');
     if (savedVersion !== currentVersion) {
       // First, migrate any existing isManual records into MANUAL_RECORDS_KEY so they are never lost!
@@ -297,7 +302,7 @@ export default function App() {
         'lotto_data_nikkei_vip_morning', 'lotto_data_nikkei_vip_afternoon',
         'lotto_data_china_vip_morning', 'lotto_data_china_vip_afternoon',
         'lotto_data_hangseng_vip_morning', 'lotto_data_hangseng_vip_afternoon',
-        'lotto_data_laos', 'lotto_data_dowjones', 'lotto_data_hanoi_special',
+        'lotto_data_laos', 'lotto_data_laos_star', 'lotto_data_malay', 'lotto_data_dowjones', 'lotto_data_hanoi_special',
         'lotto_data_hanoi', 'lotto_data_hanoi_vip', 'lotto_data_gsb', 'lotto_data_gov'
       ];
       allKeys.forEach((k) => {
@@ -328,6 +333,8 @@ export default function App() {
       setHangsengVipMorningData(injectManualRecords(INITIAL_HANGSENG_VIP_MORNING_DATA, 'STOCKS_VIP', 'HANGSENG_VIP_MORNING'));
       setHangsengVipAfternoonData(injectManualRecords(INITIAL_HANGSENG_VIP_AFTERNOON_DATA, 'STOCKS_VIP', 'HANGSENG_VIP_AFTERNOON'));
       setLaosData(injectManualRecords(INITIAL_LAOS_DATA, 'LAOS', 'LAOS_EVENING'));
+      setLaosStarData(injectManualRecords(INITIAL_LAOS_STAR_DATA, 'LAOS_STAR', 'LAOS_STAR_DAY'));
+      setMalayData(injectManualRecords(INITIAL_MALAY_DATA, 'MALAY', 'MALAY_EVENING'));
       setDowjonesData(injectManualRecords(INITIAL_DOWJONES_DATA, 'DOWJONES', 'DOWJONES_NIGHT'));
       setHanoiSpecialData(injectManualRecords(INITIAL_HANOI_SPECIAL_DATA, 'HANOI', 'HANOI_SPECIAL'));
       setHanoiData(injectManualRecords(INITIAL_HANOI_DATA, 'HANOI', 'HANOI_EVENING'));
@@ -596,6 +603,9 @@ export default function App() {
   const activeDataset = useMemo(() => {
     if (lotteryType === 'LAOS') {
       return laosData;
+    }
+    if (lotteryType === 'MALAY') {
+      return malayData;
     }
     if (lotteryType === 'DOWJONES') {
       return dowjonesData;
@@ -877,6 +887,10 @@ export default function App() {
       if (lotteryType === 'LAOS') {
         localStorage.removeItem('lotto_data_laos');
         setLaosData(injectManualRecords(INITIAL_LAOS_DATA, 'LAOS', 'LAOS_EVENING'));
+
+      } else if (lotteryType === 'MALAY') {
+        localStorage.removeItem('lotto_data_malay');
+        setMalayData(injectManualRecords(INITIAL_MALAY_DATA, 'MALAY', 'MALAY_EVENING'));
       } else if (lotteryType === 'DOWJONES') {
         localStorage.removeItem('lotto_data_dowjones');
         setDowjonesData(injectManualRecords(INITIAL_DOWJONES_DATA, 'DOWJONES', 'DOWJONES_NIGHT'));
@@ -932,6 +946,7 @@ export default function App() {
       STOCKS_VIP: 'หวยหุ้น VIP',
       DOWJONES: 'ดาวโจนส์',
       LAOS: 'ลาวพัฒนา',
+      MALAY: 'หวยมาเลย์',
       HANOI: 'ฮานอย',
       GSB: 'ออมสิน',
       GOVERNMENT: 'รัฐบาลไทย'
@@ -1047,87 +1062,154 @@ export default function App() {
       };
 
       const nikkeiM = mergeDataset(nikkeiMorningData, 'NIKKEI_MORNING', 'NIKKEI');
-      if (nikkeiM.updatedCount > 0) setNikkeiMorningData(nikkeiM.list);
+      if (nikkeiM.updatedCount > 0) {
+        setNikkeiMorningData(nikkeiM.list);
+        syncSaveToCloud('lotto_data_nikkei_morning', nikkeiM.list);
+      }
       updatedTotalCount += nikkeiM.updatedCount;
       protectedTotalCount += nikkeiM.protectedCount;
 
       const nikkeiA = mergeDataset(nikkeiAfternoonData, 'NIKKEI_AFTERNOON', 'NIKKEI');
-      if (nikkeiA.updatedCount > 0) setNikkeiAfternoonData(nikkeiA.list);
+      if (nikkeiA.updatedCount > 0) {
+        setNikkeiAfternoonData(nikkeiA.list);
+        syncSaveToCloud('lotto_data_nikkei_afternoon', nikkeiA.list);
+      }
       updatedTotalCount += nikkeiA.updatedCount;
       protectedTotalCount += nikkeiA.protectedCount;
 
       const chinaM = mergeDataset(chinaMorningData, 'CHINA_MORNING', 'NIKKEI');
-      if (chinaM.updatedCount > 0) setChinaMorningData(chinaM.list);
+      if (chinaM.updatedCount > 0) {
+        setChinaMorningData(chinaM.list);
+        syncSaveToCloud('lotto_data_china_morning', chinaM.list);
+      }
       updatedTotalCount += chinaM.updatedCount;
       protectedTotalCount += chinaM.protectedCount;
 
       const chinaA = mergeDataset(chinaAfternoonData, 'CHINA_AFTERNOON', 'NIKKEI');
-      if (chinaA.updatedCount > 0) setChinaAfternoonData(chinaA.list);
+      if (chinaA.updatedCount > 0) {
+        setChinaAfternoonData(chinaA.list);
+        syncSaveToCloud('lotto_data_china_afternoon', chinaA.list);
+      }
       updatedTotalCount += chinaA.updatedCount;
       protectedTotalCount += chinaA.protectedCount;
 
       const hangsengM = mergeDataset(hangsengMorningData, 'HANGSENG_MORNING', 'NIKKEI');
-      if (hangsengM.updatedCount > 0) setHangsengMorningData(hangsengM.list);
+      if (hangsengM.updatedCount > 0) {
+        setHangsengMorningData(hangsengM.list);
+        syncSaveToCloud('lotto_data_hangseng_morning', hangsengM.list);
+      }
       updatedTotalCount += hangsengM.updatedCount;
       protectedTotalCount += hangsengM.protectedCount;
 
       const hangsengA = mergeDataset(hangsengAfternoonData, 'HANGSENG_AFTERNOON', 'NIKKEI');
-      if (hangsengA.updatedCount > 0) setHangsengAfternoonData(hangsengA.list);
+      if (hangsengA.updatedCount > 0) {
+        setHangsengAfternoonData(hangsengA.list);
+        syncSaveToCloud('lotto_data_hangseng_afternoon', hangsengA.list);
+      }
       updatedTotalCount += hangsengA.updatedCount;
       protectedTotalCount += hangsengA.protectedCount;
 
       const laos = mergeDataset(laosData, 'LAOS_EVENING', 'LAOS');
-      if (laos.updatedCount > 0) setLaosData(laos.list);
+      if (laos.updatedCount > 0) {
+        setLaosData(laos.list);
+        syncSaveToCloud('lotto_data_laos', laos.list);
+      }
       updatedTotalCount += laos.updatedCount;
       protectedTotalCount += laos.protectedCount;
 
+      const laosStar = mergeDataset(laosStarData, 'LAOS_STAR_DAY', 'LAOS_STAR');
+      if (laosStar.updatedCount > 0) {
+        setLaosStarData(laosStar.list);
+        syncSaveToCloud('lotto_data_laos_star', laosStar.list);
+      }
+      updatedTotalCount += laosStar.updatedCount;
+      protectedTotalCount += laosStar.protectedCount;
+
+      const malay = mergeDataset(malayData, 'MALAY_EVENING', 'MALAY');
+      if (malay.updatedCount > 0) {
+        setMalayData(malay.list);
+        syncSaveToCloud('lotto_data_malay', malay.list);
+      }
+      updatedTotalCount += malay.updatedCount;
+      protectedTotalCount += malay.protectedCount;
+
       const dowjones = mergeDataset(dowjonesData, 'DOWJONES_NIGHT', 'DOWJONES');
-      if (dowjones.updatedCount > 0) setDowjonesData(dowjones.list);
+      if (dowjones.updatedCount > 0) {
+        setDowjonesData(dowjones.list);
+        syncSaveToCloud('lotto_data_dowjones', dowjones.list);
+      }
       updatedTotalCount += dowjones.updatedCount;
       protectedTotalCount += dowjones.protectedCount;
 
       const hanoiSpec = mergeDataset(hanoiSpecialData, 'HANOI_SPECIAL', 'HANOI');
-      if (hanoiSpec.updatedCount > 0) setHanoiSpecialData(hanoiSpec.list);
+      if (hanoiSpec.updatedCount > 0) {
+        setHanoiSpecialData(hanoiSpec.list);
+        syncSaveToCloud('lotto_data_hanoi_special', hanoiSpec.list);
+      }
       updatedTotalCount += hanoiSpec.updatedCount;
       protectedTotalCount += hanoiSpec.protectedCount;
 
       const hanoiNorm = mergeDataset(hanoiData, 'HANOI_EVENING', 'HANOI');
-      if (hanoiNorm.updatedCount > 0) setHanoiData(hanoiNorm.list);
+      if (hanoiNorm.updatedCount > 0) {
+        setHanoiData(hanoiNorm.list);
+        syncSaveToCloud('lotto_data_hanoi', hanoiNorm.list);
+      }
       updatedTotalCount += hanoiNorm.updatedCount;
       protectedTotalCount += hanoiNorm.protectedCount;
 
       const hanoiVip = mergeDataset(hanoiVipData, 'HANOI_VIP', 'HANOI');
-      if (hanoiVip.updatedCount > 0) setHanoiVipData(hanoiVip.list);
+      if (hanoiVip.updatedCount > 0) {
+        setHanoiVipData(hanoiVip.list);
+        syncSaveToCloud('lotto_data_hanoi_vip', hanoiVip.list);
+      }
       updatedTotalCount += hanoiVip.updatedCount;
       protectedTotalCount += hanoiVip.protectedCount;
 
       const gsb = mergeDataset(gsbData, 'GSB_BIWEEKLY', 'GSB');
-      if (gsb.updatedCount > 0) setGsbData(gsb.list);
+      if (gsb.updatedCount > 0) {
+        setGsbData(gsb.list);
+        syncSaveToCloud('lotto_data_gsb', gsb.list);
+      }
       updatedTotalCount += gsb.updatedCount;
       protectedTotalCount += gsb.protectedCount;
 
       const gov = mergeDataset(govData, 'GOV_BIWEEKLY', 'GOVERNMENT');
-      if (gov.updatedCount > 0) setGovData(gov.list);
+      if (gov.updatedCount > 0) {
+        setGovData(gov.list);
+        syncSaveToCloud('lotto_data_gov', gov.list);
+      }
       updatedTotalCount += gov.updatedCount;
       protectedTotalCount += gov.protectedCount;
 
       const nikkeiVipM = mergeDataset(nikkeiVipMorningData, 'NIKKEI_VIP_MORNING', 'STOCKS_VIP');
-      if (nikkeiVipM.updatedCount > 0) setNikkeiVipMorningData(nikkeiVipM.list);
+      if (nikkeiVipM.updatedCount > 0) {
+        setNikkeiVipMorningData(nikkeiVipM.list);
+        syncSaveToCloud('lotto_data_nikkei_vip_morning', nikkeiVipM.list);
+      }
       updatedTotalCount += nikkeiVipM.updatedCount;
       protectedTotalCount += nikkeiVipM.protectedCount;
 
       const nikkeiVipA = mergeDataset(nikkeiVipAfternoonData, 'NIKKEI_VIP_AFTERNOON', 'STOCKS_VIP');
-      if (nikkeiVipA.updatedCount > 0) setNikkeiVipAfternoonData(nikkeiVipA.list);
+      if (nikkeiVipA.updatedCount > 0) {
+        setNikkeiVipAfternoonData(nikkeiVipA.list);
+        syncSaveToCloud('lotto_data_nikkei_vip_afternoon', nikkeiVipA.list);
+      }
       updatedTotalCount += nikkeiVipA.updatedCount;
       protectedTotalCount += nikkeiVipA.protectedCount;
 
       const chinaVipM = mergeDataset(chinaVipMorningData, 'CHINA_VIP_MORNING', 'STOCKS_VIP');
-      if (chinaVipM.updatedCount > 0) setChinaVipMorningData(chinaVipM.list);
+      if (chinaVipM.updatedCount > 0) {
+        setChinaVipMorningData(chinaVipM.list);
+        syncSaveToCloud('lotto_data_china_vip_morning', chinaVipM.list);
+      }
       updatedTotalCount += chinaVipM.updatedCount;
       protectedTotalCount += chinaVipM.protectedCount;
 
       const chinaVipA = mergeDataset(chinaVipAfternoonData, 'CHINA_VIP_AFTERNOON', 'STOCKS_VIP');
-      if (chinaVipA.updatedCount > 0) setChinaVipAfternoonData(chinaVipA.list);
+      if (chinaVipA.updatedCount > 0) {
+        setChinaVipAfternoonData(chinaVipA.list);
+        syncSaveToCloud('lotto_data_china_vip_afternoon', chinaVipA.list);
+      }
       updatedTotalCount += chinaVipA.updatedCount;
       protectedTotalCount += chinaVipA.protectedCount;
 
@@ -1168,11 +1250,448 @@ export default function App() {
     handleAutoFetch(true);
   }, []);
 
+  // Helper for subbanner card matching 0a787ed2
+  const getMarketCodeBadge = () => {
+    const isVip = lotteryType === 'STOCKS_VIP';
+    const vipPrefix = isVip ? '💎 ' : '';
+    if (lotteryType === 'HANOI') return 'VN';
+    if (lotteryType === 'LAOS') return 'LA';
+    if (lotteryType === 'MALAY') return 'MY';
+    if (lotteryType === 'DOWJONES') return 'US';
+    if (lotteryType === 'GSB') return 'GSB';
+    if (lotteryType === 'GOVERNMENT') return 'TH';
+    if (selectedSession.startsWith('CHINA')) return `${vipPrefix}CN`;
+    if (selectedSession.startsWith('HANGSENG')) return `${vipPrefix}HK`;
+    if (selectedSession.startsWith('NIKKEI')) return `${vipPrefix}NK`;
+    return `${vipPrefix}VIP`;
+  };
+
+  const getSubbannerTitleAndSubtitle = () => {
+    let title = '';
+    let subtitle = '';
+
+    if (lotteryType === 'NIKKEI') {
+      if (selectedSession === 'CHINA_MORNING') {
+        title = 'หวยหุ้นจีน รอบเช้า (10:35 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีนรอบเช้า ปิดตลาด 10:35 น. อ้างอิง exphuay (SZSE)';
+      } else if (selectedSession === 'CHINA_AFTERNOON') {
+        title = 'หวยหุ้นจีน รอบบ่าย (14:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีนรอบบ่าย ปิดตลาด 14:00 น. อ้างอิง exphuay (SZSE)';
+      } else if (selectedSession === 'CHINA_BOTH') {
+        title = 'หวยหุ้นจีน ควบ 2 รอบ (เช้า 10:35 / บ่าย 14:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีนควบเช้า-บ่าย 2 รอบ (10:35 / 14:00 น.)';
+      } else if (selectedSession === 'HANGSENG_MORNING') {
+        title = 'หวยหุ้นฮั่งเส็ง รอบเช้า (11:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็งรอบเช้า ปิดตลาด 11:00 น. อ้างอิง exphuay (HSI)';
+      } else if (selectedSession === 'HANGSENG_AFTERNOON') {
+        title = 'หวยหุ้นฮั่งเส็ง รอบบ่าย (15:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็งรอบบ่าย ปิดตลาด 15:00 น. อ้างอิง exphuay (HSI)';
+      } else if (selectedSession === 'HANGSENG_BOTH') {
+        title = 'หวยหุ้นฮั่งเส็ง ควบ 2 รอบ (เช้า 11:00 / บ่าย 15:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็งควบเช้า-บ่าย 2 รอบ (11:00 / 15:00 น.)';
+      } else if (selectedSession === 'NIKKEI_MORNING' || selectedSession === 'MORNING') {
+        title = 'หวยหุ้นนิคเคอิเช้า (รอบ 09:30 น.)';
+        subtitle = 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นญี่ปุ่นเปิดรอบแรก';
+      } else if (selectedSession === 'NIKKEI_AFTERNOON' || selectedSession === 'AFTERNOON') {
+        title = 'หวยหุ้นนิคเคอิบ่าย (รอบ 13:00 น.)';
+        subtitle = 'คำนวณแนวทางรอบบ่าย พร้อมวิเคราะห์เลขไหลต่อเนื่องจากรอบเช้า';
+      } else if (selectedSession === 'NIKKEI_BOTH' || selectedSession === 'BOTH') {
+        title = 'วิเคราะห์รวมนิคเคอิ 2 รอบ (เช้า 09:30 / บ่าย 13:00 น.)';
+        subtitle = 'คำนวณแนวทางรอบเช้าและบ่ายจากสถิติตลาดหุ้นญี่ปุ่น';
+      } else {
+        title = 'รวมทุกหุ้นปกติ 3 ตลาด (นิเคอิ / จีน / ฮั่งเส็ง รวม 6 รอบ)';
+        subtitle = 'วิเคราะห์ความน่าจะเป็นรวมทุกหุ้นปกติ 3 ประเทศ (นิเคอิ / จีน / ฮั่งเส็ง)';
+      }
+    } else if (lotteryType === 'STOCKS_VIP') {
+      if (selectedSession === 'CHINA_VIP_MORNING') {
+        title = 'หวยหุ้นจีน VIP รอบเช้า (09:30 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบเช้า ปิดตลาด 09:30 น. ออกผลทุกวัน';
+      } else if (selectedSession === 'CHINA_VIP_AFTERNOON') {
+        title = 'หวยหุ้นจีน VIP รอบบ่าย (13:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP รอบบ่าย ปิดตลาด 13:00 น. ออกผลทุกวัน';
+      } else if (selectedSession === 'CHINA_VIP_BOTH') {
+        title = 'หวยหุ้นจีน VIP ควบ 2 รอบ (เช้า 09:30 / บ่าย 13:00 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นจีน VIP ควบเช้า-บ่าย 2 รอบ (09:30 / 13:00 น.)';
+      } else if (selectedSession === 'HANGSENG_VIP_MORNING') {
+        title = 'หวยหุ้นฮั่งเส็ง VIP รอบเช้า (10:55 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบเช้า ปิดตลาด 10:55 น. ออกผลทุกวัน';
+      } else if (selectedSession === 'HANGSENG_VIP_AFTERNOON') {
+        title = 'หวยหุ้นฮั่งเส็ง VIP รอบบ่าย (14:55 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP รอบบ่าย ปิดตลาด 14:55 น. ออกผลทุกวัน';
+      } else if (selectedSession === 'HANGSENG_VIP_BOTH') {
+        title = 'หวยหุ้นฮั่งเส็ง VIP ควบ 2 รอบ (เช้า 10:55 / บ่าย 14:55 น.)';
+        subtitle = 'คำนวณแนวทางหุ้นฮั่งเส็ง VIP ควบเช้า-บ่าย 2 รอบ (10:55 / 14:55 น.)';
+      } else if (selectedSession === 'NIKKEI_VIP_MORNING') {
+        title = 'หวยหุ้นนิคเคอิ VIP เช้า (รอบ 08:30 น.)';
+        subtitle = 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นนิเคอิ VIP เปิดรอบแรก';
+      } else if (selectedSession === 'NIKKEI_VIP_AFTERNOON') {
+        title = 'หวยหุ้นนิคเคอิ VIP บ่าย (รอบ 12:00 น.)';
+        subtitle = 'คำนวณแนวทางรอบบ่าย พร้อมวิเคราะห์เลขไหลต่อเนื่องจากรอบเช้า';
+      } else if (selectedSession === 'NIKKEI_VIP_BOTH') {
+        title = 'วิเคราะห์รวมนิคเคอิ VIP 2 รอบ (เช้า 08:30 / บ่าย 12:00 น.)';
+        subtitle = 'คำนวณแนวทางรอบเช้าและบ่ายจากสถิติตลาดหุ้นนิเคอิ VIP';
+      } else {
+        title = 'รวมทุกหุ้น VIP 3 ตลาด (นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP รวม 6 รอบ)';
+        subtitle = 'วิเคราะห์ความน่าจะเป็นรวมทุกหุ้น VIP 3 ประเทศ (นิเคอิ VIP / จีน VIP / ฮั่งเส็ง VIP)';
+      }
+    } else if (lotteryType === 'HANOI') {
+      if (selectedSession === 'HANOI_SPECIAL') {
+        title = 'หวยฮานอยพิเศษ (รอบ 17:30 น. - อ้างอิง exphuay xsthm)';
+        subtitle = 'คำนวณแนวทางสถิติหวยฮานอยพิเศษ ย้อนหลัง 3 เดือน อ้างอิง exphuay';
+      } else if (selectedSession === 'HANOI_EVENING') {
+        title = 'หวยฮานอยปกติ (รอบ 18:30 น. - อ้างอิง exphuay Minh Ngoc)';
+        subtitle = 'คำนวณแนวทางสถิติหวยฮานอยปกติ ย้อนหลัง 3 เดือน อ้างอิง exphuay (Minh Ngoc)';
+      } else if (selectedSession === 'HANOI_VIP') {
+        title = 'หวยฮานอย VIP (รอบ 19:30 น. - อ้างอิง exphuay mlnhngo)';
+        subtitle = 'คำนวณแนวทางสถิติหวยฮานอย VIP ย้อนหลัง 3 เดือน อ้างอิง exphuay';
+      } else {
+        title = 'วิเคราะห์รวม 3 หวยฮานอย (17:30 / 18:30 / 19:30) ดักเด่นรูด 3 รอบ';
+        subtitle = 'คำนวณแนวทางสถิติรวม 3 รอบฮานอย ดักทางเลขเด่นวิ่ง-รูด 3 รอบ';
+      }
+    } else if (lotteryType === 'LAOS') {
+      title = 'หวยลาวพัฒนา (ออกทุกวัน รอบ 20:30 น.)';
+      subtitle = 'คำนวณแนวทางสถิติหวยลาวพัฒนา 6 ตัว, 3 ตัวบน, 2 ตัวล่าง ย้อนหลัง 3 เดือน';
+    } else if (lotteryType === 'MALAY') {
+      title = 'หวยมาเลย์ Magnum 4D (รอบ 18:30 น.)';
+      subtitle = 'คำนวณแนวทางสถิติหวยมาเลย์ Magnum 4D ย้อนหลัง 3 เดือน';
+    } else if (lotteryType === 'DOWJONES') {
+      title = 'หวยหุ้นดาวโจนส์ (รอบ 04:00 น. เช้ามืด - อ้างอิง exphuay)';
+      subtitle = 'คำนวณแนวทางสถิติหวยหุ้นดาวโจนส์ ดัชนีปิดตลาดสหรัฐฯ ย้อนหลัง 3 เดือน อ้างอิง exphuay';
+    } else if (lotteryType === 'GSB') {
+      title = 'หวยออมสิน (ออกวันที่ 1 และ 16 เวลา 13:00 น. - อ้างอิง exphuay GSB)';
+      subtitle = 'คำนวณแนวทางสถิติหวยออมสิน ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay (GSB)';
+    } else if (lotteryType === 'GOVERNMENT') {
+      title = 'หวยรัฐบาลไทย (ออกวันที่ 1 และ 16 เวลา 15:30 น. - อ้างอิง exphuay)';
+      subtitle = 'คำนวณแนวทางสถิติหวยรัฐบาลไทย ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay';
+    }
+
+    return { title, subtitle };
+  };
+
+  const renderSubbannerSessionButtons = () => {
+    if (lotteryType === 'NIKKEI') {
+      if (selectedSession.startsWith('CHINA')) {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('CHINA_BOTH')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_BOTH'
+                  ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️-🌙 รวมเช้า-บ่าย
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_MORNING')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_MORNING'
+                  ? 'bg-rose-500 text-white font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️ เช้า 10:35
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_AFTERNOON')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_AFTERNOON'
+                  ? 'bg-red-600 text-white font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              🌙 บ่าย 14:00
+            </button>
+          </>
+        );
+      }
+      if (selectedSession.startsWith('HANGSENG')) {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_BOTH')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_BOTH'
+                  ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️-🌙 รวมเช้า-บ่าย
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_MORNING')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_MORNING'
+                  ? 'bg-emerald-400 text-black font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️ เช้า 11:00
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_AFTERNOON')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_AFTERNOON'
+                  ? 'bg-teal-400 text-black font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              🌙 บ่าย 15:00
+            </button>
+          </>
+        );
+      }
+      if (selectedSession === 'STOCKS_ALL_3') {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('NIKKEI_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              ☀️ นิคเคอิ
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              🇨🇳 จีน
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              🇭🇰 ฮั่งเส็ง
+            </button>
+          </>
+        );
+      }
+      // NIKKEI
+      return (
+        <>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_BOTH')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_BOTH' || selectedSession === 'BOTH'
+                ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            ☀️-🌙 รวมเช้า-บ่าย
+          </button>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_MORNING')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_MORNING' || selectedSession === 'MORNING'
+                ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            ☀️ เช้า 09:30
+          </button>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_AFTERNOON')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_AFTERNOON' || selectedSession === 'AFTERNOON'
+                ? 'bg-cyan-400 text-black font-extrabold shadow-glow-cyan'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            🌙 บ่าย 13:00
+          </button>
+        </>
+      );
+    }
+
+    if (lotteryType === 'STOCKS_VIP') {
+      if (selectedSession.startsWith('CHINA')) {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('CHINA_VIP_BOTH')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_VIP_BOTH'
+                  ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️-🌙 รวมเช้า-บ่าย
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_VIP_MORNING')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_VIP_MORNING'
+                  ? 'bg-rose-500 text-white font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️ เช้า 09:30
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_VIP_AFTERNOON')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'CHINA_VIP_AFTERNOON'
+                  ? 'bg-red-600 text-white font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              🌙 บ่าย 14:00
+            </button>
+          </>
+        );
+      }
+      if (selectedSession.startsWith('HANGSENG')) {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_VIP_BOTH')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_VIP_BOTH'
+                  ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️-🌙 รวมเช้า-บ่าย
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_VIP_MORNING')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_VIP_MORNING'
+                  ? 'bg-cyan-400 text-black font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              ☀️ เช้า 11:00
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_VIP_AFTERNOON')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                selectedSession === 'HANGSENG_VIP_AFTERNOON'
+                  ? 'bg-blue-600 text-white font-extrabold shadow-md'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              🌙 บ่าย 15:30
+            </button>
+          </>
+        );
+      }
+      if (selectedSession === 'STOCKS_VIP_ALL_3') {
+        return (
+          <>
+            <button
+              onClick={() => setSelectedSession('NIKKEI_VIP_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              ☀️ นิคเคอิ VIP
+            </button>
+            <button
+              onClick={() => setSelectedSession('CHINA_VIP_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              🇨🇳 จีน VIP
+            </button>
+            <button
+              onClick={() => setSelectedSession('HANGSENG_VIP_BOTH')}
+              className="px-3 py-1.5 rounded-xl text-xs font-bold bg-white/10 text-gray-300 hover:bg-white/20 cursor-pointer"
+            >
+              🇭🇰 ฮั่งเส็ง VIP
+            </button>
+          </>
+        );
+      }
+      // NIKKEI VIP
+      return (
+        <>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_VIP_BOTH')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_VIP_BOTH'
+                ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            ☀️-🌙 รวมเช้า-บ่าย
+          </button>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_VIP_MORNING')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_VIP_MORNING'
+                ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            ☀️ เช้า 09:30
+          </button>
+          <button
+            onClick={() => setSelectedSession('NIKKEI_VIP_AFTERNOON')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'NIKKEI_VIP_AFTERNOON'
+                ? 'bg-cyan-400 text-black font-extrabold shadow-glow-cyan'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            🌙 บ่าย 13:00
+          </button>
+        </>
+      );
+    }
+
+    if (lotteryType === 'HANOI') {
+      return (
+        <>
+          <button
+            onClick={() => setSelectedSession('HANOI_ALL_3')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'HANOI_ALL_3'
+                ? 'bg-emerald-500 text-black font-extrabold shadow-glow-emerald'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            ✨ รวม 3 ฮานอย
+          </button>
+          <button
+            onClick={() => setSelectedSession('HANOI_SPECIAL')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'HANOI_SPECIAL'
+                ? 'bg-amber-400 text-black font-extrabold shadow-glow-gold'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            🟠 พิเศษ (17:30)
+          </button>
+          <button
+            onClick={() => setSelectedSession('HANOI_EVENING')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'HANOI_EVENING'
+                ? 'bg-red-500 text-white font-extrabold shadow-md'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            🔴 ปกติ (18:30)
+          </button>
+          <button
+            onClick={() => setSelectedSession('HANOI_VIP')}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              selectedSession === 'HANOI_VIP'
+                ? 'bg-purple-500 text-white font-extrabold shadow-md'
+                : 'bg-white/10 text-gray-300 hover:bg-white/20'
+            }`}
+          >
+            🟣 VIP (19:30)
+          </button>
+        </>
+      );
+    }
+
+    return null;
+  };
+
   // Theme mode styling generator
   const getThemeClass = () => {
     return themeMode === 'LIGHT'
-      ? 'theme-light bg-slate-100 text-slate-900 selection:bg-amber-500 selection:text-black'
-      : 'theme-dark bg-[#080b11] text-gray-100 selection:bg-amber-500 selection:text-black';
+      ? 'theme-light bg-[#fff7ed] text-[#78350f] selection:bg-amber-500 selection:text-black'
+      : 'theme-dark bg-[#140b04] text-[#fffbeb] selection:bg-amber-500 selection:text-black';
   };
 
   return (
@@ -1207,120 +1726,30 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10">
         
-        {/* Session Indicator Subbanner */}
-        <div className="glass-panel border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-glass-card">
+        {/* Subbanner Card: ขณะนี้กำลังวิเคราะห์ */}
+        <div className="bg-[#2a170b] border-2 border-amber-500/40 rounded-2xl p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
           <div className="flex items-center gap-3">
-            <span className="text-2xl">
-              {lotteryType === 'LAOS'
-                ? '🇱🇦'
-                : lotteryType === 'DOWJONES'
-                ? '🇺🇸'
-                : lotteryType === 'HANOI'
-                ? '🇻🇳'
-                : lotteryType === 'GSB'
-                ? '🏦'
-                : lotteryType === 'GOVERNMENT'
-                ? '🇹🇭'
-                : lotteryType === 'STOCKS_VIP'
-                ? '💎'
-                : selectedSession === 'MORNING'
-                ? '☀️'
-                : selectedSession === 'AFTERNOON'
-                ? '🌤️'
-                : '🔄'}
-            </span>
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center font-black text-xs sm:text-sm shrink-0 uppercase tracking-wider shadow-md">
+              {getMarketCodeBadge()}
+            </div>
             <div>
-              <h2 className="text-lg font-extrabold text-white">
-                ขณะนี้กำลังวิเคราะห์: <span className="text-amber-400">
-                  {lotteryType === 'LAOS'
-                    ? 'หวยลาวพัฒนา (ออกทุกวัน รอบ 20:30 น.)'
-                    : lotteryType === 'DOWJONES'
-                    ? 'หวยหุ้นดาวโจนส์ (รอบ 04:00 น. เช้ามืด - อ้างอิง exphuay)'
-                    : lotteryType === 'HANOI'
-                    ? selectedSession === 'HANOI_SPECIAL'
-                      ? 'หวยฮานอยพิเศษ (รอบ 17:30 น. - อ้างอิง exphuay xsthm)'
-                      : selectedSession === 'HANOI_VIP'
-                      ? 'หวยฮานอย VIP (รอบ 19:30 น. - อ้างอิง exphuay mlnhngo)'
-                      : selectedSession === 'HANOI_EVENING'
-                      ? 'หวยฮานอยปกติ (รอบ 18:30 น. - อ้างอิง exphuay Minh Ngoc)'
-                      : 'วิเคราะห์รวม 3 หวยฮานอย (17:30 / 18:30 / 19:30) ดักเด่นรูด 3 รอบ'
-                    : lotteryType === 'GSB'
-                    ? 'หวยออมสิน (ออกวันที่ 1 และ 16 เวลา 13:00 น. - อ้างอิง exphuay GSB)'
-                    : lotteryType === 'GOVERNMENT'
-                    ? 'หวยรัฐบาลไทย (ออกวันที่ 1 และ 16 เวลา 15:30 น. - อ้างอิง exphuay)'
-                    : lotteryType === 'STOCKS_VIP'
-                    ? selectedSession === 'NIKKEI_VIP_MORNING'
-                      ? 'หวยหุ้นนิคเคอิ VIP เช้า (รอบ 09:30 น.)'
-                      : selectedSession === 'NIKKEI_VIP_AFTERNOON'
-                      ? 'หวยหุ้นนิคเคอิ VIP บ่าย (รอบ 13:00 น.)'
-                      : selectedSession === 'NIKKEI_VIP_BOTH'
-                      ? 'หวยหุ้นนิคเคอิ VIP (เช้า + บ่าย)'
-                      : selectedSession === 'CHINA_VIP_MORNING'
-                      ? 'หวยหุ้นจีน VIP เช้า (รอบ 10:30 น.)'
-                      : selectedSession === 'CHINA_VIP_AFTERNOON'
-                      ? 'หวยหุ้นจีน VIP บ่าย (รอบ 14:00 น.)'
-                      : selectedSession === 'CHINA_VIP_BOTH'
-                      ? 'หวยหุ้นจีน VIP (เช้า + บ่าย)'
-                      : selectedSession === 'HANGSENG_VIP_MORNING'
-                      ? 'หวยหุ้นฮั่งเส็ง VIP เช้า (รอบ 11:00 น.)'
-                      : selectedSession === 'HANGSENG_VIP_AFTERNOON'
-                      ? 'หวยหุ้นฮั่งเส็ง VIP บ่าย (รอบ 15:00 น.)'
-                      : selectedSession === 'HANGSENG_VIP_BOTH'
-                      ? 'หวยหุ้นฮั่งเส็ง VIP (เช้า + บ่าย)'
-                      : 'วิเคราะห์รวม 3 หุ้น VIP (นิคเคอิ + จีน + ฮั่งเส็ง VIP 6 รอบ/วัน)'
-                    : selectedSession === 'MORNING'
-                    ? 'หวยหุ้นนิคเคอิเช้า (รอบ 09:30 น.)'
-                    : selectedSession === 'AFTERNOON'
-                    ? 'หวยหุ้นนิคเคอิบ่าย (รอบ 13:00 น.)'
-                    : 'วิเคราะห์รวมนิคเคอิ 2 รอบ'}
-                </span>
+              <h2 className="text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-1.5 flex-wrap">
+                <span>ขณะนี้กำลังวิเคราะห์:</span>
+                <span className="text-yellow-300 font-extrabold">{getSubbannerTitleAndSubtitle().title}</span>
               </h2>
-              <p className="text-xs text-gray-400">
-                {lotteryType === 'LAOS'
-                  ? 'คำนวณแนวทางสถิติหวยลาวพัฒนา 6 ตัว, 3 ตัวบน, 2 ตัวล่าง ย้อนหลัง 3 เดือน'
-                  : lotteryType === 'DOWJONES'
-                  ? 'คำนวณแนวทางสถิติหวยหุ้นดาวโจนส์ ดัชนีปิดตลาดสหรัฐฯ ย้อนหลัง 3 เดือน อ้างอิง exphuay'
-                  : lotteryType === 'HANOI'
-                  ? 'คำนวณแนวทางสถิติหวยฮานอยปกติ ย้อนหลัง 3 เดือน อ้างอิง exphuay (Minh Ngoc)'
-                  : lotteryType === 'GSB'
-                  ? 'คำนวณแนวทางสถิติหวยออมสิน ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay (GSB)'
-                  : lotteryType === 'GOVERNMENT'
-                  ? 'คำนวณแนวทางสถิติหวยรัฐบาลไทย ย้อนหลัง 6 เดือนเต็ม (มีนาคม - สิงหาคม) อ้างอิง exphuay'
-                  : lotteryType === 'STOCKS_VIP'
-                  ? 'คำนวณแนวทางสถิติหวยหุ้น VIP ย้อนหลัง 127 งวดเต็ม (มิ.ย. - ต.ค. 2569) วิเคราะห์เลขไหลต่อเนื่อง'
-                  : selectedSession === 'AFTERNOON'
-                  ? 'คำนวณแนวทางรอบบ่าย พร้อมวิเคราะห์เลขไหลต่อเนื่องจากรอบเช้า'
-                  : 'คำนวณแนวทางรอบเช้าจากสถิติตลาดหุ้นญี่ปุ่นเปิดรอบแรก'}
+              <p className="text-[10px] sm:text-[11px] text-amber-200/70 mt-0.5">
+                {getSubbannerTitleAndSubtitle().subtitle}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={() => setIsManualModalOpen(true)}
-              className={`text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-all font-bold cursor-pointer ${
-                manualRecords.length > 0
-                  ? 'bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 shadow-sm'
-                  : 'backdrop-blur-md bg-white/[0.04] hover:bg-white/[0.08] text-gray-300 border border-white/[0.08]'
-              }`}
-              title="ตรวจสอบผลรางวัลที่บันทึกเองและสถานะการคุ้มครอง"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>
-                {manualRecords.length > 0
-                  ? `ตรวจผลบันทึกเอง (${manualRecords.length})`
-                  : 'ตรวจผลบันทึกเอง'}
-              </span>
-              {manualRecords.length > 0 && (
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              )}
-            </button>
-
+          <div className="flex items-center gap-1.5 flex-wrap shrink-0">
+            {renderSubbannerSessionButtons()}
             <button
               onClick={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
-              className="bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition-colors shadow-glow-gold cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 text-black text-xs font-black hover:brightness-110 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-glow-gold"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-3.5 h-3.5" />
               <span>+ ใส่ผลรางวัลใหม่</span>
             </button>
           </div>
@@ -1428,6 +1857,7 @@ export default function App() {
               : activeDataset
           }
           lotteryType={lotteryType}
+          selectedSession={selectedSession}
         />
 
         {/* Tab Content Display */}

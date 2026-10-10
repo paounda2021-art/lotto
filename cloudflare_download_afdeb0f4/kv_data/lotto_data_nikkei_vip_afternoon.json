@@ -1,19 +1,43 @@
 [
   {
-    "id": "STOCK_VIP_NIKKEI_VIP_AFTERNOON_2026-10-06",
+    "id": "STOCK_VIP_NIKKEI_VIP_AFTERNOON_2026-10-09",
     "lotteryType": "STOCK_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
-    "date": "2026-10-06",
-    "dateFormatted": "06 ต.ค. 2569",
-    "dayOfWeek": "Tue",
-    "dayNameThai": "อังคาร",
-    "top3": "102",
-    "top2": "02",
-    "bottom2": "79"
+    "date": "2026-10-09",
+    "dateFormatted": "09 ต.ค. 2569",
+    "dayOfWeek": "Fri",
+    "dayNameThai": "ศุกร์",
+    "top3": "914",
+    "top2": "14",
+    "bottom2": "31"
+  },
+  {
+    "id": "STOCK_VIP_NIKKEI_VIP_AFTERNOON_2026-10-08",
+    "lotteryType": "STOCK_VIP",
+    "session": "NIKKEI_VIP_AFTERNOON",
+    "date": "2026-10-08",
+    "dateFormatted": "08 ต.ค. 2569",
+    "dayOfWeek": "Thu",
+    "dayNameThai": "พฤหัสบดี",
+    "top3": "498",
+    "top2": "98",
+    "bottom2": "82"
+  },
+  {
+    "id": "STOCK_VIP_NIKKEI_VIP_AFTERNOON_2026-10-05",
+    "lotteryType": "STOCKS_VIP",
+    "session": "NIKKEI_VIP_AFTERNOON",
+    "date": "2026-10-05",
+    "dateFormatted": "05 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "088",
+    "top2": "88",
+    "bottom2": "74"
   },
   {
     "id": "nikkei_vip_afternoon_20261004",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-10-04",
     "dateFormatted": "04 ต.ค. 2569",
@@ -25,7 +49,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20261003",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-10-03",
     "dateFormatted": "03 ต.ค. 2569",
@@ -37,7 +61,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20261002",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-10-02",
     "dateFormatted": "02 ต.ค. 2569",
@@ -49,7 +73,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20261001",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-10-01",
     "dateFormatted": "01 ต.ค. 2569",
@@ -61,7 +85,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260930",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-30",
     "dateFormatted": "30 ก.ย. 2569",
@@ -73,7 +97,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260929",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-29",
     "dateFormatted": "29 ก.ย. 2569",
@@ -85,7 +109,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260928",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-28",
     "dateFormatted": "28 ก.ย. 2569",
@@ -97,7 +121,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260927",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-27",
     "dateFormatted": "27 ก.ย. 2569",
@@ -109,7 +133,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260926",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-26",
     "dateFormatted": "26 ก.ย. 2569",
@@ -121,7 +145,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260925",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-25",
     "dateFormatted": "25 ก.ย. 2569",
@@ -133,7 +157,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260924",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-24",
     "dateFormatted": "24 ก.ย. 2569",
@@ -145,7 +169,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260923",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-23",
     "dateFormatted": "23 ก.ย. 2569",
@@ -157,7 +181,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260922",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-22",
     "dateFormatted": "22 ก.ย. 2569",
@@ -169,7 +193,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260921",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-21",
     "dateFormatted": "21 ก.ย. 2569",
@@ -181,7 +205,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260920",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-20",
     "dateFormatted": "20 ก.ย. 2569",
@@ -193,7 +217,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260919",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-19",
     "dateFormatted": "19 ก.ย. 2569",
@@ -205,7 +229,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260918",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-18",
     "dateFormatted": "18 ก.ย. 2569",
@@ -217,7 +241,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260917",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-17",
     "dateFormatted": "17 ก.ย. 2569",
@@ -229,7 +253,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260916",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-16",
     "dateFormatted": "16 ก.ย. 2569",
@@ -241,7 +265,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260915",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-15",
     "dateFormatted": "15 ก.ย. 2569",
@@ -253,7 +277,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260914",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-14",
     "dateFormatted": "14 ก.ย. 2569",
@@ -265,7 +289,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260913",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-13",
     "dateFormatted": "13 ก.ย. 2569",
@@ -277,7 +301,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260912",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-12",
     "dateFormatted": "12 ก.ย. 2569",
@@ -289,7 +313,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260911",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-11",
     "dateFormatted": "11 ก.ย. 2569",
@@ -301,7 +325,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260910",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-10",
     "dateFormatted": "10 ก.ย. 2569",
@@ -313,7 +337,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260909",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-09",
     "dateFormatted": "09 ก.ย. 2569",
@@ -325,7 +349,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260908",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-08",
     "dateFormatted": "08 ก.ย. 2569",
@@ -337,7 +361,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260907",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-07",
     "dateFormatted": "07 ก.ย. 2569",
@@ -349,7 +373,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260906",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-06",
     "dateFormatted": "06 ก.ย. 2569",
@@ -361,7 +385,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260905",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-05",
     "dateFormatted": "05 ก.ย. 2569",
@@ -373,7 +397,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260904",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-04",
     "dateFormatted": "04 ก.ย. 2569",
@@ -385,7 +409,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260903",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-03",
     "dateFormatted": "03 ก.ย. 2569",
@@ -397,7 +421,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260902",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-02",
     "dateFormatted": "02 ก.ย. 2569",
@@ -409,7 +433,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260901",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-09-01",
     "dateFormatted": "01 ก.ย. 2569",
@@ -421,7 +445,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260831",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-31",
     "dateFormatted": "31 ส.ค. 2569",
@@ -433,7 +457,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260830",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-30",
     "dateFormatted": "30 ส.ค. 2569",
@@ -445,7 +469,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260829",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-29",
     "dateFormatted": "29 ส.ค. 2569",
@@ -457,7 +481,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260828",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-28",
     "dateFormatted": "28 ส.ค. 2569",
@@ -469,7 +493,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260827",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-27",
     "dateFormatted": "27 ส.ค. 2569",
@@ -481,7 +505,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260826",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-26",
     "dateFormatted": "26 ส.ค. 2569",
@@ -493,7 +517,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260825",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-25",
     "dateFormatted": "25 ส.ค. 2569",
@@ -505,7 +529,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260824",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-24",
     "dateFormatted": "24 ส.ค. 2569",
@@ -517,7 +541,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260823",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-23",
     "dateFormatted": "23 ส.ค. 2569",
@@ -529,7 +553,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260822",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-22",
     "dateFormatted": "22 ส.ค. 2569",
@@ -541,7 +565,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260821",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-21",
     "dateFormatted": "21 ส.ค. 2569",
@@ -553,7 +577,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260820",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-20",
     "dateFormatted": "20 ส.ค. 2569",
@@ -565,7 +589,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260819",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-19",
     "dateFormatted": "19 ส.ค. 2569",
@@ -577,7 +601,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260818",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-18",
     "dateFormatted": "18 ส.ค. 2569",
@@ -589,7 +613,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260817",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-17",
     "dateFormatted": "17 ส.ค. 2569",
@@ -601,7 +625,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260816",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-16",
     "dateFormatted": "16 ส.ค. 2569",
@@ -613,7 +637,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260815",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-15",
     "dateFormatted": "15 ส.ค. 2569",
@@ -625,7 +649,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260814",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-14",
     "dateFormatted": "14 ส.ค. 2569",
@@ -637,7 +661,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260813",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-13",
     "dateFormatted": "13 ส.ค. 2569",
@@ -649,7 +673,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260812",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-12",
     "dateFormatted": "12 ส.ค. 2569",
@@ -661,7 +685,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260811",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-11",
     "dateFormatted": "11 ส.ค. 2569",
@@ -673,7 +697,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260810",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-10",
     "dateFormatted": "10 ส.ค. 2569",
@@ -685,7 +709,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260809",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-09",
     "dateFormatted": "09 ส.ค. 2569",
@@ -697,7 +721,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260808",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-08",
     "dateFormatted": "08 ส.ค. 2569",
@@ -709,7 +733,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260807",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-07",
     "dateFormatted": "07 ส.ค. 2569",
@@ -721,7 +745,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260806",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-06",
     "dateFormatted": "06 ส.ค. 2569",
@@ -733,7 +757,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260805",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-05",
     "dateFormatted": "05 ส.ค. 2569",
@@ -745,7 +769,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260804",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-04",
     "dateFormatted": "04 ส.ค. 2569",
@@ -757,7 +781,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260803",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-03",
     "dateFormatted": "03 ส.ค. 2569",
@@ -769,7 +793,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260802",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-02",
     "dateFormatted": "02 ส.ค. 2569",
@@ -781,7 +805,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260801",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-08-01",
     "dateFormatted": "01 ส.ค. 2569",
@@ -793,7 +817,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260731",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-31",
     "dateFormatted": "31 ก.ค. 2569",
@@ -805,7 +829,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260730",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-30",
     "dateFormatted": "30 ก.ค. 2569",
@@ -817,7 +841,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260729",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-29",
     "dateFormatted": "29 ก.ค. 2569",
@@ -829,7 +853,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260728",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-28",
     "dateFormatted": "28 ก.ค. 2569",
@@ -841,7 +865,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260727",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-27",
     "dateFormatted": "27 ก.ค. 2569",
@@ -853,7 +877,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260726",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-26",
     "dateFormatted": "26 ก.ค. 2569",
@@ -865,7 +889,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260725",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-25",
     "dateFormatted": "25 ก.ค. 2569",
@@ -877,7 +901,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260724",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-24",
     "dateFormatted": "24 ก.ค. 2569",
@@ -889,7 +913,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260723",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-23",
     "dateFormatted": "23 ก.ค. 2569",
@@ -901,7 +925,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260722",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-22",
     "dateFormatted": "22 ก.ค. 2569",
@@ -913,7 +937,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260721",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-21",
     "dateFormatted": "21 ก.ค. 2569",
@@ -925,7 +949,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260720",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-20",
     "dateFormatted": "20 ก.ค. 2569",
@@ -937,7 +961,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260719",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-19",
     "dateFormatted": "19 ก.ค. 2569",
@@ -949,7 +973,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260718",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-18",
     "dateFormatted": "18 ก.ค. 2569",
@@ -961,7 +985,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260717",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-17",
     "dateFormatted": "17 ก.ค. 2569",
@@ -973,7 +997,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260716",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-16",
     "dateFormatted": "16 ก.ค. 2569",
@@ -985,7 +1009,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260715",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-15",
     "dateFormatted": "15 ก.ค. 2569",
@@ -997,7 +1021,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260714",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-14",
     "dateFormatted": "14 ก.ค. 2569",
@@ -1009,7 +1033,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260713",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-13",
     "dateFormatted": "13 ก.ค. 2569",
@@ -1021,7 +1045,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260712",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-12",
     "dateFormatted": "12 ก.ค. 2569",
@@ -1033,7 +1057,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260711",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-11",
     "dateFormatted": "11 ก.ค. 2569",
@@ -1045,7 +1069,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260710",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-10",
     "dateFormatted": "10 ก.ค. 2569",
@@ -1057,7 +1081,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260709",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-09",
     "dateFormatted": "09 ก.ค. 2569",
@@ -1069,7 +1093,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260708",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-08",
     "dateFormatted": "08 ก.ค. 2569",
@@ -1081,7 +1105,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260707",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-07",
     "dateFormatted": "07 ก.ค. 2569",
@@ -1093,7 +1117,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260706",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-06",
     "dateFormatted": "06 ก.ค. 2569",
@@ -1105,7 +1129,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260705",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-05",
     "dateFormatted": "05 ก.ค. 2569",
@@ -1117,7 +1141,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260704",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-04",
     "dateFormatted": "04 ก.ค. 2569",
@@ -1129,7 +1153,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260703",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-03",
     "dateFormatted": "03 ก.ค. 2569",
@@ -1141,7 +1165,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260702",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-02",
     "dateFormatted": "02 ก.ค. 2569",
@@ -1153,7 +1177,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260701",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-07-01",
     "dateFormatted": "01 ก.ค. 2569",
@@ -1165,7 +1189,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260630",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-30",
     "dateFormatted": "30 มิ.ย. 2569",
@@ -1177,7 +1201,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260629",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-29",
     "dateFormatted": "29 มิ.ย. 2569",
@@ -1189,7 +1213,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260628",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-28",
     "dateFormatted": "28 มิ.ย. 2569",
@@ -1201,7 +1225,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260627",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-27",
     "dateFormatted": "27 มิ.ย. 2569",
@@ -1213,7 +1237,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260626",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-26",
     "dateFormatted": "26 มิ.ย. 2569",
@@ -1225,7 +1249,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260625",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-25",
     "dateFormatted": "25 มิ.ย. 2569",
@@ -1237,7 +1261,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260624",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-24",
     "dateFormatted": "24 มิ.ย. 2569",
@@ -1249,7 +1273,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260623",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-23",
     "dateFormatted": "23 มิ.ย. 2569",
@@ -1261,7 +1285,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260622",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-22",
     "dateFormatted": "22 มิ.ย. 2569",
@@ -1273,7 +1297,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260621",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-21",
     "dateFormatted": "21 มิ.ย. 2569",
@@ -1285,7 +1309,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260620",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-20",
     "dateFormatted": "20 มิ.ย. 2569",
@@ -1297,7 +1321,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260619",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-19",
     "dateFormatted": "19 มิ.ย. 2569",
@@ -1309,7 +1333,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260618",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-18",
     "dateFormatted": "18 มิ.ย. 2569",
@@ -1321,7 +1345,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260617",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-17",
     "dateFormatted": "17 มิ.ย. 2569",
@@ -1333,7 +1357,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260616",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-16",
     "dateFormatted": "16 มิ.ย. 2569",
@@ -1345,7 +1369,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260615",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-15",
     "dateFormatted": "15 มิ.ย. 2569",
@@ -1357,7 +1381,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260614",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-14",
     "dateFormatted": "14 มิ.ย. 2569",
@@ -1369,7 +1393,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260613",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-13",
     "dateFormatted": "13 มิ.ย. 2569",
@@ -1381,7 +1405,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260612",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-12",
     "dateFormatted": "12 มิ.ย. 2569",
@@ -1393,7 +1417,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260611",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-11",
     "dateFormatted": "11 มิ.ย. 2569",
@@ -1405,7 +1429,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260610",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-10",
     "dateFormatted": "10 มิ.ย. 2569",
@@ -1417,7 +1441,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260609",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-09",
     "dateFormatted": "09 มิ.ย. 2569",
@@ -1429,7 +1453,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260608",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-08",
     "dateFormatted": "08 มิ.ย. 2569",
@@ -1441,7 +1465,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260607",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-07",
     "dateFormatted": "07 มิ.ย. 2569",
@@ -1453,7 +1477,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260606",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-06",
     "dateFormatted": "06 มิ.ย. 2569",
@@ -1465,7 +1489,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260605",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-05",
     "dateFormatted": "05 มิ.ย. 2569",
@@ -1477,7 +1501,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260604",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-04",
     "dateFormatted": "04 มิ.ย. 2569",
@@ -1489,7 +1513,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260603",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-03",
     "dateFormatted": "03 มิ.ย. 2569",
@@ -1501,7 +1525,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260602",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-02",
     "dateFormatted": "02 มิ.ย. 2569",
@@ -1513,7 +1537,7 @@
   },
   {
     "id": "nikkei_vip_afternoon_20260601",
-    "lotteryType": "STOCK_VIP",
+    "lotteryType": "STOCKS_VIP",
     "session": "NIKKEI_VIP_AFTERNOON",
     "date": "2026-06-01",
     "dateFormatted": "01 มิ.ย. 2569",

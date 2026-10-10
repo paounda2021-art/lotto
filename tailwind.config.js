@@ -8,10 +8,10 @@ export default {
     extend: {
       colors: {
         nikkei: {
-          dark: '#080c14',
-          card: '#0f172a',
-          cardHover: '#1e293b',
-          border: 'rgba(255, 255, 255, 0.08)',
+          dark: '#140b04',
+          card: '#1c1007',
+          cardHover: '#2a190d',
+          border: 'rgba(245, 158, 11, 0.35)',
           gold: '#f59e0b',
           goldGlow: '#fbbf24',
           emerald: '#10b981',

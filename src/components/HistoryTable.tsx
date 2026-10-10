@@ -179,6 +179,14 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({
         </span>
       );
     }
+
+    if (lotteryType === 'MALAY') {
+      return (
+        <span className="inline-flex items-center gap-1 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-2.5 py-0.5 rounded-lg text-[11px] font-bold">
+          🇲🇾 หวยมาเลย์ (18:30)
+        </span>
+      );
+    }
     if (lotteryType === 'HANOI') {
       if (item.session === 'HANOI_SPECIAL') {
         return (
@@ -236,6 +244,8 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({
                   ? '🇺🇸 หุ้นดาวโจนส์ (เช้ามืด 04:00 น.)'
                   : lotteryType === 'LAOS'
                   ? '🇱🇦 ลาวพัฒนา (รอบ 20:30 น.)'
+                  : lotteryType === 'MALAY'
+                  ? '🇲🇾 หวยมาเลย์ (Magnum 4D รอบ 18:30 น.)'
                   : lotteryType === 'HANOI'
                   ? '🇻🇳 ฮานอย (รอบ 18:30 น.)'
                   : lotteryType === 'GSB'
@@ -253,6 +263,8 @@ export const HistoryTable: React.FC<HistoryTableProps> = ({
               ? 'แสดงผลหวยหุ้นดาวโจนส์ย้อนหลัง ดัชนีปิดตลาดสหรัฐฯ อ้างอิง exphuay'
               : lotteryType === 'LAOS'
               ? 'แสดงผลหวยลาวพัฒนา 6 ตัว, 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง อ้างอิง LottoTH'
+              : lotteryType === 'MALAY'
+              ? 'แสดงผลหวยมาเลย์ 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง (Magnum 4D) ย้อนหลัง'
               : lotteryType === 'HANOI'
               ? 'แสดงผลหวยฮานอยปกติ ย้อนหลัง 3 ตัวบน, 2 ตัวบน, 2 ตัวล่าง'
               : lotteryType === 'GSB'
