@@ -607,11 +607,31 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
         }
       }
 
-      return { v0, v1, a0, a1, digits, pairs2D, triples3D, replacedDuplicates };
+      // Collect winning numbers for golden yellow highlight
+      const winning2D = new Set<string>();
+      const winning3D = new Set<string>();
+      const winningDigits = new Set<number>();
+
+      targetDraws.forEach((dr) => {
+        if (dr && dr.top3 && dr.top3.trim() !== '') {
+          winning3D.add(dr.top3);
+          winning3D.add(dr.top3.split('').sort().join(''));
+        }
+        const top2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : '');
+        if (top2) winning2D.add(top2);
+        if (dr.bottom2) winning2D.add(dr.bottom2);
+
+        `${dr.top3 || ''}${dr.bottom2 || ''}`.split('').forEach((ch) => {
+          const d = parseInt(ch, 10);
+          if (!isNaN(d)) winningDigits.add(d);
+        });
+      });
+
+      return { v0, v1, a0, a1, digits, pairs2D, triples3D, replacedDuplicates, winning2D, winning3D, winningDigits };
     } catch (err) {
       return null;
     }
-  }, [lotteryType, fullDataset, viewMode, targetRecordedDate, activeDay]);
+  }, [lotteryType, fullDataset, viewMode, targetRecordedDate, activeDay, targetDraws, isFuture]);
 
   const isHanoiAllRecorded = targetDraws.length > 0 && targetDraws.every((d) => Boolean(d.top3 && d.top3.trim() !== ''));
 
@@ -1454,8 +1474,13 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
             {/* 2D */}
             <div className="bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-amber-300 flex items-center gap-1.5 flex-wrap">
                   ⚡ ชุดเลขวิน 2 ตัว บน-ล่าง ({hanoiSpecialWinSet.pairs2D.length} ชุด):
+                  {hanoiSpecialWinSet.pairs2D.filter(p => hanoiSpecialWinSet.winning2D.has(p)).length > 0 && (
+                    <span className="bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse">
+                      ✓ เข้าเป้า {hanoiSpecialWinSet.pairs2D.filter(p => hanoiSpecialWinSet.winning2D.has(p)).length} ชุด
+                    </span>
+                  )}
                 </span>
                 <button
                   onClick={(e) => {
@@ -1473,22 +1498,34 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                 </button>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {hanoiSpecialWinSet.pairs2D.map(p => (
-                  <span
-                    key={p}
-                    className="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-300 font-black font-mono text-xs sm:text-sm tracking-wider hover:bg-amber-500/30 transition-colors"
-                  >
-                    {p}
-                  </span>
-                ))}
+                {hanoiSpecialWinSet.pairs2D.map(p => {
+                  const isHit = hanoiSpecialWinSet.winning2D.has(p);
+                  return (
+                    <span
+                      key={p}
+                      className={`px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all ${
+                        isHit
+                          ? 'bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse'
+                          : 'bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30'
+                      }`}
+                    >
+                      {p}
+                    </span>
+                  );
+                })}
               </div>
             </div>
 
             {/* 3D */}
             <div className="bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-cyan-300 flex items-center gap-1.5">
+                <span className="text-xs font-bold text-cyan-300 flex items-center gap-1.5 flex-wrap">
                   ⚡ ชุดเลขวิน 3 ตัวตรง ({hanoiSpecialWinSet.triples3D.length} ชุด / 24 โต๊ด):
+                  {hanoiSpecialWinSet.triples3D.filter(t => hanoiSpecialWinSet.winning3D.has(t) || hanoiSpecialWinSet.winning3D.has(t.split('').sort().join(''))).length > 0 && (
+                    <span className="bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse">
+                      ✓ เข้าเป้า {hanoiSpecialWinSet.triples3D.filter(t => hanoiSpecialWinSet.winning3D.has(t) || hanoiSpecialWinSet.winning3D.has(t.split('').sort().join(''))).length} ชุด
+                    </span>
+                  )}
                 </span>
                 <button
                   onClick={(e) => {
@@ -1506,14 +1543,21 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                 </button>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {hanoiSpecialWinSet.triples3D.map(t => (
-                  <span
-                    key={t}
-                    className="px-3 py-1 rounded-lg bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 font-black font-mono text-xs sm:text-sm tracking-wider hover:bg-cyan-500/30 transition-colors"
-                  >
-                    {t}
-                  </span>
-                ))}
+                {hanoiSpecialWinSet.triples3D.map(t => {
+                  const isHit = hanoiSpecialWinSet.winning3D.has(t) || hanoiSpecialWinSet.winning3D.has(t.split('').sort().join(''));
+                  return (
+                    <span
+                      key={t}
+                      className={`px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all ${
+                        isHit
+                          ? 'bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse'
+                          : 'bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30'
+                      }`}
+                    >
+                      {t}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           </div>
