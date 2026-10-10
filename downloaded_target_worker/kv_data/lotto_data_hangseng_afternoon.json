@@ -1,65 +1,5 @@
 [
   {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-09",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-09",
-    "dateFormatted": "09 ต.ค. 2569",
-    "dayOfWeek": "Fri",
-    "dayNameThai": "ศุกร์",
-    "top3": "135",
-    "top2": "35",
-    "bottom2": "56"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-08",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-08",
-    "dateFormatted": "08 ต.ค. 2569",
-    "dayOfWeek": "Thu",
-    "dayNameThai": "พฤหัสบดี",
-    "top3": "579",
-    "top2": "79",
-    "bottom2": "71"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-07",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-07",
-    "dateFormatted": "07 ต.ค. 2569",
-    "dayOfWeek": "Wed",
-    "dayNameThai": "พุธ",
-    "top3": "050",
-    "top2": "50",
-    "bottom2": "06"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-06",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-06",
-    "dateFormatted": "06 ต.ค. 2569",
-    "dayOfWeek": "Tue",
-    "dayNameThai": "อังคาร",
-    "top3": "056",
-    "top2": "56",
-    "bottom2": "22"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-05",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-05",
-    "dateFormatted": "05 ต.ค. 2569",
-    "dayOfWeek": "Mon",
-    "dayNameThai": "จันทร์",
-    "top3": "034",
-    "top2": "34",
-    "bottom2": "05"
-  },
-  {
     "id": "hangseng_afternoon_20261002",
     "lotteryType": "NIKKEI",
     "session": "HANGSENG_AFTERNOON",
@@ -70,19 +10,6 @@
     "top3": "229",
     "top2": "29",
     "bottom2": "98"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_AFTERNOON_2026-10-01",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_AFTERNOON",
-    "date": "2026-10-01",
-    "dateFormatted": "01 ต.ค. 2569",
-    "dayOfWeek": "Thu",
-    "dayNameThai": "พฤหัสบดี",
-    "full6D": "งดออกผล",
-    "top3": "กผล",
-    "top2": "ผล",
-    "bottom2": "งดออกผล"
   },
   {
     "id": "hangseng_afternoon_20260930",

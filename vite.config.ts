@@ -130,5 +130,8 @@ export default defineConfig({
   server: {
     port: 3000,
     open: false,
+    watch: {
+      ignored: ['**/downloaded_*/**', '**/cloudflare_*/**', '**/dist/**', '**/.git/**']
+    }
   },
 });

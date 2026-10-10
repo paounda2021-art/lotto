@@ -1,65 +1,5 @@
 [
   {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-10-09",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-10-09",
-    "dateFormatted": "09 ต.ค. 2569",
-    "dayOfWeek": "Fri",
-    "dayNameThai": "ศุกร์",
-    "top3": "092",
-    "top2": "92",
-    "bottom2": "19"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-10-08",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-10-08",
-    "dateFormatted": "08 ต.ค. 2569",
-    "dayOfWeek": "Thu",
-    "dayNameThai": "พฤหัสบดี",
-    "top3": "211",
-    "top2": "11",
-    "bottom2": "60"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-10-07",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-10-07",
-    "dateFormatted": "07 ต.ค. 2569",
-    "dayOfWeek": "Wed",
-    "dayNameThai": "พุธ",
-    "top3": "571",
-    "top2": "71",
-    "bottom2": "27"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-10-06",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-10-06",
-    "dateFormatted": "06 ต.ค. 2569",
-    "dayOfWeek": "Tue",
-    "dayNameThai": "อังคาร",
-    "top3": "398",
-    "top2": "98",
-    "bottom2": "12"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-10-05",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-10-05",
-    "dateFormatted": "05 ต.ค. 2569",
-    "dayOfWeek": "Mon",
-    "dayNameThai": "จันทร์",
-    "top3": "686",
-    "top2": "86",
-    "bottom2": "40"
-  },
-  {
     "id": "nikkei_afternoon_20261002",
     "lotteryType": "NIKKEI",
     "session": "NIKKEI_AFTERNOON",
@@ -142,45 +82,6 @@
     "top3": "399",
     "top2": "99",
     "bottom2": "04"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-09-23",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-09-23",
-    "dateFormatted": "23 ก.ย. 2569",
-    "dayOfWeek": "Wed",
-    "dayNameThai": "พุธ",
-    "full6D": "งดออกผล",
-    "top3": "กผล",
-    "top2": "ผล",
-    "bottom2": "งดออกผล"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-09-22",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-09-22",
-    "dateFormatted": "22 ก.ย. 2569",
-    "dayOfWeek": "Tue",
-    "dayNameThai": "อังคาร",
-    "full6D": "งดออกผล",
-    "top3": "กผล",
-    "top2": "ผล",
-    "bottom2": "งดออกผล"
-  },
-  {
-    "id": "NIKKEI_NIKKEI_AFTERNOON_2026-09-21",
-    "lotteryType": "NIKKEI",
-    "session": "NIKKEI_AFTERNOON",
-    "date": "2026-09-21",
-    "dateFormatted": "21 ก.ย. 2569",
-    "dayOfWeek": "Mon",
-    "dayNameThai": "จันทร์",
-    "full6D": "งดออกผล",
-    "top3": "กผล",
-    "top2": "ผล",
-    "bottom2": "งดออกผล"
   },
   {
     "id": "nikkei_afternoon_20260918",

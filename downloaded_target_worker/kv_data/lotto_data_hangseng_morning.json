@@ -1,65 +1,5 @@
 [
   {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-09",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-09",
-    "dateFormatted": "09 ต.ค. 2569",
-    "dayOfWeek": "Fri",
-    "dayNameThai": "ศุกร์",
-    "top3": "571",
-    "top2": "71",
-    "bottom2": "92"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-08",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-08",
-    "dateFormatted": "08 ต.ค. 2569",
-    "dayOfWeek": "Thu",
-    "dayNameThai": "พฤหัสบดี",
-    "top3": "331",
-    "top2": "31",
-    "bottom2": "19"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-07",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-07",
-    "dateFormatted": "07 ต.ค. 2569",
-    "dayOfWeek": "Wed",
-    "dayNameThai": "พุธ",
-    "top3": "190",
-    "top2": "90",
-    "bottom2": "66"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-06",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-06",
-    "dateFormatted": "06 ต.ค. 2569",
-    "dayOfWeek": "Tue",
-    "dayNameThai": "อังคาร",
-    "top3": "847",
-    "top2": "47",
-    "bottom2": "13"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-05",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-05",
-    "dateFormatted": "05 ต.ค. 2569",
-    "dayOfWeek": "Mon",
-    "dayNameThai": "จันทร์",
-    "top3": "228",
-    "top2": "28",
-    "bottom2": "01"
-  },
-  {
     "id": "hangseng_morning_20261002",
     "lotteryType": "NIKKEI",
     "session": "HANGSENG_MORNING",
@@ -70,19 +10,6 @@
     "top3": "438",
     "top2": "38",
     "bottom2": "89"
-  },
-  {
-    "id": "NIKKEI_HANGSENG_MORNING_2026-10-01",
-    "lotteryType": "NIKKEI",
-    "session": "HANGSENG_MORNING",
-    "date": "2026-10-01",
-    "dateFormatted": "01 ต.ค. 2569",
-    "dayOfWeek": "Thu",
-    "dayNameThai": "พฤหัสบดี",
-    "full6D": "งดออกผล",
-    "top3": "กผล",
-    "top2": "ผล",
-    "bottom2": "งดออกผล"
   },
   {
     "id": "hangseng_morning_20260930",

@@ -1,5 +1,77 @@
 [
   {
+    "id": "HANOI_HANOI_EVENING_2026-10-09",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-09",
+    "dateFormatted": "09 ต.ค. 2569",
+    "dayOfWeek": "Fri",
+    "dayNameThai": "ศุกร์",
+    "top3": "635",
+    "top2": "35",
+    "bottom2": "82"
+  },
+  {
+    "id": "HANOI_HANOI_EVENING_2026-10-08",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-08",
+    "dateFormatted": "08 ต.ค. 2569",
+    "dayOfWeek": "Thu",
+    "dayNameThai": "พฤหัสบดี",
+    "top3": "339",
+    "top2": "39",
+    "bottom2": "43"
+  },
+  {
+    "id": "HANOI_HANOI_EVENING_2026-10-07",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-07",
+    "dateFormatted": "07 ต.ค. 2569",
+    "dayOfWeek": "Wed",
+    "dayNameThai": "พุธ",
+    "top3": "488",
+    "top2": "88",
+    "bottom2": "38"
+  },
+  {
+    "id": "HANOI_HANOI_EVENING_2026-10-06",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-06",
+    "dateFormatted": "06 ต.ค. 2569",
+    "dayOfWeek": "Tue",
+    "dayNameThai": "อังคาร",
+    "top3": "554",
+    "top2": "54",
+    "bottom2": "33"
+  },
+  {
+    "id": "HANOI_HANOI_EVENING_2026-10-05",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-05",
+    "dateFormatted": "05 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "654",
+    "top2": "54",
+    "bottom2": "19"
+  },
+  {
+    "id": "HANOI_HANOI_EVENING_2026-10-04",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-04",
+    "dateFormatted": "04 ต.ค. 2569",
+    "dayOfWeek": "Sun",
+    "dayNameThai": "อาทิตย์",
+    "top3": "951",
+    "top2": "51",
+    "bottom2": "35"
+  },
+  {
     "id": "hanoi_evening_20261003",
     "lotteryType": "HANOI",
     "session": "HANOI_EVENING",

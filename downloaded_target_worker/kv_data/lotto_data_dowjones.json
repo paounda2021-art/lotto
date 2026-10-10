@@ -1,5 +1,17 @@
 [
   {
+    "id": "DOWJONES_DOWJONES_NIGHT_2026-10-09",
+    "lotteryType": "DOWJONES",
+    "session": "DOWJONES_NIGHT",
+    "date": "2026-10-09",
+    "dateFormatted": "09 ต.ค. 2569",
+    "dayOfWeek": "Fri",
+    "dayNameThai": "ศุกร์",
+    "top3": "495",
+    "top2": "95",
+    "bottom2": "31"
+  },
+  {
     "id": "dowjones_night_20261002",
     "lotteryType": "DOWJONES",
     "session": "DOWJONES_NIGHT",
