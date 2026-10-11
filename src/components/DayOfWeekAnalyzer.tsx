@@ -491,7 +491,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
   const expectedSessionCount = useMemo(() => {
     if (lotteryType === 'HANOI') return 3;
-    if (lotteryType === 'STOCKS_VIP') {
+    if (lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') {
       const hasChina = fullDataset.some((d) => d.session === 'CHINA_VIP_MORNING' || d.session === 'CHINA_VIP_AFTERNOON');
       const hasHangseng = fullDataset.some((d) => d.session === 'HANGSENG_VIP_MORNING' || d.session === 'HANGSENG_VIP_AFTERNOON');
       if (hasChina && hasHangseng) return 6;
@@ -671,7 +671,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
     return breakdown.filter((b) => b.status === 'CLOSED');
   }, [targetIsoDate, targetDayOfWeekIdx, lotteryType, targetDraws, data]);
 
-  const daysList = (lotteryType === 'NIKKEI' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES') ? [
+  const daysList = (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES') ? [
     { code: 'Mon', label: 'วันจันทร์', color: 'from-yellow-500/20 to-amber-500/20 text-yellow-300 border-yellow-500/40 hover:border-yellow-400' },
     { code: 'Tue', label: 'วันอังคาร', color: 'from-pink-500/20 to-rose-400/20 text-pink-300 border-pink-500/40 hover:border-pink-400' },
     { code: 'Wed', label: 'วันพุธ', color: 'from-emerald-500/20 to-teal-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400' },
@@ -833,7 +833,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           ))}
         </div>
       );
-    } else if (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP') {
+    } else if (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') {
       const hits = getNikkeiHitsForDigit(digit, targetDraws);
       if (hits.length === 0) {
         if (!isAllRecorded) {
@@ -1288,8 +1288,8 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                         ))}
                       </div>
                     );
-                  })() : (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP') ? (() => {
-                    const stockSessions = lotteryType === 'STOCKS_VIP' ? STOCK_VIP_SESSIONS : STOCK_REGULAR_SESSIONS;
+                  })() : (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') ? (() => {
+                    const stockSessions = (lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') ? STOCK_VIP_SESSIONS : STOCK_REGULAR_SESSIONS;
                     return (
                       <div className="bg-gradient-to-r from-emerald-950/80 to-teal-950/80 border-2 border-emerald-500/60 rounded-xl p-2 shadow-glow-emerald space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
                         <span className="text-xs text-emerald-300 font-black block uppercase tracking-wider flex items-center justify-between mb-1">
