@@ -1726,35 +1726,6 @@ export default function App() {
       {/* Main Container */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6 relative z-10">
         
-        {/* Subbanner Card: ขณะนี้กำลังวิเคราะห์ */}
-        <div className="bg-[#2a170b] border-2 border-amber-500/40 rounded-2xl p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center font-black text-xs sm:text-sm shrink-0 uppercase tracking-wider shadow-md">
-              {getMarketCodeBadge()}
-            </div>
-            <div>
-              <h2 className="text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-1.5 flex-wrap">
-                <span>ขณะนี้กำลังวิเคราะห์:</span>
-                <span className="text-yellow-300 font-extrabold">{getSubbannerTitleAndSubtitle().title}</span>
-              </h2>
-              <p className="text-[10px] sm:text-[11px] text-amber-200/70 mt-0.5">
-                {getSubbannerTitleAndSubtitle().subtitle}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1.5 flex-wrap shrink-0">
-            {renderSubbannerSessionButtons()}
-            <button
-              onClick={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
-              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 text-black text-xs font-black hover:brightness-110 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-glow-gold"
-            >
-              <PlusCircle className="w-3.5 h-3.5" />
-              <span>+ ใส่ผลรางวัลใหม่</span>
-            </button>
-          </div>
-        </div>
-
         {/* Navigation Tabs (Responsive Swipeable on Mobile, Grid on Desktop) */}
         <div className="flex lg:grid lg:grid-cols-7 gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar scrollbar-none pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 touch-pan-x border-b border-nikkei-border/60">
           
@@ -1842,6 +1813,35 @@ export default function App() {
             <span className="truncate">เครื่องมือจับเลขวิน</span>
           </button>
 
+        </div>
+
+        {/* Subbanner Card: ขณะนี้กำลังวิเคราะห์ */}
+        <div className="bg-[#2a170b] border-2 border-amber-500/40 rounded-2xl p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center font-black text-xs sm:text-sm shrink-0 uppercase tracking-wider shadow-md">
+              {getMarketCodeBadge()}
+            </div>
+            <div>
+              <h2 className="text-xs sm:text-sm font-extrabold text-amber-300 flex items-center gap-1.5 flex-wrap">
+                <span>ขณะนี้กำลังวิเคราะห์:</span>
+                <span className="text-yellow-300 font-extrabold">{getSubbannerTitleAndSubtitle().title}</span>
+              </h2>
+              <p className="text-[10px] sm:text-[11px] text-amber-200/70 mt-0.5">
+                {getSubbannerTitleAndSubtitle().subtitle}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5 flex-wrap shrink-0">
+            {renderSubbannerSessionButtons()}
+            <button
+              onClick={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
+              className="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-300 text-black text-xs font-black hover:brightness-110 transition-all flex items-center gap-1 shrink-0 cursor-pointer shadow-glow-gold"
+            >
+              <PlusCircle className="w-3.5 h-3.5" />
+              <span>+ ใส่ผลรางวัลใหม่</span>
+            </button>
+          </div>
         </div>
 
         {/* Day of Week Frequency Analyzer (Positioned directly under the 7 Navigation Tabs) */}
