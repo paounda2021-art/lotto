@@ -17,14 +17,21 @@ if (!code.includes('btn-line-settings-jsx')) {
   const target1 = 'n.jsx("span",{children:"🔄 ดึงผลรางวัลด่วน (Auto-Sync)"})]}),';
   const repl1 = 'n.jsx("span",{children:"🔄 ดึงผลรางวัลด่วน (Auto-Sync)"})]}),n.jsx("button",{id:"btn-line-settings-jsx",onClick:()=>window.openLineSettingsModal&&window.openLineSettingsModal(),title:"ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE",className:"btn-line-nav",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"12px",padding:"6px 14px",borderRadius:"8px",display:"inline-flex",alignItems:"center",gap:"6px",cursor:"pointer",boxShadow:"0 2px 10px rgba(6, 199, 85, 0.5)",marginLeft:"6px",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"💬 แจ้งเตือน LINE"})]}),';
   if (code.includes(target1)) code = code.replace(target1, repl1);
+}
 
-  const target2 = 'n.jsxs(n.Fragment,{children:[n.jsx(Ld,{className:"w-4 h-4"}),n.jsx("span",{children:"คัดลอกแนวทาง"})]})})]})]}),';
-  const repl2 = 'n.jsxs(n.Fragment,{children:[n.jsx(Ld,{className:"w-4 h-4"}),n.jsx("span",{children:"คัดลอกแนวทาง"})]})}),n.jsx("button",{id:"btn-line-send-day-jsx",onClick:(e)=>window.sendCurrentResultToLine&&window.sendCurrentResultToLine(e.currentTarget),title:"ส่งผลรางวัลและเลขเด่นเข้า LINE",className:"btn-line-send",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"13px",padding:"10px 16px",borderRadius:"12px",display:"inline-flex",alignItems:"center",gap:"8px",cursor:"pointer",boxShadow:"0 4px 14px rgba(6, 199, 85, 0.5)",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"📲 ส่งผลเข้า LINE"})]})]})]}),';
-  if (code.includes(target2)) code = code.replace(target2, repl2);
+// Revert card-level LINE buttons (hide per user request: "ขอซ่อนปุ่มไลน์ในการ์ดด้านล่างไว้ก่อน ให้เหลือไว้เฉพาะบนหัวเว็บ")
+const repl2 = 'n.jsxs(n.Fragment,{children:[n.jsx(Ld,{className:"w-4 h-4"}),n.jsx("span",{children:"คัดลอกแนวทาง"})]})}),n.jsx("button",{id:"btn-line-send-day-jsx",onClick:(e)=>window.sendCurrentResultToLine&&window.sendCurrentResultToLine(e.currentTarget),title:"ส่งผลรางวัลและเลขเด่นเข้า LINE",className:"btn-line-send",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"13px",padding:"10px 16px",borderRadius:"12px",display:"inline-flex",alignItems:"center",gap:"8px",cursor:"pointer",boxShadow:"0 4px 14px rgba(6, 199, 85, 0.5)",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"📲 ส่งผลเข้า LINE"})]})]})]}),';
+const orig2 = 'n.jsxs(n.Fragment,{children:[n.jsx(Ld,{className:"w-4 h-4"}),n.jsx("span",{children:"คัดลอกแนวทาง"})]})})]})]}),';
+if (code.includes(repl2)) {
+  code = code.replace(repl2, orig2);
+  console.log('Reverted btn-line-send-day-jsx from DayOfWeekAnalyzer card.');
+}
 
-  const target3 = 'n.jsx("span",{children:"คัดลอกแนวทาง"})]})]})';
-  const repl3 = 'n.jsx("span",{children:"คัดลอกแนวทาง"})]}),n.jsx("button",{id:"btn-line-send-result-jsx",onClick:(e)=>window.sendCurrentResultToLine&&window.sendCurrentResultToLine(e.currentTarget),title:"ส่งผลรางวัลและสรุปเลขเข้า LINE",className:"btn-line-send",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"13px",padding:"10px 16px",borderRadius:"12px",display:"inline-flex",alignItems:"center",gap:"8px",cursor:"pointer",boxShadow:"0 4px 14px rgba(6, 199, 85, 0.5)",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"📲 ส่งผลเข้า LINE"})]})]})';
-  if (code.includes(target3)) code = code.replace(target3, repl3);
+const repl3 = 'n.jsx("span",{children:"คัดลอกแนวทาง"})]}),n.jsx("button",{id:"btn-line-send-result-jsx",onClick:(e)=>window.sendCurrentResultToLine&&window.sendCurrentResultToLine(e.currentTarget),title:"ส่งผลรางวัลและสรุปเลขเข้า LINE",className:"btn-line-send",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"13px",padding:"10px 16px",borderRadius:"12px",display:"inline-flex",alignItems:"center",gap:"8px",cursor:"pointer",boxShadow:"0 4px 14px rgba(6, 199, 85, 0.5)",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"📲 ส่งผลเข้า LINE"})]})]})';
+const orig3 = 'n.jsx("span",{children:"คัดลอกแนวทาง"})]})]})';
+if (code.includes(repl3)) {
+  code = code.replace(repl3, orig3);
+  console.log('Reverted btn-line-send-result-jsx from PredictionCard.');
 }
 
 // 2. Day sync patches

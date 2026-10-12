@@ -524,6 +524,9 @@
   
   
   
+  
+  
+  
   /* ==========================================================================
      LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
      ========================================================================== */
@@ -1257,32 +1260,9 @@
   }
 
   function injectLineSendButton() {
-    if (document.getElementById('btn-line-send-result-ui') || document.getElementById('btn-line-send-result-jsx')) return;
-    const allButtons = Array.from(document.querySelectorAll('button'));
-    const copyBtns = allButtons.filter(b => b.innerText && b.innerText.includes('คัดลอกแนวทาง') && !b.id.includes('export'));
-    if (copyBtns.length === 0) return;
-
-    const targetBtn = copyBtns.find(b => b.className.includes('from-amber-400') || (b.parentElement && b.parentElement.innerHTML.includes('ฟันเด่น'))) || copyBtns[copyBtns.length - 1];
-    if (!targetBtn || !targetBtn.parentElement) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'btn-line-send-result-ui';
-    btn.title = 'ส่งผลรางวัลและสรุปแนวทางเข้า LINE ทันที';
-    btn.className = 'btn-line-send';
-    btn.style.cssText = 'background-color: #06c755 !important; color: #ffffff !important; border: 1px solid #05a043 !important; font-weight: 800 !important; font-size: 13px !important; padding: 10px 16px !important; border-radius: 12px !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; box-shadow: 0 4px 14px rgba(6, 199, 85, 0.5) !important; margin-right: 8px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
-    btn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" style="width: 16px; height: 16px; fill: #ffffff; flex-shrink: 0; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
-        <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
-      </svg>
-      <span style="color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;">📲 ส่งเข้า LINE</span>
-    `;
-    btn.onclick = function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      window.sendCurrentResultToLine(btn);
-    };
-
-    targetBtn.parentElement.insertBefore(btn, targetBtn);
+    // Hidden per user request: "ขอซ่อนปุ่มไลน์ในการ์ดด้านล่างไว้ก่อน ให้เหลือไว้เฉพาะบนหัวเว็บ"
+    const existing = document.getElementById('btn-line-send-result-ui');
+    if (existing && existing.parentElement) existing.remove();
   }
 
   function runAllInjectors() {
