@@ -17,7 +17,9 @@
     fetch('/api/draws')
       .then(r => r.json())
       .then(res => {
-        if (res && res.success && res.data) {
+        if (res && res.success) {
+          const kvD = res.datasets || res.data || {};
+          window.__KV_DRAWS__ = kvD;
           window.__KV_DRAWS__ = res.data;
         }
       })
@@ -518,13 +520,14 @@
 
 
   
+  
   /* ==========================================================================
      LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
      ========================================================================== */
 
   let lineModalContainer = null;
+  let lineChoiceModalOverlay = null;
 
-  // Simple toast notifier
   function showToast(message, isError = false) {
     let toast = document.getElementById('lucky-toast-notification');
     if (!toast) {
@@ -559,28 +562,22 @@
     }, 3500);
   }
 
-  // Load LINE Bot Config
   async function getLineConfig() {
     let config = { channelAccessToken: '', targetId: 'U3a7529a26c7c9a1a06d4cd374349a33c', enabled: true };
     try {
       const raw = localStorage.getItem('lotto_line_bot_config');
-      if (raw) {
-        config = { ...config, ...JSON.parse(raw) };
-      }
+      if (raw) config = { ...config, ...JSON.parse(raw) };
     } catch(e) {}
     try {
       const res = await fetch('/api/line/config');
       if (res.ok) {
         const data = await res.json();
-        if (data && data.config) {
-          config = { ...config, ...data.config };
-        }
+        if (data && data.config) config = { ...config, ...data.config };
       }
     } catch(e) {}
     return config;
   }
 
-  // Save LINE Bot Config
   async function saveLineConfig(config) {
     try {
       localStorage.setItem('lotto_line_bot_config', JSON.stringify(config));
@@ -594,6 +591,330 @@
     } catch(e) {}
   }
 
+  function isNumericResult(draw) {
+    if (!draw) return false;
+    const top3 = String(draw.top3 || '').trim();
+    const bottom2 = String(draw.bottom2 || '').trim();
+    return /^[0-9]{2,3}$/.test(top3) && /^[0-9]{2}$/.test(bottom2);
+  }
+
+  function getLotteryInfo(activeType, activeSess) {
+    const type = (activeType || 'NIKKEI').toUpperCase();
+    const sess = (activeSess || '').toUpperCase();
+
+    let title = 'นิเคอิ-ปก (เช้า)';
+    let marketShort = 'นิเคอิ ปก-เช้า';
+    let fullName = 'หุ้นนิเคอิ (ปกติ)';
+
+    if (type === 'NIKKEI') {
+      if (sess.includes('CHINA')) {
+        if (sess.includes('AFTERNOON')) {
+          title = 'จีน-ปก (บ่าย)'; marketShort = 'จีน ปก-บ่าย'; fullName = 'หุ้นจีน (ปกติ)';
+        } else {
+          title = 'จีน-ปก (เช้า)'; marketShort = 'จีน ปก-เช้า'; fullName = 'หุ้นจีน (ปกติ)';
+        }
+      } else if (sess.includes('HANGSENG')) {
+        if (sess.includes('AFTERNOON')) {
+          title = 'ฮั่งเส็ง-ปก (บ่าย)'; marketShort = 'ฮั่งเส็ง ปก-บ่าย'; fullName = 'หุ้นฮั่งเส็ง (ปกติ)';
+        } else {
+          title = 'ฮั่งเส็ง-ปก (เช้า)'; marketShort = 'ฮั่งเส็ง ปก-เช้า'; fullName = 'หุ้นฮั่งเส็ง (ปกติ)';
+        }
+      } else {
+        if (sess.includes('AFTERNOON')) {
+          title = 'นิเคอิ-ปก (บ่าย)'; marketShort = 'นิเคอิ ปก-บ่าย'; fullName = 'หุ้นนิเคอิ (ปกติ)';
+        } else if (sess.includes('BOTH')) {
+          title = 'นิเคอิ-ปก (เช้า-บ่าย)'; marketShort = 'นิเคอิ ปก'; fullName = 'หุ้นนิเคอิ (ปกติ)';
+        } else {
+          title = 'นิเคอิ-ปก (เช้า)'; marketShort = 'นิเคอิ ปก-เช้า'; fullName = 'หุ้นนิเคอิ (ปกติ)';
+        }
+      }
+    } else if (type === 'STOCKS_VIP' || type === 'STOCK_VIP') {
+      if (sess.includes('CHINA')) {
+        if (sess.includes('AFTERNOON')) {
+          title = 'จีน-VIP (บ่าย)'; marketShort = 'จีน VIP-บ่าย'; fullName = 'หุ้นจีน VIP';
+        } else {
+          title = 'จีน-VIP (เช้า)'; marketShort = 'จีน VIP-เช้า'; fullName = 'หุ้นจีน VIP';
+        }
+      } else if (sess.includes('HANGSENG')) {
+        if (sess.includes('AFTERNOON')) {
+          title = 'ฮั่งเส็ง-VIP (บ่าย)'; marketShort = 'ฮั่งเส็ง VIP-บ่าย'; fullName = 'หุ้นฮั่งเส็ง VIP';
+        } else {
+          title = 'ฮั่งเส็ง-VIP (เช้า)'; marketShort = 'ฮั่งเส็ง VIP-เช้า'; fullName = 'หุ้นฮั่งเส็ง VIP';
+        }
+      } else {
+        if (sess.includes('AFTERNOON')) {
+          title = 'นิเคอิ-VIP (บ่าย)'; marketShort = 'นิเคอิ VIP-บ่าย'; fullName = 'หุ้นนิเคอิ VIP';
+        } else if (sess.includes('BOTH')) {
+          title = 'นิเคอิ-VIP (เช้า-บ่าย)'; marketShort = 'นิเคอิ VIP'; fullName = 'หุ้นนิเคอิ VIP';
+        } else {
+          title = 'นิเคอิ-VIP (เช้า)'; marketShort = 'นิเคอิ VIP-เช้า'; fullName = 'หุ้นนิเคอิ VIP';
+        }
+      }
+    } else if (type === 'HANOI') {
+      if (sess === 'HANOI_SPECIAL') {
+        title = 'ฮานอยพิเศษ (17:30)'; marketShort = 'ฮานอย พิเศษ'; fullName = 'หวยฮานอยพิเศษ';
+      } else if (sess === 'HANOI_VIP') {
+        title = 'ฮานอย VIP (19:30)'; marketShort = 'ฮานอย VIP'; fullName = 'หวยฮานอย VIP';
+      } else {
+        title = 'ฮานอยปกติ (18:30)'; marketShort = 'ฮานอย ปกติ'; fullName = 'หวยฮานอย (ปกติ)';
+      }
+    } else if (type === 'LAOS') {
+      title = 'ลาวพัฒนา (20:30)'; marketShort = 'ลาวพัฒนา'; fullName = 'หวยลาวพัฒนา';
+    } else if (type === 'DOWJONES') {
+      title = 'ดาวโจนส์ (04:00)'; marketShort = 'ดาวโจนส์'; fullName = 'หวยหุ้นดาวโจนส์';
+    } else if (type === 'GSB') {
+      title = 'หวยออมสิน (13:00)'; marketShort = 'ออมสิน'; fullName = 'หวยออมสิน';
+    } else if (type === 'GOVERNMENT') {
+      title = 'หวยรัฐบาลไทย (15:30)'; marketShort = 'รัฐบาลไทย'; fullName = 'หวยรัฐบาลไทย';
+    } else if (type === 'MALAY') {
+      title = 'หวยมาเลย์ (18:30)'; marketShort = 'หวยมาเลย์'; fullName = 'หวยมาเลย์ (Magnum 4D)';
+    }
+
+    return { title, marketShort, fullName };
+  }
+
+  function buildLineResultMessage(draw, activeType, activeSess) {
+    const info = getLotteryInfo(activeType, activeSess);
+    const top3 = String(draw.top3 || '').trim();
+    const bottom2 = String(draw.bottom2 || '').trim();
+    const top2 = draw.top2 || (top3.length >= 2 ? top3.slice(-2) : '');
+
+    const draws = getDrawsForLottery('CURRENT');
+    const pastDraws = draws.filter(d => d.date !== draw.date && isNumericResult(d));
+    const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    pastDraws.forEach(d => {
+      (String(d.top3 || '') + String(d.bottom2 || '')).split('').forEach(ch => {
+        const n = parseInt(ch, 10);
+        if (!isNaN(n)) counts[n] = (counts[n] || 0) + 1;
+      });
+    });
+    const sortedDigits = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
+    const primary = sortedDigits[0] ? sortedDigits[0].digit : 3;
+    const secondary = sortedDigits[1] ? sortedDigits[1].digit : 2;
+
+    const lines = [];
+    lines.push(info.title);
+    if (draw.dateFormatted) {
+      lines.push('(งวด ' + draw.dateFormatted + ')');
+    }
+    lines.push('ผล ' + top3 + '-' + bottom2);
+    lines.push('');
+
+    let hasHits = false;
+    if (bottom2.includes(String(primary))) {
+      lines.push('🌼 ' + info.marketShort + ' เด่น ' + primary + ' [ล่าง ' + bottom2.split('').join(' ') + ']');
+      hasHits = true;
+    }
+    if (top2.includes(String(primary))) {
+      lines.push('🌼 ' + info.marketShort + ' เด่น ' + primary + ' [บน ' + top2.split('').join(' ') + ']');
+      hasHits = true;
+    }
+    if (bottom2.includes(String(secondary))) {
+      lines.push('🌼 ' + info.marketShort + ' รอง ' + secondary + ' [ล่าง ' + bottom2.split('').join(' ') + ']');
+      hasHits = true;
+    }
+    if (top2.includes(String(secondary))) {
+      lines.push('🌼 ' + info.marketShort + ' รอง ' + secondary + ' [บน ' + top2.split('').join(' ') + ']');
+      hasHits = true;
+    }
+
+    if (info.title.includes('VIP')) {
+      lines.push('🏷️ รวมหุ้น VIP [บน ' + top2.split('').join(' ') + ']');
+    } else {
+      lines.push('🏷️ รวมหุ้น [บน ' + top2.split('').join(' ') + ']');
+    }
+
+    lines.push('');
+    lines.push('🎉🎉🎉🎉');
+    return lines.join('\n');
+  }
+
+  function buildDailyPredictionGuide(activeType, activeSess) {
+    const info = getLotteryInfo(activeType, activeSess);
+    const activeDay = localStorage.getItem('lotto_selected_day') || 'Tue';
+    const dayNameMap = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสบดี', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์', ALL: 'ทุกวัน' };
+    const dayName = dayNameMap[activeDay] || 'อังคาร';
+
+    let d0 = '3', d1 = '2';
+    const draws = getDrawsForLottery('CURRENT');
+    const pastDraws = draws.filter(isNumericResult);
+    const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    const pairCounts = {};
+    pastDraws.forEach(d => {
+      (String(d.top3 || '') + String(d.bottom2 || '')).split('').forEach(ch => {
+        const n = parseInt(ch, 10);
+        if (!isNaN(n)) counts[n] = (counts[n] || 0) + 1;
+      });
+      if (d.top2) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
+      if (d.bottom2) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
+    });
+    const sorted = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
+    if (sorted[0]) d0 = String(sorted[0].digit);
+    if (sorted[1]) d1 = String(sorted[1].digit);
+
+    const topPairs = Object.entries(pairCounts).sort((a,b) => b[1] - a[1]).slice(0, 6).map(p => p[0]).join(' ');
+
+    const lines = [
+      '📊 [แนวทางสถิติเลขรายวัน] SystemLucky289',
+      '🎯 หวย: ' + info.fullName,
+      '📌 รอบ: ' + info.title,
+      '🗓️ ประจำ: วัน' + dayName,
+      '--------------------------',
+      '🔥 ฟันเด่น วิ่ง-รูด 19 ประตู: ' + d0 + ' และ ' + d1,
+      '💎 TOP 6 เลข 2 ตัว เน้น: ' + (topPairs || (d0 + d1 + ' ' + d0 + '5 ' + d0 + '8 ' + d1 + '4 ' + d1 + '7 ' + d1 + '9')),
+      '--------------------------',
+      '🤖 วิเคราะห์อัตโนมัติตามสถิติ LOTTO289'
+    ];
+    return lines.join('\n');
+  }
+
+  function showNoResultChoiceModal({ title, statusText, validDraw, onSendGuide, onSendLastResult }) {
+    if (!lineChoiceModalOverlay) {
+      lineChoiceModalOverlay = document.createElement('div');
+      lineChoiceModalOverlay.id = 'line-no-result-modal-overlay';
+      lineChoiceModalOverlay.style.cssText = 'position: fixed; inset: 0; z-index: 99999; background: rgba(0,0,0,0.85); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px;';
+      document.body.appendChild(lineChoiceModalOverlay);
+    }
+
+    lineChoiceModalOverlay.innerHTML = `
+      <div style="background: #18110b; border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 16px; padding: 22px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); color: #fffbeb; text-align: center;">
+        <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
+          <span style="font-size: 22px;">📢</span>
+        </div>
+        <h3 style="margin: 0 0 6px; font-size: 16px; font-weight: 800; color: #fbbf24;">รอบนี้ยังไม่มีผลหวยออก</h3>
+        <p style="margin: 0 0 16px; font-size: 12px; color: #d4d4d8; line-height: 1.5;">
+          <b>${title}</b> สถานะปัจจุบัน: <span style="color: #f87171; font-weight: 700;">${statusText}</span><br>
+          กรุณาเลือกข้อมูลที่ต้องการส่งเข้ากลุ่ม LINE:
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button id="no-res-send-guide-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: 1px solid #fbbf24; color: #000; font-weight: 800; padding: 11px 14px; border-radius: 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+            📊 ส่งแนวทางฟันเด่นงวดนี้เข้า LINE
+          </button>
+
+          ${validDraw ? `
+          <button id="no-res-send-last-btn" style="background: rgba(6, 199, 85, 0.15); border: 1px solid #06c755; color: #34d399; font-weight: 800; padding: 11px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+            🎯 ส่งผลรางวัลงวดล่าสุด (${validDraw.dateFormatted || validDraw.date}: ${validDraw.top3}-${validDraw.bottom2})
+          </button>
+          ` : ''}
+
+          <button id="no-res-cancel-btn" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #a1a1aa; font-weight: 600; padding: 8px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 4px;">
+            ✕ ยกเลิก
+          </button>
+        </div>
+      </div>
+    `;
+
+    lineChoiceModalOverlay.style.display = 'flex';
+
+    lineChoiceModalOverlay.querySelector('#no-res-send-guide-btn').onclick = () => {
+      lineChoiceModalOverlay.style.display = 'none';
+      onSendGuide();
+    };
+
+    const lastBtn = lineChoiceModalOverlay.querySelector('#no-res-send-last-btn');
+    if (lastBtn) {
+      lastBtn.onclick = () => {
+        lineChoiceModalOverlay.style.display = 'none';
+        onSendLastResult();
+      };
+    }
+
+    lineChoiceModalOverlay.querySelector('#no-res-cancel-btn').onclick = () => {
+      lineChoiceModalOverlay.style.display = 'none';
+    };
+    lineChoiceModalOverlay.onclick = (e) => {
+      if (e.target === lineChoiceModalOverlay) lineChoiceModalOverlay.style.display = 'none';
+    };
+  }
+
+  async function postLineMessage(messageText, targetId, triggerBtn) {
+    let originalHtml = '';
+    if (triggerBtn) {
+      originalHtml = triggerBtn.innerHTML;
+      triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">⏳ กำลังส่งเข้า LINE...</span>';
+      triggerBtn.disabled = true;
+    }
+
+    try {
+      const res = await fetch('/api/line/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: messageText, targetId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🎉 ส่งแจ้งเตือนเข้า LINE สำเร็จเรียบร้อยแล้ว!');
+        if (triggerBtn) {
+          triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">✓ ส่งเข้า LINE สำเร็จ!</span>';
+          setTimeout(() => {
+            triggerBtn.innerHTML = originalHtml;
+            triggerBtn.disabled = false;
+          }, 2500);
+        }
+      } else {
+        throw new Error(data.error || 'Failed to send message');
+      }
+    } catch(err) {
+      showToast('ส่งไม่สำเร็จ: ' + err.message, true);
+      alert('❌ ส่งข้อมูลเข้า LINE ไม่สำเร็จ: ' + err.message);
+      if (triggerBtn) {
+        triggerBtn.innerHTML = originalHtml;
+        triggerBtn.disabled = false;
+      }
+    }
+  }
+
+  // Main Send Function
+  window.sendCurrentResultToLine = async function(triggerBtn) {
+    const config = await getLineConfig();
+
+    if (!config.channelAccessToken) {
+      alert('กรุณาตั้งค่า LINE Channel Access Token ก่อนใช้งาน');
+      window.openLineSettingsModal();
+      return;
+    }
+
+    const activeType = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_active_lottery_type') : '') || 'NIKKEI';
+    const activeSess = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_selected_session') : '') || '';
+    const info = getLotteryInfo(activeType, activeSess);
+
+    const draws = getDrawsForLottery('CURRENT');
+    const latestDraw = draws[0];
+    const validDraw = draws.find(isNumericResult);
+
+    // If latest draw is not numeric (e.g. "งดออกผล" or "รอผล")
+    if (!isNumericResult(latestDraw)) {
+      let statusText = 'ไม่มีการออกผลรางวัล (งดออกผล)';
+      if (latestDraw) {
+        const rawText = (latestDraw.full6D || '') + (latestDraw.top3 || '') + (latestDraw.bottom2 || '');
+        if (rawText.includes('รอ')) statusText = 'รอผลรางวัล (ยังไม่ออกผล)';
+        else if (rawText.includes('งด')) statusText = 'งดออกผล (ตลาดปิดทำการ)';
+      }
+
+      showNoResultChoiceModal({
+        title: info.title,
+        statusText,
+        validDraw,
+        onSendGuide: () => {
+          const guideMsg = buildDailyPredictionGuide(activeType, activeSess);
+          postLineMessage(guideMsg, config.targetId, triggerBtn);
+        },
+        onSendLastResult: () => {
+          if (validDraw) {
+            const resMsg = buildLineResultMessage(validDraw, activeType, activeSess);
+            postLineMessage(resMsg, config.targetId, triggerBtn);
+          }
+        }
+      });
+      return;
+    }
+
+    // Has valid current result
+    const messageText = buildLineResultMessage(latestDraw, activeType, activeSess);
+    postLineMessage(messageText, config.targetId, triggerBtn);
+  };
+
   // Open LINE Settings Modal
   window.openLineSettingsModal = async function() {
     const config = await getLineConfig();
@@ -601,19 +922,10 @@
     if (!lineModalContainer) {
       lineModalContainer = document.createElement('div');
       lineModalContainer.id = 'line-settings-modal-overlay';
-      lineModalContainer.className = 'fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in';
-      lineModalContainer.style.position = 'fixed';
-      lineModalContainer.style.inset = '0';
-      lineModalContainer.style.zIndex = '9999';
-      lineModalContainer.style.background = 'rgba(0, 0, 0, 0.85)';
-      lineModalContainer.style.backdropFilter = 'blur(6px)';
-      lineModalContainer.style.display = 'flex';
-      lineModalContainer.style.alignItems = 'center';
-      lineModalContainer.style.justifyContent = 'center';
-      lineModalContainer.style.padding = '16px';
+      lineModalContainer.style.cssText = 'position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(6px); display: flex; align-items: center; justify-content: center; padding: 16px;';
 
       lineModalContainer.innerHTML = `
-        <div class="bg-[#18110b] border border-[#06c755]/50 rounded-2xl p-5 sm:p-6 w-full max-w-lg shadow-2xl text-amber-50 relative max-h-[92vh] overflow-y-auto" style="background: #18110b; border: 1px solid rgba(6, 199, 85, 0.5); border-radius: 16px; padding: 24px; width: 100%; max-width: 520px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); color: #fffbeb; position: relative; max-height: 92vh; overflow-y: auto;">
+        <div style="background: #18110b; border: 1px solid rgba(6, 199, 85, 0.5); border-radius: 16px; padding: 24px; width: 100%; max-width: 520px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); color: #fffbeb; position: relative; max-height: 92vh; overflow-y: auto;">
           <!-- Header -->
           <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(6, 199, 85, 0.3); padding-bottom: 14px; margin-bottom: 18px;">
             <div style="display: flex; align-items: center; gap: 10px;">
@@ -661,7 +973,7 @@
             <label style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;">
               <input type="checkbox" id="line-enabled-input" style="width: 16px; height: 16px; accent-color: #06c755; cursor: pointer;" />
               <span style="font-size: 12px; font-weight: 600; color: #e4e4e7;">
-                🔔 ส่งแจ้งเตือนผลอัตโนมัติเมื่อกด Auto-Sync แล้วพบงวดใหม่
+                🔔 ส่งแจ้งเตือนผลอัตโนมัติเมื่อกด Auto-Sync แล้วพบงวดใหม่ (เฉพาะงวดที่มีผลออกจริง)
               </span>
             </label>
 
@@ -679,21 +991,6 @@
               <div>4. พิมพ์ข้อความอะไรก็ได้ในกลุ่ม บอทจะตอบกลับเป็นรหัสกลุ่ม <b>C...</b> และบันทึกเข้าระบบให้อัตโนมัติทันที!</div>
             </div>
 
-            <!-- Preview Box -->
-            <div style="background: rgba(0,0,0,0.3); border: 1px dashed rgba(6, 199, 85, 0.3); border-radius: 10px; padding: 12px;">
-              <div style="font-size: 11px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">
-                📱 ตัวอย่างรูปแบบข้อความแจ้งเตือนที่ระบบจะส่งเข้ากลุ่ม:
-              </div>
-              <div style="background: #111827; border-radius: 8px; padding: 10px; font-family: sans-serif; font-size: 12px; line-height: 1.5; color: #f3f4f6; border-left: 3px solid #06c755;">
-                <div style="font-weight: 800; color: #34d399;">นิเคอิ-ปก (เช้า)</div>
-                <div style="font-weight: 800; font-size: 13px;">ผล 397-28</div>
-                <div style="margin-top: 4px; color: #fef08a;">🌼 นิเคอิ ปก-เช้า เด่น 2 [ล่าง 2 8]</div>
-                <div style="color: #fef08a;">🌼 นิเคอิ ปก-เช้า รอง 7 [บน 9 7]</div>
-                <div style="color: #6ee7b7;">🏷️ รวมทุกหุ้นปกติ 6 รอบ [บน 9 7]</div>
-                <div style="margin-top: 4px; font-size: 13px;">🎉🎉🎉🎉</div>
-              </div>
-            </div>
-
             <!-- Action Buttons -->
             <div style="display: flex; gap: 10px; margin-top: 6px;">
               <button type="button" id="line-test-send-btn" style="flex: 1; background: rgba(6, 199, 85, 0.15); border: 1px solid #06c755; color: #34d399; font-weight: 800; padding: 10px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
@@ -709,27 +1006,21 @@
 
       document.body.appendChild(lineModalContainer);
 
-      // Event listeners
       lineModalContainer.querySelector('#line-modal-close-btn').onclick = () => {
         lineModalContainer.style.display = 'none';
       };
-
       lineModalContainer.onclick = (e) => {
-        if (e.target === lineModalContainer) {
-          lineModalContainer.style.display = 'none';
-        }
+        if (e.target === lineModalContainer) lineModalContainer.style.display = 'none';
       };
 
       const tokenInput = lineModalContainer.querySelector('#line-token-input');
       lineModalContainer.querySelector('#line-token-toggle').onclick = () => {
         tokenInput.type = tokenInput.type === 'password' ? 'text' : 'password';
       };
-
       lineModalContainer.querySelector('#line-use-personal-btn').onclick = () => {
         lineModalContainer.querySelector('#line-target-input').value = 'U3a7529a26c7c9a1a06d4cd374349a33c';
       };
 
-      // Test send
       lineModalContainer.querySelector('#line-test-send-btn').onclick = async () => {
         const testBtn = lineModalContainer.querySelector('#line-test-send-btn');
         const tokenVal = tokenInput.value.trim();
@@ -748,7 +1039,6 @@
         testBtn.disabled = true;
 
         try {
-          // save config first
           await saveLineConfig({
             channelAccessToken: tokenVal,
             targetId: targetVal,
@@ -777,7 +1067,6 @@
         }
       };
 
-      // Save button
       lineModalContainer.querySelector('#line-save-btn').onclick = async () => {
         const tokenVal = tokenInput.value.trim();
         const targetVal = lineModalContainer.querySelector('#line-target-input').value.trim();
@@ -794,7 +1083,6 @@
       };
     }
 
-    // Populate current values
     lineModalContainer.querySelector('#line-token-input').value = config.channelAccessToken || '';
     lineModalContainer.querySelector('#line-target-input').value = config.targetId || 'U3a7529a26c7c9a1a06d4cd374349a33c';
     lineModalContainer.querySelector('#line-enabled-input').checked = config.enabled !== false;
@@ -802,155 +1090,6 @@
     lineModalContainer.style.display = 'flex';
   };
 
-  // Send current result to LINE
-  window.sendCurrentResultToLine = async function(triggerBtn) {
-    const config = await getLineConfig();
-
-    if (!config.channelAccessToken) {
-      alert('กรุณาตั้งค่า LINE Channel Access Token ก่อนใช้งาน');
-      window.openLineSettingsModal();
-      return;
-    }
-
-    const activeType = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_active_lottery_type') : '') || 'NIKKEI';
-    const activeSess = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_selected_session') : '') || '';
-
-    // Retrieve draws
-    const draws = getDrawsForLottery('CURRENT');
-    const validDraw = draws.find(d => /^d+$/.test(d.top3 || '')) || draws[0];
-
-    if (!validDraw) {
-      alert('ไม่พบข้อมูลผลรางวัลสำหรับรอบที่กำลังเลือก');
-      return;
-    }
-
-    // Determine titles
-    let title = 'ผลรางวัล';
-    let marketShort = 'หุ้น';
-    if (activeType === 'NIKKEI') {
-      if (activeSess.includes('CHINA')) {
-        title = activeSess.includes('AFTERNOON') ? 'จีน-ปก (บ่าย)' : 'จีน-ปก (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'จีน ปก-บ่าย' : 'จีน ปก-เช้า';
-      } else if (activeSess.includes('HANGSENG')) {
-        title = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง-ปก (บ่าย)' : 'ฮั่งเส็ง-ปก (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง ปก-บ่าย' : 'ฮั่งเส็ง ปก-เช้า';
-      } else {
-        title = activeSess.includes('AFTERNOON') ? 'นิเคอิ-ปก (บ่าย)' : 'นิเคอิ-ปก (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'นิเคอิ ปก-บ่าย' : 'นิเคอิ ปก-เช้า';
-      }
-    } else if (activeType === 'STOCKS_VIP') {
-      if (activeSess.includes('NIKKEI')) {
-        title = activeSess.includes('AFTERNOON') ? 'นิเคอิ-VIP (บ่าย)' : 'นิเคอิ-VIP (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'นิเคอิ VIP-บ่าย' : 'นิเคอิ VIP-เช้า';
-      } else if (activeSess.includes('CHINA')) {
-        title = activeSess.includes('AFTERNOON') ? 'จีน-VIP (บ่าย)' : 'จีน-VIP (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'จีน VIP-บ่าย' : 'จีน VIP-เช้า';
-      } else if (activeSess.includes('HANGSENG')) {
-        title = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง-VIP (บ่าย)' : 'ฮั่งเส็ง-VIP (เช้า)';
-        marketShort = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง VIP-บ่าย' : 'ฮั่งเส็ง VIP-เช้า';
-      } else {
-        title = 'หุ้น-VIP';
-        marketShort = 'หุ้น VIP';
-      }
-    } else if (activeType === 'HANOI') {
-      if (activeSess === 'HANOI_SPECIAL') { title = 'ฮานอยพิเศษ'; marketShort = 'ฮานอย พิเศษ'; }
-      else if (activeSess === 'HANOI_VIP') { title = 'ฮานอย VIP'; marketShort = 'ฮานอย VIP'; }
-      else { title = 'ฮานอยปกติ'; marketShort = 'ฮานอย ปกติ'; }
-    } else if (activeType === 'LAOS') { title = 'ลาวพัฒนา'; marketShort = 'ลาวพัฒนา'; }
-    else if (activeType === 'DOWJONES') { title = 'ดาวโจนส์'; marketShort = 'ดาวโจนส์'; }
-    else if (activeType === 'GSB') { title = 'หวยออมสิน'; marketShort = 'ออมสิน'; }
-    else if (activeType === 'GOVERNMENT') { title = 'หวยรัฐบาลไทย'; marketShort = 'รัฐบาลไทย'; }
-
-    // Calculate single digits (เด่น, รอง)
-    const pastDraws = draws.filter(d => d.date !== validDraw.date && /^d+$/.test(d.top3 || ''));
-    const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
-    pastDraws.forEach(d => {
-      `${d.top3 || ''}${d.bottom2 || ''}`.split('').forEach(ch => {
-        const num = parseInt(ch, 10);
-        if (!isNaN(num)) counts[num] = (counts[num] || 0) + 1;
-      });
-    });
-    const sortedDigits = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
-    const primary = sortedDigits[0] ? sortedDigits[0].digit : 2;
-    const secondary = sortedDigits[1] ? sortedDigits[1].digit : 7;
-
-    const top3 = (validDraw.top3 || '').trim();
-    const bottom2 = (validDraw.bottom2 || '').trim();
-    const top2 = validDraw.top2 || (top3.length >= 2 ? top3.slice(-2) : '');
-
-    const lines = [];
-    lines.push(title);
-    lines.push(`ผล ${top3}-${bottom2}`);
-    lines.push('');
-
-    let hasHits = false;
-    if (bottom2.includes(String(primary))) {
-      lines.push(`🌼 ${marketShort} เด่น ${primary} [ล่าง ${bottom2.split('').join(' ')}]`);
-      hasHits = true;
-    }
-    if (top2.includes(String(primary))) {
-      lines.push(`🌼 ${marketShort} เด่น ${primary} [บน ${top2.split('').join(' ')}]`);
-      hasHits = true;
-    }
-    if (bottom2.includes(String(secondary))) {
-      lines.push(`🌼 ${marketShort} รอง ${secondary} [ล่าง ${bottom2.split('').join(' ')}]`);
-      hasHits = true;
-    }
-    if (top2.includes(String(secondary))) {
-      lines.push(`🌼 ${marketShort} รอง ${secondary} [บน ${top2.split('').join(' ')}]`);
-      hasHits = true;
-    }
-
-    if (activeType === 'NIKKEI') {
-      lines.push(`🏷️ รวมทุกหุ้นปกติ 6 รอบ [บน ${top2.split('').join(' ')}]`);
-    } else if (activeType === 'STOCKS_VIP') {
-      lines.push(`🏷️ รวมหุ้น VIP 6 รอบ [บน ${top2.split('').join(' ')}]`);
-    } else {
-      lines.push(`🏷️ รวมหุ้น [บน ${top2.split('').join(' ')}]`);
-    }
-
-    lines.push('');
-    lines.push('🎉🎉🎉🎉');
-
-    const messageText = lines.join('\n');
-
-    let originalHtml = '';
-    if (triggerBtn) {
-      originalHtml = triggerBtn.innerHTML;
-      triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">⏳ กำลังส่งเข้า LINE...</span>';
-      triggerBtn.disabled = true;
-    }
-
-    try {
-      const res = await fetch('/api/line/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: messageText, targetId: config.targetId })
-      });
-      const data = await res.json();
-      if (data.success) {
-        showToast('🎉 ส่งแจ้งเตือนผลเข้า LINE สำเร็จเรียบร้อยแล้ว!');
-        if (triggerBtn) {
-          triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">✓ ส่งเข้า LINE สำเร็จ!</span>';
-          setTimeout(() => {
-            triggerBtn.innerHTML = originalHtml;
-            triggerBtn.disabled = false;
-          }, 2500);
-        }
-      } else {
-        throw new Error(data.error || 'Failed to send message');
-      }
-    } catch(err) {
-      showToast('ส่งไม่สำเร็จ: ' + err.message, true);
-      alert('❌ ส่งผลเข้า LINE ไม่สำเร็จ: ' + err.message);
-      if (triggerBtn) {
-        triggerBtn.innerHTML = originalHtml;
-        triggerBtn.disabled = false;
-      }
-    }
-  };
-
-  // Safe DOM Injector for Navbar LINE Settings Button (Solid Vivid LINE Green #06c755)
   function injectLineNavbarButton() {
     if (document.getElementById('btn-line-settings-ui') || document.getElementById('btn-line-settings-jsx')) return;
     const allButtons = Array.from(document.querySelectorAll('button'));
@@ -977,7 +1116,6 @@
     syncBtn.parentElement.insertBefore(btn, syncBtn.nextSibling);
   }
 
-  // Safe DOM Injector for Prediction Card LINE Send Button (Solid Vivid LINE Green #06c755)
   function injectLineSendButton() {
     if (document.getElementById('btn-line-send-result-ui') || document.getElementById('btn-line-send-result-jsx')) return;
     const allButtons = Array.from(document.querySelectorAll('button'));
@@ -989,14 +1127,14 @@
 
     const btn = document.createElement('button');
     btn.id = 'btn-line-send-result-ui';
-    btn.title = 'ส่งผลรางวัลและเลขที่เข้าเป้าเข้า LINE ทันที';
+    btn.title = 'ส่งผลรางวัลและสรุปแนวทางเข้า LINE ทันที';
     btn.className = 'btn-line-send';
     btn.style.cssText = 'background-color: #06c755 !important; color: #ffffff !important; border: 1px solid #05a043 !important; font-weight: 800 !important; font-size: 13px !important; padding: 10px 16px !important; border-radius: 12px !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; box-shadow: 0 4px 14px rgba(6, 199, 85, 0.5) !important; margin-right: 8px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
     btn.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" style="width: 16px; height: 16px; fill: #ffffff; flex-shrink: 0; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
         <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
       </svg>
-      <span style="color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;">📲 ส่งผลเข้า LINE</span>
+      <span style="color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;">📲 ส่งเข้า LINE</span>
     `;
     btn.onclick = function(e) {
       e.preventDefault();
@@ -1013,7 +1151,6 @@
     injectLineSendButton();
   }
 
-  // Periodic and reactive checks
   setInterval(runAllInjectors, 400);
   if (typeof document !== 'undefined') {
     if (document.body) {
