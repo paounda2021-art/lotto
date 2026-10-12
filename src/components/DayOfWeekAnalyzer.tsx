@@ -179,7 +179,7 @@ const getHeaderBadgeText = (lotteryType: LotteryType, selectedSession?: string) 
 };
 
 const getNextTargetDayCode = (allData: DrawResult[], lotteryType?: LotteryType): string => {
-  const fallbackDay = lotteryType === 'NIKKEI' ? 'Mon' : lotteryType === 'MALAY' ? 'Wed' : 'Sat';
+  const fallbackDay = (lotteryType === 'NIKKEI' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES') ? 'Mon' : lotteryType === 'MALAY' ? 'Wed' : 'Sat';
   if (!allData || allData.length === 0) return fallbackDay;
   const latest = allData[0];
   if (!latest) return fallbackDay;

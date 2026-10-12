@@ -326,7 +326,7 @@ export function getDynamicNextTargetDate(
   let thaiFormatted = latestDraw.dateFormatted || formatThaiDate(latestDraw.date);
 
   if (hasRecordedResult) {
-    const nextDateInfo = parseAndIncrementDate(latestDraw, lotteryType === 'NIKKEI');
+    const nextDateInfo = parseAndIncrementDate(latestDraw, lotteryType === 'NIKKEI' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES');
     thaiFormatted = nextDateInfo.thaiFormatted;
   }
 

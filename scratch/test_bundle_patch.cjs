@@ -40,5 +40,22 @@ if (!code.includes('__CURRENT_ACTIVE_DAY__')) {
   console.log('Applied day sync patches to index JS.');
 }
 
+// 3. Laos next draw weekend skip patch
+const targetW2 = ';if(t==="LAOS")return o.setDate(o.getDate()+1),o;if(t==="NIKKEI"||t==="DOWJONES"){for(o.setDate(o.getDate()+1);o.getDay()===0||o.getDay()===6;)o.setDate(o.getDate()+1);return o}';
+const replW2 = ';if(t==="NIKKEI"||t==="DOWJONES"||t==="LAOS"){for(o.setDate(o.getDate()+1);o.getDay()===0||o.getDay()===6;)o.setDate(o.getDate()+1);return o}';
+
+if (code.includes(targetW2)) {
+  code = code.replace(targetW2, replW2);
+  console.log('Applied Laos w2 weekend skip patch.');
+}
+
+const targetYy = 'Yy=(e,t)=>{const o=t==="NIKKEI"?"Mon":t==="MALAY"?"Wed":"Sat";';
+const replYy = 'Yy=(e,t)=>{const o=t==="NIKKEI"||t==="LAOS"||t==="DOWJONES"?"Mon":t==="MALAY"?"Wed":"Sat";';
+
+if (code.includes(targetYy)) {
+  code = code.replace(targetYy, replYy);
+  console.log('Applied Laos Yy next day fallback patch.');
+}
+
 fs.writeFileSync('scratch/index_patched.js', code, 'utf8');
 console.log('Saved scratch/index_patched.js successfully.');
