@@ -3,52 +3,51 @@ const path = require('path');
 
 function getDraws(file) {
   const p = path.join(__dirname, '..', 'downloaded_target_worker', 'kv_data', file);
-  return JSON.parse(fs.readFileSync(p, 'utf8'))
-    .filter(d => /^[0-9]{2,3}$/.test(String(d.top3 || '').trim()) && /^[0-9]{2}$/.test(String(d.bottom2 || '').trim()));
+  return JSON.parse(fs.readFileSync(p, 'utf8'));
 }
 
-function analyzeStats(draws, targetDay) {
-  const matching = targetDay === 'ALL' ? draws : draws.filter(d => d.dayOfWeek === targetDay);
-  const targetDraws = matching.length > 5 ? matching : draws;
-
-  const digitCounts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
-  const pairCounts = {};
-
-  targetDraws.forEach(d => {
-    const top3 = String(d.top3 || '');
-    const b2 = String(d.bottom2 || '');
-    const t2 = d.top2 || (top3.length >= 2 ? top3.slice(-2) : '');
-    (top3 + b2).split('').forEach(ch => {
-      const n = parseInt(ch, 10);
-      if (!isNaN(n)) digitCounts[n] = (digitCounts[n] || 0) + 1;
+// Exact same Ey calculation as the website frontend
+function Ey(e, t) {
+  const o = e.filter(N => t === 'ALL' || N.dayOfWeek === t);
+  const a = o.length;
+  const i = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+  const r = {};
+  o.forEach(N => {
+    const y = '' + (N.top3 || '') + (N.bottom2 || '');
+    y.split('').forEach(p => {
+      const f = parseInt(p, 10);
+      if (!isNaN(f)) i[f] = (i[f] || 0) + 1;
     });
-    if (/^[0-9]{2}$/.test(t2)) pairCounts[t2] = (pairCounts[t2] || 0) + 1;
-    if (/^[0-9]{2}$/.test(b2)) pairCounts[b2] = (pairCounts[b2] || 0) + 1;
+    if (N.top2 && /^[0-9]{2}$/.test(N.top2)) r[N.top2] = (r[N.top2] || 0) + 1;
+    if (N.bottom2 && /^[0-9]{2}$/.test(N.bottom2)) r[N.bottom2] = (r[N.bottom2] || 0) + 1;
   });
 
-  const sortedDigits = Object.entries(digitCounts).map(([d, c]) => ({ digit: parseInt(d, 10), count: c })).sort((a,b) => b.count - a.count);
-  const d0 = sortedDigits[0].digit;
-  const d1 = sortedDigits[1].digit;
+  const d = Object.entries(i).map(([N, y]) => {
+    const p = parseInt(N, 10);
+    const f = a > 0 ? Math.round(y / (a * 5) * 1000) / 10 : 0;
+    return { digit: p, count: y, percent: f };
+  }).sort((N, y) => y.count - N.count).slice(0, 5);
 
-  let sortedPairs = Object.entries(pairCounts).sort((a,b) => b[1] - a[1]).slice(0, 6).map(x => x[0]);
-  if (sortedPairs.length < 6) {
-    sortedPairs = [d0 + '' + d1, d0 + '5', d0 + '8', d1 + '4', d1 + '7', d1 + '9'];
-  }
-
-  return { d0, d1, topPairs: sortedPairs.join(' ') };
+  const l = Object.entries(r).map(([N, y]) => ({ pair: N, count: y })).sort((N, y) => y.count - N.count).slice(0, 6);
+  return { d0: d[0].digit, d1: d[1].digit, pairs: l.map(x => x.pair).join(' ') };
 }
 
 const nikkeiM = getDraws('lotto_data_nikkei_morning.json');
 const chinaA = getDraws('lotto_data_china_afternoon.json');
 const hangsengVipM = getDraws('lotto_data_hangseng_vip_morning.json');
 
+// For Monday pre-draw scan, exclude 2026-10-12 so it matches the pre-draw card on screen exactly
+const nikkeiM_Mon = nikkeiM.filter(d => d.date !== '2026-10-12');
+const chinaA_Mon = chinaA.filter(d => d.date !== '2026-10-12');
+const hangsengVipM_Mon = hangsengVipM.filter(d => d.date !== '2026-10-12');
+
 const daysConfig = [
-  { code: 'Mon', name: 'วันจันทร์', dateSample: '12 ต.ค. 2569' },
-  { code: 'Tue', name: 'วันอังคาร', dateSample: '13 ต.ค. 2569' },
-  { code: 'Wed', name: 'วันพุธ', dateSample: '14 ต.ค. 2569' },
-  { code: 'Thu', name: 'วันพฤหัสบดี', dateSample: '15 ต.ค. 2569' },
-  { code: 'Fri', name: 'วันศุกร์', dateSample: '16 ต.ค. 2569' },
-  { code: 'ALL', name: 'สถิติรวมทุกวันทำการ', dateSample: 'ทุกวันทำการ' }
+  { code: 'Mon', name: 'วันจันทร์', dateSample: '12 ต.ค. 2569', isMon: true },
+  { code: 'Tue', name: 'วันอังคาร', dateSample: '13 ต.ค. 2569', isMon: false },
+  { code: 'Wed', name: 'วันพุธ', dateSample: '14 ต.ค. 2569', isMon: false },
+  { code: 'Thu', name: 'วันพฤหัสบดี', dateSample: '15 ต.ค. 2569', isMon: false },
+  { code: 'Fri', name: 'วันศุกร์', dateSample: '16 ต.ค. 2569', isMon: false },
+  { code: 'ALL', name: 'สถิติรวมทุกวันทำการ', dateSample: 'ทุกวันทำการ', isMon: false }
 ];
 
 let csv = '\uFEFF'; // UTF-8 BOM
@@ -57,20 +56,24 @@ csv += 'ลำดับ,วันทำการ,ตัวอย่างวั�
 let rowIdx = 1;
 
 daysConfig.forEach(d => {
+  const nM_src = d.isMon ? nikkeiM_Mon : nikkeiM;
+  const cA_src = d.isMon ? chinaA_Mon : chinaA;
+  const hVip_src = d.isMon ? hangsengVipM_Mon : hangsengVipM;
+
   // 1. Morning (นิเคอิ เช้า ➡️ จีน เช้า) using Nikkei Morning card
-  const resM = analyzeStats(nikkeiM, d.code);
-  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","☀️ รอบเช้า (09:30-10:30)","นิเคอิ (เช้า) 09:30 ➡️ ตาม จีน (เช้า) 10:30","นิเคอิ (เช้า)","${resM.d0}","${resM.d1}","${resM.topPairs}","86.3%","13.7%","แทงนิเคอิเช้า ถ้าเข้าเป้าหยุดทันที หากหลุดตามทบจีนเช้า"\n`;
+  const resM = Ey(nM_src, d.code);
+  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","☀️ รอบเช้า (09:30-10:30)","นิเคอิ (เช้า) 09:30 ➡️ ตาม จีน (เช้า) 10:30","นิเคอิ (เช้า)","${resM.d0}","${resM.d1}","${resM.pairs}","86.3%","13.7%","แทงนิเคอิเช้า ถ้าเข้าเป้าหยุดทันที หากหลุดตามทบจีนเช้า"\n`;
 
   // 2. Afternoon Recommended (นิเคอิ บ่าย ➡️ จีน บ่าย) using China Afternoon card
-  const resA = analyzeStats(chinaA, d.code);
-  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","🌤️ รอบบ่าย (แนะนำ 🥇 13:00-14:00)","นิเคอิ (บ่าย) 13:00 ➡️ ตาม จีน (บ่าย) 14:00","จีน (บ่าย)","${resA.d0}","${resA.d1}","${resA.topPairs}","89.0%","11.0%","หลุดน้อยที่สุดในระบบ แทงนิเคอิบ่าย ถ้าหลุดตามทบจีนบ่าย"\n`;
+  const resA = Ey(cA_src, d.code);
+  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","🌤️ รอบบ่าย (แนะนำ 🥇 13:00-14:00)","นิเคอิ (บ่าย) 13:00 ➡️ ตาม จีน (บ่าย) 14:00","จีน (บ่าย)","${resA.d0}","${resA.d1}","${resA.pairs}","89.0%","11.0%","หลุดน้อยที่สุดในระบบ แทงนิเคอิบ่าย ถ้าหลุดตามทบจีนบ่าย"\n`;
 
   // 3. Afternoon Alternative (จีน บ่าย ➡️ ฮั่งเส็ง บ่าย) using China Afternoon card
-  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","🌤️ รอบบ่าย (ทางเลือกเจาะแตก 14:00-15:30)","จีน (บ่าย) 14:00 ➡️ ตาม ฮั่งเส็ง (บ่าย) 15:30","จีน (บ่าย)","${resA.d0}","${resA.d1}","${resA.topPairs}","87.2%","12.8%","ชุดเจาะ 2 ตัวเข้าดีที่สุด (25.6%) แทงจีนบ่าย ถ้าหลุดตามฮั่งเส็งบ่าย"\n`;
+  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","🌤️ รอบบ่าย (ทางเลือกเจาะแตก 14:00-15:30)","จีน (บ่าย) 14:00 ➡️ ตาม ฮั่งเส็ง (บ่าย) 15:30","จีน (บ่าย)","${resA.d0}","${resA.d1}","${resA.pairs}","87.2%","12.8%","ชุดเจาะ 2 ตัวเข้าดีที่สุด (25.6%) แทงจีนบ่าย ถ้าหลุดตามฮั่งเส็งบ่าย"\n`;
 
   // 4. VIP Morning (จีน VIP เช้า ➡️ ฮั่งเส็ง VIP เช้า) using Hangseng VIP Morning card
-  const resVip = analyzeStats(hangsengVipM, d.code);
-  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","💎 VIP เช้า (10:30-11:00)","จีน VIP (เช้า) 10:30 ➡️ ตาม ฮั่งเส็ง VIP (เช้า) 11:00","ฮั่งเส็ง VIP (เช้า)","${resVip.d0}","${resVip.d1}","${resVip.topPairs}","84.7%","15.3%","สำหรับสายหุ้น VIP เจาะ 2 ตัว Top 6 แตกบ่อย"\n`;
+  const resVip = Ey(hVip_src, d.code);
+  csv += `"${rowIdx++}","${d.name}","${d.dateSample}","💎 VIP เช้า (10:30-11:00)","จีน VIP (เช้า) 10:30 ➡️ ตาม ฮั่งเส็ง VIP (เช้า) 11:00","ฮั่งเส็ง VIP (เช้า)","${resVip.d0}","${resVip.d1}","${resVip.pairs}","84.7%","15.3%","สำหรับสายหุ้น VIP เจาะ 2 ตัว Top 6 แตกบ่อย"\n`;
 });
 
 // Output files
@@ -80,5 +83,5 @@ const outWorker = path.join(__dirname, '..', 'downloaded_target_worker', 'assets
 fs.writeFileSync(outDist, csv, 'utf8');
 fs.writeFileSync(outWorker, csv, 'utf8');
 
-console.log('Successfully created lotto_chase_strategy_daily.csv:');
+console.log('Successfully updated lotto_chase_strategy_daily.csv to match web frontend exactly:');
 console.log('Size:', csv.length, 'bytes');
