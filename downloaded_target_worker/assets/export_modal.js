@@ -522,6 +522,8 @@
   
   
   
+  
+  
   /* ==========================================================================
      LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
      ========================================================================== */
@@ -745,45 +747,120 @@
 
   function buildDailyPredictionGuide(activeType, activeSess) {
     const info = getLotteryInfo(activeType, activeSess);
-    const activeDay = localStorage.getItem('lotto_selected_day') || 'Mon';
+
+    let dayName = '';
+    let dayCode = '';
     const dayNameMap = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสบดี', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์', ALL: 'ทุกวันทำการ' };
-    const dayName = dayNameMap[activeDay] || 'ประจำวัน';
+    const revDayMap = { 'จันทร์': 'Mon', 'อังคาร': 'Tue', 'พุธ': 'Wed', 'พฤหัสบดี': 'Thu', 'ศุกร์': 'Fri', 'เสาร์': 'Sat', 'อาทิตย์': 'Sun', 'ทุกวันทำการ': 'ALL' };
 
-    let d0 = '3', d1 = '2';
-    try {
-      const funText = document.body.innerText.match(/ฟันเด่นวิ่ง-รูด\s*19\s*ประตู:\s*([0-9])\s*และ\s*([0-9])/);
-      if (funText) {
-        d0 = funText[1];
-        d1 = funText[2];
+    // 1. From window.__CURRENT_STAT_H__
+    if (typeof window !== 'undefined' && window.__CURRENT_STAT_H__ && window.__CURRENT_STAT_H__.dayName) {
+      dayName = window.__CURRENT_STAT_H__.dayName;
+      dayCode = window.__CURRENT_STAT_H__.dayOfWeek || revDayMap[dayName] || '';
+    }
+
+    // 2. From DOM
+    if (!dayName && typeof document !== 'undefined') {
+      try {
+        const bodyText = document.body ? document.body.innerText : '';
+        const m1 = bodyText.match(/สรุปฟันธงเลขเด่น(?:รูด)?(?:งวด)?ประจำวัน([^\s():]+)/);
+        if (m1) {
+          dayName = m1[1].replace(/[():]/g, '').trim();
+        } else {
+          const m2 = bodyText.match(/จากสถิติสแกน\s*\d+\s*งวด\s*\(วัน([^\s():]+)\)/);
+          if (m2) {
+            dayName = m2[1].replace(/[():]/g, '').trim();
+          } else {
+            const m3 = bodyText.match(/ชุดเจาะ 2 ตัว\s*\(เน้นประจำวัน([^\s():]+)\)/);
+            if (m3) {
+              dayName = m3[1].replace(/[():]/g, '').trim();
+            }
+          }
+        }
+      } catch(e) {}
+    }
+
+    // 3. From window.__CURRENT_ACTIVE_DAY__ or localStorage
+    if (!dayName) {
+      const activeDay = (typeof window !== 'undefined' ? window.__CURRENT_ACTIVE_DAY__ : null) || 
+                        (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_selected_day') : null);
+      if (activeDay && dayNameMap[activeDay]) {
+        dayName = dayNameMap[activeDay];
+        dayCode = activeDay;
       }
-    } catch(e) {}
+    }
 
-    const draws = getDrawsForLottery('CURRENT');
-    const pastDraws = draws.filter(isNumericResult);
-    const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
-    const pairCounts = {};
-    pastDraws.forEach(d => {
-      (String(d.top3 || '') + String(d.bottom2 || '')).split('').forEach(ch => {
-        const n = parseInt(ch, 10);
-        if (!isNaN(n)) counts[n] = (counts[n] || 0) + 1;
-      });
-      if (d.top2 && /^[0-9]{2}$/.test(d.top2)) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
-      if (d.bottom2 && /^[0-9]{2}$/.test(d.bottom2)) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
-    });
-    const sorted = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
-    if (!d0 && sorted[0]) d0 = String(sorted[0].digit);
-    if (!d1 && sorted[1]) d1 = String(sorted[1].digit);
+    if (!dayName) {
+      dayName = 'จันทร์';
+    }
+    dayName = dayName.replace(/^วัน/, '').trim();
+    if (!dayCode) {
+      dayCode = revDayMap[dayName] || 'Mon';
+    }
 
-    const topPairs = Object.entries(pairCounts)
-      .sort((a,b) => b[1] - a[1])
-      .slice(0, 6)
-      .map(p => p[0]);
+    // Extract d0 and d1
+    let d0 = '', d1 = '';
+    if (typeof window !== 'undefined' && window.__CURRENT_STAT_H__ && window.__CURRENT_STAT_H__.topSingleDigits && window.__CURRENT_STAT_H__.topSingleDigits.length >= 2) {
+      d0 = String(window.__CURRENT_STAT_H__.topSingleDigits[0].digit);
+      d1 = String(window.__CURRENT_STAT_H__.topSingleDigits[1].digit);
+    }
 
-    const fallbackPairs = [
-      d0 + d1, d0 + '5', d0 + '8',
-      d1 + '4', d1 + '7', d1 + '9'
-    ];
-    const finalPairs = topPairs.length >= 6 ? topPairs.join(' ') : fallbackPairs.join(' ');
+    if ((!d0 || !d1) && typeof document !== 'undefined') {
+      try {
+        const bodyText = document.body ? document.body.innerText : '';
+        const funMatch = bodyText.match(/ฟันเด่นวิ่ง-รูด\s*19\s*ประตู:\s*([0-9])\s*และ\s*([0-9])/);
+        if (funMatch) {
+          d0 = funMatch[1];
+          d1 = funMatch[2];
+        }
+      } catch(e) {}
+    }
+
+    // Extract 6 pairs
+    let topPairs = [];
+    if (typeof window !== 'undefined' && window.__CURRENT_STAT_H__ && window.__CURRENT_STAT_H__.top2DPairs && window.__CURRENT_STAT_H__.top2DPairs.length > 0) {
+      topPairs = window.__CURRENT_STAT_H__.top2DPairs.slice(0, 6).map(x => String(x.pair));
+    }
+
+    if (!d0 || !d1 || topPairs.length < 6) {
+      try {
+        const draws = getDrawsForLottery('CURRENT');
+        const dayDraws = draws.filter(d => isNumericResult(d) && (dayCode === 'ALL' || d.dayOfWeek === dayCode));
+        const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+        const pairCounts = {};
+        const targetDraws = dayDraws.length > 0 ? dayDraws : draws.filter(isNumericResult);
+
+        targetDraws.forEach(d => {
+          (String(d.top3 || '') + String(d.bottom2 || '')).split('').forEach(ch => {
+            const n = parseInt(ch, 10);
+            if (!isNaN(n)) counts[n] = (counts[n] || 0) + 1;
+          });
+          if (d.top2 && /^[0-9]{2}$/.test(d.top2)) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
+          if (d.bottom2 && /^[0-9]{2}$/.test(d.bottom2)) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
+        });
+
+        if (!d0 || !d1) {
+          const sorted = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
+          if (!d0 && sorted[0]) d0 = String(sorted[0].digit);
+          if (!d1 && sorted[1]) d1 = String(sorted[1].digit);
+        }
+
+        if (topPairs.length < 6) {
+          const sortedPairs = Object.entries(pairCounts).sort((a,b) => b[1] - a[1]).slice(0, 6).map(p => p[0]);
+          if (sortedPairs.length > 0) {
+            topPairs = sortedPairs;
+          }
+        }
+      } catch(e) {}
+    }
+
+    if (!d0) d0 = '9';
+    if (!d1) d1 = '0';
+
+    if (topPairs.length < 6) {
+      topPairs = [d0 + d1, d0 + '5', d0 + '8', d1 + '4', d1 + '7', d1 + '9'];
+    }
+    const finalPairs = topPairs.slice(0, 6).join(' ');
 
     const lines = [
       '📊 [แนวทางสถิติเลขรายวัน] SystemLucky289',
@@ -791,7 +868,10 @@
       '📌 รอบ: ' + info.title,
       '🗓️ ประจำ: วัน' + dayName,
       '--------------------------',
-      '🔥 ฟันเด่น วิ่ง-รูด 19 ประตู: ' + d0 + ' และ ' + d1,
+      '🔥 ฟันเด่น วิ่ง-รูด 19 ประตู: ',
+      '⭐ เด่นหลัก: ' + d0,
+      '✨ เด่นรอง: ' + d1,
+      '',
       '💎 ชุดเจาะ 2 ตัว (เน้นประจำวัน' + dayName + '):',
       ' ' + finalPairs,
       '--------------------------',
