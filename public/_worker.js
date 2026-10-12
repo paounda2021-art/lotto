@@ -243,6 +243,46 @@ var worker_default = {
         }
       }
 
+      // POST /api/line/webhook (รับ Event จาก LINE เพื่ออ่าน groupId อัตโนมัติ)
+      if (url.pathname === "/api/line/webhook" && request.method === "POST") {
+        try {
+          const body = await request.json();
+          const events = body.events || [];
+          for (const ev of events) {
+            const groupId = ev.source && ev.source.groupId;
+            if (groupId && kvStore) {
+              const raw = await kvStore.get("line_bot_config", "text");
+              const cfg = raw ? JSON.parse(raw) : {};
+              cfg.targetId = groupId;
+              cfg.lastDetectedGroupId = groupId;
+              await kvStore.put("line_bot_config", JSON.stringify(cfg));
+
+              if (cfg.channelAccessToken && ev.replyToken) {
+                await fetch("https://api.line.me/v2/bot/message/reply", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${cfg.channelAccessToken}`
+                  },
+                  body: JSON.stringify({
+                    replyToken: ev.replyToken,
+                    messages: [
+                      {
+                        type: "text",
+                        text: `รหัสกลุ่มนี้คือ:\n${groupId}\n\n(ระบบได้บันทึกรหัสกลุ่มนี้ไว้ให้อัตโนมัติแล้วครับ)`
+                      }
+                    ]
+                  })
+                }).catch(() => {});
+              }
+            }
+          }
+          return new Response("OK", { status: 200 });
+        } catch (e) {
+          return new Response("OK", { status: 200 });
+        }
+      }
+
       // POST /api/line/send
       if (url.pathname === "/api/line/send" && request.method === "POST") {
         try {

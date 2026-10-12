@@ -170,6 +170,48 @@ function createServerHandler() {
         });
         return;
       }
+      if (parsed.pathname === '/api/line/webhook' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', async () => {
+          try {
+            const data = JSON.parse(body);
+            const events = data.events || [];
+            for (const ev of events) {
+              const groupId = ev.source && ev.source.groupId;
+              if (groupId) {
+                let cfg = { channelAccessToken: '', targetId: groupId, enabled: true };
+                if (fs.existsSync(lineConfigPath)) {
+                  try { cfg = JSON.parse(fs.readFileSync(lineConfigPath, 'utf8')); } catch(e) {}
+                }
+                cfg.targetId = groupId;
+                cfg.lastDetectedGroupId = groupId;
+                fs.writeFileSync(lineConfigPath, JSON.stringify(cfg, null, 2), 'utf8');
+
+                if (cfg.channelAccessToken && ev.replyToken) {
+                  await fetch('https://api.line.me/v2/bot/message/reply', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${cfg.channelAccessToken}`
+                    },
+                    body: JSON.stringify({
+                      replyToken: ev.replyToken,
+                      messages: [{ type: 'text', text: `รหัสกลุ่มนี้คือ:\n${groupId}\n\n(ระบบบันทึกรหัสกลุ่มนี้เรียบร้อยแล้วครับ)` }]
+                    })
+                  }).catch(() => {});
+                }
+              }
+            }
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end('OK');
+          } catch(e) {
+            res.writeHead(200, { 'Content-Type': 'text/plain' });
+            res.end('OK');
+          }
+        });
+        return;
+      }
 
       if (parsed.pathname === '/api/line/send' && req.method === 'POST') {
         let body = '';
