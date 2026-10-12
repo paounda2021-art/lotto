@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 function localKvPlugin(): Plugin {
-  const kvDir = path.resolve(__dirname, 'cloudflare_download_afdeb0f4/kv_data');
+  const kvDir = path.resolve(__dirname, 'downloaded_target_worker/kv_data');
   return {
     name: 'local-kv-plugin',
     configureServer(server) {
@@ -92,10 +92,18 @@ function localKvPlugin(): Plugin {
         }
 
         if (url.pathname.startsWith('/api/proxy')) {
-          const targetUrl = url.searchParams.get('url');
+          let targetUrl = url.searchParams.get('url');
+          if (!targetUrl) {
+            const rawIdx = (req.url || '').indexOf('url=');
+            if (rawIdx !== -1) {
+              try { targetUrl = decodeURIComponent((req.url || '').slice(rawIdx + 4)); } catch (e) { targetUrl = (req.url || '').slice(rawIdx + 4); }
+            }
+          }
           if (!targetUrl) {
             res.statusCode = 400;
-            res.end(JSON.stringify({ error: 'Missing target url' }));
+            res.setHeader('Content-Type', 'application/json');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify({ error: 'Missing target url parameter' }));
             return;
           }
           try {
@@ -107,12 +115,15 @@ function localKvPlugin(): Plugin {
               }
             });
             const text = await proxyRes.text();
-            res.setHeader('Content-Type', 'application/json');
+            res.statusCode = proxyRes.status || 200;
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.setHeader('Access-Control-Allow-Origin', '*');
             res.end(text);
           } catch (e: any) {
             res.statusCode = 500;
-            res.end(JSON.stringify({ error: e?.message }));
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.end(JSON.stringify({ error: e?.message || 'Proxy fetch failed' }));
           }
           return;
         }

@@ -2,7 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PUBLIC_DIR = path.join(__dirname, '..', 'downloaded_target_worker');
+const PUBLIC_DIR = path.join(__dirname, '..', 'dist');
 const KV_DIR = path.join(__dirname, '..', 'downloaded_target_worker', 'kv_data');
 
 if (!fs.existsSync(KV_DIR)) {
@@ -95,23 +95,132 @@ function createServerHandler() {
     // Handle Proxy API (/api/proxy)
     if (req.url.startsWith('/api/proxy')) {
       const parsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
-      const targetUrl = parsed.searchParams.get('url');
-      if (targetUrl) {
-        try {
-          const proxyRes = await fetch(targetUrl, {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-              'Referer': 'https://exphuay.com/',
-              'Accept': 'application/json, text/plain, */*'
-            }
-          });
-          const text = await proxyRes.text();
-          res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-          res.end(text);
-        } catch (err) {
-          res.writeHead(500, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ error: err.message }));
+      let targetUrl = parsed.searchParams.get('url');
+      if (!targetUrl) {
+        const rawIdx = req.url.indexOf('url=');
+        if (rawIdx !== -1) {
+          try {
+            targetUrl = decodeURIComponent(req.url.slice(rawIdx + 4));
+          } catch(e) {
+            targetUrl = req.url.slice(rawIdx + 4);
+          }
         }
+      }
+      if (!targetUrl) {
+        res.writeHead(400, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
+        res.end(JSON.stringify({ error: 'Missing target url parameter' }));
+        return;
+      }
+
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 12000);
+        const proxyRes = await fetch(targetUrl, {
+          signal: controller.signal,
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            'Referer': 'https://exphuay.com/',
+            'Accept': 'application/json, text/plain, */*'
+          }
+        });
+        clearTimeout(timeout);
+        const text = await proxyRes.text();
+        res.writeHead(proxyRes.status || 200, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        });
+        res.end(text);
+      } catch (err) {
+        res.writeHead(500, {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*'
+        });
+        res.end(JSON.stringify({ error: err.message || 'Proxy fetch failed' }));
+      }
+      return;
+    }
+
+    // Handle LINE API (/api/line)
+    if (req.url.startsWith('/api/line')) {
+      const parsed = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
+      const lineConfigPath = path.join(KV_DIR, 'line_bot_config.json');
+
+      if (parsed.pathname === '/api/line/config' && req.method === 'GET') {
+        let config = { channelAccessToken: '', targetId: 'U3a7529a26c7c9a1a06d4cd374349a33c', enabled: true };
+        if (fs.existsSync(lineConfigPath)) {
+          try { config = JSON.parse(fs.readFileSync(lineConfigPath, 'utf8')); } catch(e) {}
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, config }));
+        return;
+      }
+
+      if (parsed.pathname === '/api/line/config' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', () => {
+          try {
+            fs.writeFileSync(lineConfigPath, body, 'utf8');
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, message: 'LINE Bot config saved' }));
+          } catch(e) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: e.message }));
+          }
+        });
+        return;
+      }
+
+      if (parsed.pathname === '/api/line/send' && req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => { body += chunk; });
+        req.on('end', async () => {
+          try {
+            const data = JSON.parse(body);
+            let { message, to, token } = data;
+            if (!token && fs.existsSync(lineConfigPath)) {
+              try {
+                const cfg = JSON.parse(fs.readFileSync(lineConfigPath, 'utf8'));
+                token = cfg.channelAccessToken;
+                if (!to) to = cfg.targetId;
+              } catch(e) {}
+            }
+            if (!to) to = 'U3a7529a26c7c9a1a06d4cd374349a33c';
+            if (!token) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: false, error: 'กรุณาระบุ Channel Access Token ในการตั้งค่า LINE ก่อนส่งข้อความ' }));
+              return;
+            }
+            if (!message) {
+              res.writeHead(400, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: false, error: 'ข้อความว่างเปล่า' }));
+              return;
+            }
+
+            const lineRes = await fetch('https://api.line.me/v2/bot/message/push', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
+              body: JSON.stringify({
+                to,
+                messages: [{ type: 'text', text: message }]
+              })
+            });
+            const lineJson = await lineRes.json().catch(() => ({}));
+            if (!lineRes.ok) {
+              res.writeHead(200, { 'Content-Type': 'application/json' });
+              res.end(JSON.stringify({ success: false, status: lineRes.status, error: lineJson.message || lineRes.statusText, details: lineJson }));
+              return;
+            }
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: true, message: 'ส่งแจ้งเตือนเข้า LINE สำเร็จแล้ว!', to }));
+          } catch(err) {
+            res.writeHead(500, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: false, error: err.message }));
+          }
+        });
         return;
       }
     }
