@@ -414,6 +414,25 @@
             <span id="export-count-display" style="background:rgba(245,158,11,0.2);padding:2px 8px;border-radius:6px;color:#fff;font-weight:900;">0 งวด</span>
           </div>
 
+          <!-- Special Comprehensive Analysis Report Download Card -->
+          <div style="background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(16,185,129,0.15));border:1px solid rgba(245,158,11,0.5);border-radius:14px;padding:14px;margin-bottom:16px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:20px;">🏆</span>
+              <div>
+                <h4 style="margin:0;font-size:13px;font-weight:900;color:#fef08a;">รายงานสถิติการมาของเลข & วิเคราะห์ความแม่นยำ (เจาะลึก 15 รอบ)</h4>
+                <p style="margin:2px 0 0;font-size:11px;color:#d1d5db;">วิเคราะห์ เด่น รอง และชุดเจาะ Top 6 คู่ หวยหุ้นปกติ / VIP / ฮานอย แยกเช้า-บ่าย</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+              <a href="/assets/lotto_hit_rate_summary.csv" download="lotto_hit_rate_summary.csv" style="text-decoration:none;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fcd34d;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;text-align:center;">
+                📊 ดาวน์โหลดสรุปอันดับ (Summary CSV)
+              </a>
+              <a href="/assets/lotto_hit_rate_details.csv" download="lotto_hit_rate_details.csv" style="text-decoration:none;background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#6ee7b7;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;text-align:center;">
+                📑 ดาวน์โหลดประวัติ 1,500 งวด (Details CSV)
+              </a>
+            </div>
+          </div>
+
           <!-- Action Buttons -->
           <div style="display:flex;gap:10px;flex-wrap:wrap;">
             <button id="export-btn-excel" style="flex:1;min-width:160px;padding:12px;border-radius:12px;border:none;background:linear-gradient(to right,#10b981,#14b8a6);color:#000;font-weight:900;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 4px 15px rgba(16,185,129,0.3);">
@@ -519,6 +538,7 @@
   }
 
 
+  
   
   
   
