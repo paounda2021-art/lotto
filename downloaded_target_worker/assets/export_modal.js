@@ -424,11 +424,14 @@
               </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+              <a href="/assets/lotto_chase_strategy_daily.csv" download="lotto_chase_strategy_daily.csv" style="grid-column: span 2; text-decoration:none;background:linear-gradient(135deg, rgba(234,179,8,0.3), rgba(245,158,11,0.3));border:1px solid #facc15;color:#fef08a;padding:11px 14px;border-radius:10px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;text-align:center;box-shadow: 0 4px 12px rgba(234,179,8,0.2);">
+                🎯 ดาวน์โหลดตารางสูตรล่า 2 หวย (รายวัน จันทร์-ศุกร์) CSV
+              </a>
               <a href="/assets/lotto_hit_rate_summary.csv" download="lotto_hit_rate_summary.csv" style="text-decoration:none;background:rgba(245,158,11,0.2);border:1px solid #f59e0b;color:#fcd34d;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;text-align:center;">
-                📊 ดาวน์โหลดสรุปอันดับ (Summary CSV)
+                📊 สรุปอันดับความแม่นยำ (Summary CSV)
               </a>
               <a href="/assets/lotto_hit_rate_details.csv" download="lotto_hit_rate_details.csv" style="text-decoration:none;background:rgba(16,185,129,0.2);border:1px solid #10b981;color:#6ee7b7;padding:9px 12px;border-radius:10px;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;transition:all 0.2s;text-align:center;">
-                📑 ดาวน์โหลดประวัติ 1,500 งวด (Details CSV)
+                📑 ประวัติย้อนหลัง 1,500 งวด (Details CSV)
               </a>
             </div>
           </div>
@@ -534,10 +537,27 @@
       window.openExportPredictionModal();
     };
 
-    targetBtn.parentElement.insertBefore(btn, targetBtn);
+    const chaseBtn = document.createElement('a');
+    chaseBtn.id = 'btn-download-chase-strategy-ui';
+    chaseBtn.href = '/assets/lotto_chase_strategy_daily.csv';
+    chaseBtn.download = 'lotto_chase_strategy_daily.csv';
+    chaseBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 shrink-0 cursor-pointer shadow-lg bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-400 text-black border border-amber-300 hover:brightness-110 hover:scale-105 active:scale-95 shadow-glow-amber mr-2 no-underline';
+    chaseBtn.title = 'ดาวน์โหลดตารางสรุปสูตรล่า 2 หวย (เข้าแล้วหยุด/หลุดตามทบ) รายวัน จันทร์-ศุกร์';
+    chaseBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-black">
+        <circle cx="12" cy="12" r="10"></circle>
+        <circle cx="12" cy="12" r="6"></circle>
+        <circle cx="12" cy="12" r="2"></circle>
+      </svg>
+      <span>🎯 ดาวน์โหลดสูตรล่า 2 หวย (CSV)</span>
+    `;
+
+    targetBtn.parentElement.insertBefore(chaseBtn, targetBtn);
+    targetBtn.parentElement.insertBefore(btn, chaseBtn);
   }
 
 
+  
   
   
   
