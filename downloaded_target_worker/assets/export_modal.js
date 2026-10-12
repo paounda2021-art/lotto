@@ -521,12 +521,23 @@
 
   
   
+  
   /* ==========================================================================
      LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
      ========================================================================== */
 
   let lineModalContainer = null;
   let lineChoiceModalOverlay = null;
+
+  function getBangkokTodayDate() {
+    const now = new Date();
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+    const bkk = new Date(utc + (3600000 * 7));
+    const y = bkk.getFullYear();
+    const m = String(bkk.getMonth() + 1).padStart(2, '0');
+    const d = String(bkk.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + d;
+  }
 
   function showToast(message, isError = false) {
     let toast = document.getElementById('lucky-toast-notification');
@@ -675,6 +686,7 @@
 
   function buildLineResultMessage(draw, activeType, activeSess) {
     const info = getLotteryInfo(activeType, activeSess);
+    const type = (activeType || '').toUpperCase();
     const top3 = String(draw.top3 || '').trim();
     const bottom2 = String(draw.bottom2 || '').trim();
     const top2 = draw.top2 || (top3.length >= 2 ? top3.slice(-2) : '');
@@ -718,10 +730,12 @@
       hasHits = true;
     }
 
-    if (info.title.includes('VIP')) {
-      lines.push('🏷️ รวมหุ้น VIP [บน ' + top2.split('').join(' ') + ']');
-    } else {
-      lines.push('🏷️ รวมหุ้น [บน ' + top2.split('').join(' ') + ']');
+    if (type === 'HANOI') {
+      lines.push('🏷️ รวม 3 ฮานอย [บน ' + top2.split('').join(' ') + ']');
+    } else if (type === 'NIKKEI') {
+      lines.push('🏷️ รวมทุกหุ้นปกติ 6 รอบ [บน ' + top2.split('').join(' ') + ']');
+    } else if (type === 'STOCK_VIP' || type === 'STOCKS_VIP') {
+      lines.push('🏷️ รวมทุกหุ้น VIP 6 รอบ [บน ' + top2.split('').join(' ') + ']');
     }
 
     lines.push('');
@@ -731,11 +745,19 @@
 
   function buildDailyPredictionGuide(activeType, activeSess) {
     const info = getLotteryInfo(activeType, activeSess);
-    const activeDay = localStorage.getItem('lotto_selected_day') || 'Tue';
-    const dayNameMap = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสบดี', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์', ALL: 'ทุกวัน' };
-    const dayName = dayNameMap[activeDay] || 'อังคาร';
+    const activeDay = localStorage.getItem('lotto_selected_day') || 'Mon';
+    const dayNameMap = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสบดี', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์', ALL: 'ทุกวันทำการ' };
+    const dayName = dayNameMap[activeDay] || 'ประจำวัน';
 
     let d0 = '3', d1 = '2';
+    try {
+      const funText = document.body.innerText.match(/ฟันเด่นวิ่ง-รูด\s*19\s*ประตู:\s*([0-9])\s*และ\s*([0-9])/);
+      if (funText) {
+        d0 = funText[1];
+        d1 = funText[2];
+      }
+    } catch(e) {}
+
     const draws = getDrawsForLottery('CURRENT');
     const pastDraws = draws.filter(isNumericResult);
     const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
@@ -745,14 +767,23 @@
         const n = parseInt(ch, 10);
         if (!isNaN(n)) counts[n] = (counts[n] || 0) + 1;
       });
-      if (d.top2) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
-      if (d.bottom2) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
+      if (d.top2 && /^[0-9]{2}$/.test(d.top2)) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
+      if (d.bottom2 && /^[0-9]{2}$/.test(d.bottom2)) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
     });
     const sorted = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
-    if (sorted[0]) d0 = String(sorted[0].digit);
-    if (sorted[1]) d1 = String(sorted[1].digit);
+    if (!d0 && sorted[0]) d0 = String(sorted[0].digit);
+    if (!d1 && sorted[1]) d1 = String(sorted[1].digit);
 
-    const topPairs = Object.entries(pairCounts).sort((a,b) => b[1] - a[1]).slice(0, 6).map(p => p[0]).join(' ');
+    const topPairs = Object.entries(pairCounts)
+      .sort((a,b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(p => p[0]);
+
+    const fallbackPairs = [
+      d0 + d1, d0 + '5', d0 + '8',
+      d1 + '4', d1 + '7', d1 + '9'
+    ];
+    const finalPairs = topPairs.length >= 6 ? topPairs.join(' ') : fallbackPairs.join(' ');
 
     const lines = [
       '📊 [แนวทางสถิติเลขรายวัน] SystemLucky289',
@@ -761,7 +792,8 @@
       '🗓️ ประจำ: วัน' + dayName,
       '--------------------------',
       '🔥 ฟันเด่น วิ่ง-รูด 19 ประตู: ' + d0 + ' และ ' + d1,
-      '💎 TOP 6 เลข 2 ตัว เน้น: ' + (topPairs || (d0 + d1 + ' ' + d0 + '5 ' + d0 + '8 ' + d1 + '4 ' + d1 + '7 ' + d1 + '9')),
+      '💎 ชุดเจาะ 2 ตัว (เน้นประจำวัน' + dayName + '):',
+      ' ' + finalPairs,
       '--------------------------',
       '🤖 วิเคราะห์อัตโนมัติตามสถิติ LOTTO289'
     ];
@@ -776,29 +808,47 @@
       document.body.appendChild(lineChoiceModalOverlay);
     }
 
+    const lastDateStr = validDraw ? (validDraw.dateFormatted || validDraw.date) : '';
+    const lastResultStr = validDraw ? (validDraw.top3 + '-' + validDraw.bottom2) : '';
+
     lineChoiceModalOverlay.innerHTML = `
-      <div style="background: #18110b; border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 16px; padding: 22px; width: 100%; max-width: 440px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); color: #fffbeb; text-align: center;">
+      <div style="background: #18110b; border: 1px solid rgba(245, 158, 11, 0.5); border-radius: 16px; padding: 22px; width: 100%; max-width: 480px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.8); color: #fffbeb; text-align: center;">
         <div style="width: 46px; height: 46px; border-radius: 12px; background: rgba(245, 158, 11, 0.15); border: 1px solid rgba(245, 158, 11, 0.4); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;">
           <span style="font-size: 22px;">📢</span>
         </div>
-        <h3 style="margin: 0 0 6px; font-size: 16px; font-weight: 800; color: #fbbf24;">รอบนี้ยังไม่มีผลหวยออก</h3>
+        <h3 style="margin: 0 0 6px; font-size: 16px; font-weight: 800; color: #fbbf24;">
+          📢 รอบนี้ยังไม่มีผลหวยออก (สถานะ: ${statusText})
+        </h3>
         <p style="margin: 0 0 16px; font-size: 12px; color: #d4d4d8; line-height: 1.5;">
-          <b>${title}</b> สถานะปัจจุบัน: <span style="color: #f87171; font-weight: 700;">${statusText}</span><br>
-          กรุณาเลือกข้อมูลที่ต้องการส่งเข้ากลุ่ม LINE:
+          <b>${title}</b> ของรอบปัจจุบันยังไม่ออกผลรางวัล<br>
+          <span style="color: #a1a1aa;">พร้อม 2 ตัวเลือกให้กดส่งเข้ากลุ่ม LINE ได้ทันที:</span>
         </p>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button id="no-res-send-guide-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: 1px solid #fbbf24; color: #000; font-weight: 800; padding: 11px 14px; border-radius: 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
-            📊 ส่งแนวทางฟันเด่นงวดนี้เข้า LINE
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Option 1: Send Prediction Guide -->
+          <button id="no-res-send-guide-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); border: 1px solid #fbbf24; color: #000; font-weight: 800; padding: 14px 16px; border-radius: 12px; cursor: pointer; text-align: left; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35); transition: all 0.2s;">
+            <div style="font-size: 14px; font-weight: 800; color: #000; display: flex; align-items: center; gap: 6px;">
+              <span>📊 ส่งแนวทางฟันเด่นงวดนี้เข้า LINE</span>
+            </div>
+            <div style="font-size: 11px; font-weight: 600; color: #262626; margin-top: 4px; line-height: 1.4;">
+              ส่งชุดเลขฟันเด่นวิ่ง-รูด 19 ประตู และชุดเจาะ 2 ตัวประจำวันนี้เข้ากลุ่ม LINE
+            </div>
           </button>
 
+          <!-- Option 2: Send Last Valid Result -->
           ${validDraw ? `
-          <button id="no-res-send-last-btn" style="background: rgba(6, 199, 85, 0.15); border: 1px solid #06c755; color: #34d399; font-weight: 800; padding: 11px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-            🎯 ส่งผลรางวัลงวดล่าสุด (${validDraw.dateFormatted || validDraw.date}: ${validDraw.top3}-${validDraw.bottom2})
+          <button id="no-res-send-last-btn" style="background: rgba(6, 199, 85, 0.12); border: 1px solid #06c755; color: #34d399; font-weight: 800; padding: 14px 16px; border-radius: 12px; cursor: pointer; text-align: left; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.2); transition: all 0.2s;">
+            <div style="font-size: 14px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 6px;">
+              <span>🎯 ส่งผลรางวัลงวดล่าสุดที่มีผลจริง</span>
+            </div>
+            <div style="font-size: 11px; font-weight: 600; color: #a7f3d0; margin-top: 4px; line-height: 1.4;">
+              ดึงผลรางวัลงวดจริงล่าสุดก่อนหน้า (เช่น งวดวันที่ ${lastDateStr}: ผล ${lastResultStr}) โดยระบุวันที่ชัดเจน เพื่อไม่ให้เกิดความสับสน
+            </div>
           </button>
           ` : ''}
 
-          <button id="no-res-cancel-btn" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #a1a1aa; font-weight: 600; padding: 8px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 4px;">
+          <!-- Option 3: Cancel -->
+          <button id="no-res-cancel-btn" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #a1a1aa; font-weight: 600; padding: 9px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 2px;">
             ✕ ยกเลิก
           </button>
         </div>
@@ -882,14 +932,24 @@
     const draws = getDrawsForLottery('CURRENT');
     const latestDraw = draws[0];
     const validDraw = draws.find(isNumericResult);
+    const todayStr = getBangkokTodayDate();
 
-    // If latest draw is not numeric (e.g. "งดออกผล" or "รอผล")
-    if (!isNumericResult(latestDraw)) {
-      let statusText = 'ไม่มีการออกผลรางวัล (งดออกผล)';
+    // Condition: Check if today's result is actually out and numeric
+    const isTodayResultOut = latestDraw && latestDraw.date === todayStr && isNumericResult(latestDraw);
+
+    // If today's result is NOT out yet (waiting, holiday/closed, or newest is from previous day)
+    // DO NOT send old result automatically! Show the Smart Choice Modal!
+    if (!isTodayResultOut) {
+      let statusText = 'รอผล';
       if (latestDraw) {
         const rawText = (latestDraw.full6D || '') + (latestDraw.top3 || '') + (latestDraw.bottom2 || '');
-        if (rawText.includes('รอ')) statusText = 'รอผลรางวัล (ยังไม่ออกผล)';
-        else if (rawText.includes('งด')) statusText = 'งดออกผล (ตลาดปิดทำการ)';
+        if (rawText.includes('งด')) {
+          statusText = 'งดออกผล';
+        } else if (rawText.includes('รอ')) {
+          statusText = 'รอผล';
+        } else if (latestDraw.date !== todayStr) {
+          statusText = 'รอผล';
+        }
       }
 
       showNoResultChoiceModal({
@@ -910,7 +970,7 @@
       return;
     }
 
-    // Has valid current result
+    // Has valid result drawn TODAY
     const messageText = buildLineResultMessage(latestDraw, activeType, activeSess);
     postLineMessage(messageText, config.targetId, triggerBtn);
   };
