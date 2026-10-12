@@ -517,6 +517,7 @@
   }
 
 
+  
   /* ==========================================================================
      LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
      ========================================================================== */
@@ -916,7 +917,7 @@
     let originalHtml = '';
     if (triggerBtn) {
       originalHtml = triggerBtn.innerHTML;
-      triggerBtn.innerHTML = '<span>⏳ กำลังส่งเข้า LINE...</span>';
+      triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">⏳ กำลังส่งเข้า LINE...</span>';
       triggerBtn.disabled = true;
     }
 
@@ -930,7 +931,7 @@
       if (data.success) {
         showToast('🎉 ส่งแจ้งเตือนผลเข้า LINE สำเร็จเรียบร้อยแล้ว!');
         if (triggerBtn) {
-          triggerBtn.innerHTML = '<span>✓ ส่งเข้า LINE สำเร็จ!</span>';
+          triggerBtn.innerHTML = '<span style="color: #ffffff !important; font-weight: 800;">✓ ส่งเข้า LINE สำเร็จ!</span>';
           setTimeout(() => {
             triggerBtn.innerHTML = originalHtml;
             triggerBtn.disabled = false;
@@ -949,7 +950,7 @@
     }
   };
 
-  // Safe DOM Injector for Navbar LINE Settings Button
+  // Safe DOM Injector for Navbar LINE Settings Button (Solid Vivid LINE Green #06c755)
   function injectLineNavbarButton() {
     if (document.getElementById('btn-line-settings-ui') || document.getElementById('btn-line-settings-jsx')) return;
     const allButtons = Array.from(document.querySelectorAll('button'));
@@ -959,12 +960,13 @@
     const btn = document.createElement('button');
     btn.id = 'btn-line-settings-ui';
     btn.title = 'ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE';
-    btn.className = 'bg-[#06c755]/20 hover:bg-[#06c755]/30 text-[#06c755] border border-[#06c755]/50 text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-md cursor-pointer ml-1.5';
+    btn.className = 'btn-line-nav';
+    btn.style.cssText = 'background-color: #06c755 !important; color: #ffffff !important; border: 1px solid #05a043 !important; font-weight: 800 !important; font-size: 12px !important; padding: 6px 14px !important; border-radius: 8px !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; cursor: pointer !important; box-shadow: 0 2px 10px rgba(6, 199, 85, 0.5) !important; margin-left: 6px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
     btn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-[#06c755]">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="width: 15px; height: 15px; fill: #ffffff; flex-shrink: 0; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
         <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
       </svg>
-      <span>💬 แจ้งเตือน LINE</span>
+      <span style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;">💬 แจ้งเตือน LINE</span>
     `;
     btn.onclick = function(e) {
       e.preventDefault();
@@ -975,7 +977,7 @@
     syncBtn.parentElement.insertBefore(btn, syncBtn.nextSibling);
   }
 
-  // Safe DOM Injector for Prediction Card LINE Send Button
+  // Safe DOM Injector for Prediction Card LINE Send Button (Solid Vivid LINE Green #06c755)
   function injectLineSendButton() {
     if (document.getElementById('btn-line-send-result-ui') || document.getElementById('btn-line-send-result-jsx')) return;
     const allButtons = Array.from(document.querySelectorAll('button'));
@@ -988,12 +990,13 @@
     const btn = document.createElement('button');
     btn.id = 'btn-line-send-result-ui';
     btn.title = 'ส่งผลรางวัลและเลขที่เข้าเป้าเข้า LINE ทันที';
-    btn.className = 'px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-1.5 shrink-0 cursor-pointer shadow-lg bg-[#06c755] hover:bg-[#05b54d] text-white border border-[#06c755]/40 hover:scale-105 active:scale-95 shadow-md mr-2';
+    btn.className = 'btn-line-send';
+    btn.style.cssText = 'background-color: #06c755 !important; color: #ffffff !important; border: 1px solid #05a043 !important; font-weight: 800 !important; font-size: 13px !important; padding: 10px 16px !important; border-radius: 12px !important; display: inline-flex !important; align-items: center !important; gap: 8px !important; cursor: pointer !important; box-shadow: 0 4px 14px rgba(6, 199, 85, 0.5) !important; margin-right: 8px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
     btn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#ffffff" style="width: 16px; height: 16px; fill: #ffffff; flex-shrink: 0; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));">
         <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
       </svg>
-      <span>📲 ส่งผลเข้า LINE</span>
+      <span style="color: #ffffff !important; font-weight: 800 !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important;">📲 ส่งผลเข้า LINE</span>
     `;
     btn.onclick = function(e) {
       e.preventDefault();
