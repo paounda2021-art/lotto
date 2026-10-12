@@ -174,6 +174,179 @@ var worker_default = {
         });
       }
     }
+    if (url.pathname.startsWith("/api/line")) {
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type"
+          }
+        });
+      }
+      const kvStore = env.LOTTO_KV || env.LOTTO289;
+
+      // GET /api/line/config
+      if (url.pathname === "/api/line/config" && request.method === "GET") {
+        let config = null;
+        if (kvStore) {
+          const raw = await kvStore.get("line_bot_config", "text");
+          if (raw) {
+            try { config = JSON.parse(raw); } catch (e) {}
+          }
+        }
+        return new Response(
+          JSON.stringify({
+            success: true,
+            config: config || {
+              channelAccessToken: "",
+              targetId: "U3a7529a26c7c9a1a06d4cd374349a33c",
+              enabled: true
+            }
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*"
+            }
+          }
+        );
+      }
+
+      // POST /api/line/config
+      if (url.pathname === "/api/line/config" && request.method === "POST") {
+        try {
+          const body = await request.json();
+          if (kvStore && body) {
+            await kvStore.put("line_bot_config", JSON.stringify(body));
+          }
+          return new Response(
+            JSON.stringify({ success: true, message: "LINE Bot configuration saved" }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+              }
+            }
+          );
+        } catch (err) {
+          return new Response(
+            JSON.stringify({ success: false, error: err.message }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+              },
+              status: 500
+            }
+          );
+        }
+      }
+
+      // POST /api/line/send
+      if (url.pathname === "/api/line/send" && request.method === "POST") {
+        try {
+          const body = await request.json();
+          let { message, to, token } = body;
+
+          if (!token && kvStore) {
+            const raw = await kvStore.get("line_bot_config", "text");
+            if (raw) {
+              const cfg = JSON.parse(raw);
+              token = cfg.channelAccessToken;
+              if (!to) to = cfg.targetId;
+            }
+          }
+
+          if (!to) to = "U3a7529a26c7c9a1a06d4cd374349a33c";
+          if (!token) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                error: "กรุณาระบุ Channel Access Token ในการตั้งค่า LINE ก่อนส่งข้อความ"
+              }),
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*"
+                },
+                status: 400
+              }
+            );
+          }
+
+          if (!message) {
+            return new Response(
+              JSON.stringify({ success: false, error: "ข้อความว่างเปล่า" }),
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*"
+                },
+                status: 400
+              }
+            );
+          }
+
+          const lineRes = await fetch("https://api.line.me/v2/bot/message/push", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              to: to,
+              messages: [
+                {
+                  type: "text",
+                  text: message
+                }
+              ]
+            })
+          });
+
+          const lineJson = await lineRes.json().catch(() => ({}));
+          if (!lineRes.ok) {
+            return new Response(
+              JSON.stringify({
+                success: false,
+                status: lineRes.status,
+                error: lineJson.message || `LINE API error: ${lineRes.statusText}`,
+                details: lineJson
+              }),
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "Access-Control-Allow-Origin": "*"
+                },
+                status: 200
+              }
+            );
+          }
+
+          return new Response(
+            JSON.stringify({ success: true, message: "ส่งแจ้งเตือนเข้า LINE สำเร็จแล้ว!", to }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+              }
+            }
+          );
+        } catch (err) {
+          return new Response(
+            JSON.stringify({ success: false, error: err.message }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*"
+              },
+              status: 500
+            }
+          );
+        }
+      }
+    }
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }

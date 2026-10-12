@@ -41,9 +41,11 @@ import { WinGenerator } from './components/WinGenerator';
 import { BacktestView } from './components/BacktestView';
 import { AddDrawModal } from './components/AddDrawModal';
 import { ManualRecordsModal } from './components/ManualRecordsModal';
+import { LineSettingsModal } from './components/LineSettingsModal';
 import { DayOfWeekAnalyzer } from './components/DayOfWeekAnalyzer';
 import { MonthlyCalendarView } from './components/MonthlyCalendarView';
 import { ToastContainer, ToastMessage } from './components/Toast';
+import { getLocalLineConfig, buildLineResultMessage, sendLineNotification, getSentDrawIds, markDrawAsSent } from './utils/lineNotifier';
 
 import { Sparkles, BarChart2, Table, Cpu, Layers, PlusCircle, ShieldCheck, Calendar, Gem } from 'lucide-react';
 import { syncFetchFromCloud, syncSaveToCloud } from './services/cloudSync';
@@ -288,6 +290,7 @@ export default function App() {
   const [isVerifyingManual, setIsVerifyingManual] = useState(false);
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isLineModalOpen, setIsLineModalOpen] = useState(false);
 
   // Sync engine version with manual protection
   useEffect(() => {
@@ -333,7 +336,6 @@ export default function App() {
       setHangsengVipMorningData(injectManualRecords(INITIAL_HANGSENG_VIP_MORNING_DATA, 'STOCKS_VIP', 'HANGSENG_VIP_MORNING'));
       setHangsengVipAfternoonData(injectManualRecords(INITIAL_HANGSENG_VIP_AFTERNOON_DATA, 'STOCKS_VIP', 'HANGSENG_VIP_AFTERNOON'));
       setLaosData(injectManualRecords(INITIAL_LAOS_DATA, 'LAOS', 'LAOS_EVENING'));
-      setLaosStarData(injectManualRecords(INITIAL_LAOS_STAR_DATA, 'LAOS_STAR', 'LAOS_STAR_DAY'));
       setMalayData(injectManualRecords(INITIAL_MALAY_DATA, 'MALAY', 'MALAY_EVENING'));
       setDowjonesData(injectManualRecords(INITIAL_DOWJONES_DATA, 'DOWJONES', 'DOWJONES_NIGHT'));
       setHanoiSpecialData(injectManualRecords(INITIAL_HANOI_SPECIAL_DATA, 'HANOI', 'HANOI_SPECIAL'));
@@ -809,6 +811,29 @@ export default function App() {
     }
 
     addToast('success', 'บันทึกผลสำเร็จ! ✏️', `เพิ่มผลรางวัลวันที่ ${newDraw.dateFormatted} (ได้รับการคุ้มครอง ปลอดภัยไม่ถูกเขียนทับ)`);
+
+    // ส่งแจ้งเตือนเข้า LINE อัตโนมัติ (ถ้าเปิดใช้งาน)
+    try {
+      const lineCfg = getLocalLineConfig();
+      if (lineCfg.enabled) {
+        const sendKey = `${created.lotteryType}_${created.session}_${created.date}_${created.top3}_${created.bottom2}`;
+        if (!getSentDrawIds().has(sendKey)) {
+          markDrawAsSent(sendKey);
+          const msg = buildLineResultMessage({
+            draw: created,
+            allData: activeDataset,
+            lotteryType: created.lotteryType
+          });
+          sendLineNotification(msg).then((res) => {
+            if (res.success) {
+              addToast('info', 'ส่ง LINE สำเร็จ 📲', `แจ้งเตือนผลรอบ ${created.session || created.lotteryType} เข้า LINE เรียบร้อยแล้ว`);
+            }
+          });
+        }
+      }
+    } catch (e) {
+      console.error('LINE notification failed:', e);
+    }
   };
 
   const handleEditDraw = (updatedDraw: DrawResult) => {
@@ -1043,6 +1068,26 @@ export default function App() {
               updatedList.unshift(item);
               addedOrUpdated++;
             }
+
+            // ส่งแจ้งเตือนเข้า LINE อัตโนมัติเมื่อตรวจพบผลออกใหม่
+            try {
+              const isWebValid = 
+                item.top3 && item.top3.length === 3 && item.top3 !== '000' && item.top3 !== '---' &&
+                item.bottom2 && item.bottom2.length === 2 && item.bottom2 !== '--';
+              if (isWebValid) {
+                const sendKey = `${item.lotteryType || lottoType}_${item.session || sessionName}_${item.date}_${item.top3}_${item.bottom2}`;
+                const lineCfg = getLocalLineConfig();
+                if (lineCfg.enabled && !getSentDrawIds().has(sendKey)) {
+                  markDrawAsSent(sendKey);
+                  const msg = buildLineResultMessage({
+                    draw: item,
+                    allData: updatedList,
+                    lotteryType: item.lotteryType || lottoType
+                  });
+                  sendLineNotification(msg).catch(() => {});
+                }
+              }
+            } catch (err) {}
           }
         }
 
@@ -1116,14 +1161,6 @@ export default function App() {
       }
       updatedTotalCount += laos.updatedCount;
       protectedTotalCount += laos.protectedCount;
-
-      const laosStar = mergeDataset(laosStarData, 'LAOS_STAR_DAY', 'LAOS_STAR');
-      if (laosStar.updatedCount > 0) {
-        setLaosStarData(laosStar.list);
-        syncSaveToCloud('lotto_data_laos_star', laosStar.list);
-      }
-      updatedTotalCount += laosStar.updatedCount;
-      protectedTotalCount += laosStar.protectedCount;
 
       const malay = mergeDataset(malayData, 'MALAY_EVENING', 'MALAY');
       if (malay.updatedCount > 0) {
@@ -1721,6 +1758,7 @@ export default function App() {
         onSelectThemeMode={setThemeMode}
         manualCount={manualRecords.length}
         onOpenManualModal={() => setIsManualModalOpen(true)}
+        onOpenLineModal={() => setIsLineModalOpen(true)}
       />
 
       {/* Main Container */}
@@ -2001,6 +2039,13 @@ export default function App() {
         onVerifyWithWeb={handleVerifyManualRecords}
         isVerifying={isVerifyingManual}
         lotteryType={lotteryType}
+      />
+
+      {/* LINE Notification Settings Modal */}
+      <LineSettingsModal
+        isOpen={isLineModalOpen}
+        onClose={() => setIsLineModalOpen(false)}
+        onToast={addToast}
       />
 
       {/* Footer */}

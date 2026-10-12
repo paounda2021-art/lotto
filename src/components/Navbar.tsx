@@ -1,6 +1,6 @@
 import React from 'react';
 import { LotteryType, SessionType, ThemeMode } from '../types';
-import { TrendingUp, Calendar, ExternalLink, RefreshCcw, Award, Sun, Moon, Clock, RotateCcw } from 'lucide-react';
+import { TrendingUp, Calendar, ExternalLink, RefreshCcw, Award, Sun, Moon, Clock, RotateCcw, MessageSquare } from 'lucide-react';
 
 interface NavbarProps {
   lotteryType: LotteryType;
@@ -15,6 +15,7 @@ interface NavbarProps {
   onSelectThemeMode: (theme: ThemeMode) => void;
   manualCount?: number;
   onOpenManualModal?: () => void;
+  onOpenLineModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -27,7 +28,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onResetData,
   onAutoFetch,
   themeMode,
-  onSelectThemeMode
+  onSelectThemeMode,
+  onOpenLineModal
 }) => {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#1a0e05]/90 border-b border-amber-500/40 shadow-[0_4px_30px_rgba(245,158,11,0.2)]">
@@ -395,6 +397,16 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <span>สว่าง</span>
                 </button>
               </div>
+
+              {/* LINE Notification Settings Button */}
+              <button
+                onClick={() => onOpenLineModal?.()}
+                title="ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE"
+                className="bg-[#06c755]/20 hover:bg-[#06c755]/30 text-[#06c755] border border-[#06c755]/50 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all shadow-md cursor-pointer"
+              >
+                <MessageSquare className="w-3.5 h-3.5 text-[#06c755] shrink-0" />
+                <span>แจ้งเตือน LINE</span>
+              </button>
 
               {/* Auto Sync Button */}
               <button

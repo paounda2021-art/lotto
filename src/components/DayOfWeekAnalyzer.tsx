@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { DrawResult, LotteryType } from '../types';
 import { analyzeDayOfWeekStats } from '../utils/calculator';
-import { Calendar, Flame, Zap, Award, CheckCircle2, Copy, Check, Trophy, XCircle, Download } from 'lucide-react';
+import { Calendar, Flame, Zap, Award, CheckCircle2, Copy, Check, Trophy, XCircle, Download, MessageSquare } from 'lucide-react';
 import { getPerMarketStatusBreakdown } from '../data/marketHolidays';
 import confetti from 'canvas-confetti';
 import { ExportPredictionModal } from './ExportPredictionModal';
+import { buildLineResultMessage, sendLineNotification, getLocalLineConfig } from '../utils/lineNotifier';
 
 interface DayOfWeekAnalyzerProps {
   data: DrawResult[];
@@ -491,7 +492,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
 
   const expectedSessionCount = useMemo(() => {
     if (lotteryType === 'HANOI') return 3;
-    if (lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') {
+    if (lotteryType === 'STOCKS_VIP') {
       const hasChina = fullDataset.some((d) => d.session === 'CHINA_VIP_MORNING' || d.session === 'CHINA_VIP_AFTERNOON');
       const hasHangseng = fullDataset.some((d) => d.session === 'HANGSENG_VIP_MORNING' || d.session === 'HANGSENG_VIP_AFTERNOON');
       if (hasChina && hasHangseng) return 6;
@@ -671,7 +672,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
     return breakdown.filter((b) => b.status === 'CLOSED');
   }, [targetIsoDate, targetDayOfWeekIdx, lotteryType, targetDraws, data]);
 
-  const daysList = (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES') ? [
+  const daysList = (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'LAOS' || lotteryType === 'DOWJONES') ? [
     { code: 'Mon', label: 'วันจันทร์', color: 'from-yellow-500/20 to-amber-500/20 text-yellow-300 border-yellow-500/40 hover:border-yellow-400' },
     { code: 'Tue', label: 'วันอังคาร', color: 'from-pink-500/20 to-rose-400/20 text-pink-300 border-pink-500/40 hover:border-pink-400' },
     { code: 'Wed', label: 'วันพุธ', color: 'from-emerald-500/20 to-teal-500/20 text-emerald-300 border-emerald-500/40 hover:border-emerald-400' },
@@ -794,6 +795,39 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
     });
   };
 
+  const [isSendingLine, setIsSendingLine] = useState(false);
+
+  const handleSendLineNotification = async () => {
+    const recordedDraw = targetDraws.find((d) => Boolean(d.top3 && d.top3.trim() !== ''));
+    if (!recordedDraw) {
+      alert('รอบนี้ยังไม่มีผลออกรางวัล ไม่สามารถส่งแจ้งเตือนผลได้ครับ');
+      return;
+    }
+    const config = getLocalLineConfig();
+    if (!config.channelAccessToken) {
+      alert('กรุณากดปุ่ม "แจ้งเตือน LINE" ด้านบนเพื่อตั้งค่า Channel Access Token ก่อนครับ');
+      return;
+    }
+    setIsSendingLine(true);
+    try {
+      const msg = buildLineResultMessage({
+        draw: recordedDraw,
+        allData: fullDataset,
+        lotteryType
+      });
+      const res = await sendLineNotification(msg);
+      if (res.success) {
+        alert('ส่งแจ้งเตือนผลและเลขเข้าเป้าเข้า LINE สำเร็จแล้ว!');
+      } else {
+        alert('ส่งไม่สำเร็จ: ' + (res.error || 'โปรดตรวจสอบ Token'));
+      }
+    } catch (e: any) {
+      alert('เกิดข้อผิดพลาด: ' + e.message);
+    } finally {
+      setIsSendingLine(false);
+    }
+  };
+
   const renderDigitHits = (digit?: number | string) => {
     if (digit === undefined || digit === null) return null;
 
@@ -833,7 +867,7 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           ))}
         </div>
       );
-    } else if (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') {
+    } else if (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP') {
       const hits = getNikkeiHitsForDigit(digit, targetDraws);
       if (hits.length === 0) {
         if (!isAllRecorded) {
@@ -921,6 +955,16 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
           >
             {copied ? <Check className="w-4 h-4 text-black stroke-[3]" /> : <Copy className="w-4 h-4 text-black stroke-[3]" />}
             <span>{copied ? '✓ คัดลอกแนวทางแล้ว!' : '📋 คัดลอกแนวทาง'}</span>
+          </button>
+
+          <button
+            onClick={handleSendLineNotification}
+            disabled={isSendingLine}
+            className="px-3.5 py-2 rounded-xl text-xs font-black transition-all duration-300 flex items-center gap-1.5 cursor-pointer shadow-lg bg-[#06c755] hover:bg-[#05b54d] text-white border border-[#06c755]/40 hover:scale-105 active:scale-95 shadow-md disabled:opacity-50"
+            title="ส่งสรุปผลและเลขที่เข้าเป้าเข้า LINE ทันที"
+          >
+            <MessageSquare className="w-4 h-4 text-white stroke-[2.5]" />
+            <span>{isSendingLine ? 'กำลังส่ง...' : '📲 ส่งผลเข้า LINE'}</span>
           </button>
 
           <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl px-3.5 py-2 text-amber-300 font-bold text-xs">
@@ -1288,8 +1332,8 @@ export const DayOfWeekAnalyzer: React.FC<DayOfWeekAnalyzerProps> = ({ data, allD
                         ))}
                       </div>
                     );
-                  })() : (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') ? (() => {
-                    const stockSessions = (lotteryType === 'STOCKS_VIP' || lotteryType === 'STOCK_VIP') ? STOCK_VIP_SESSIONS : STOCK_REGULAR_SESSIONS;
+                  })() : (lotteryType === 'NIKKEI' || lotteryType === 'STOCKS_VIP') ? (() => {
+                    const stockSessions = (lotteryType === 'STOCKS_VIP') ? STOCK_VIP_SESSIONS : STOCK_REGULAR_SESSIONS;
                     return (
                       <div className="bg-gradient-to-r from-emerald-950/80 to-teal-950/80 border-2 border-emerald-500/60 rounded-xl p-2 shadow-glow-emerald space-y-1 max-h-[300px] overflow-y-auto custom-scrollbar">
                         <span className="text-xs text-emerald-300 font-black block uppercase tracking-wider flex items-center justify-between mb-1">
