@@ -516,15 +516,509 @@
     targetBtn.parentElement.insertBefore(btn, targetBtn);
   }
 
+
+  /* ==========================================================================
+     LINE NOTIFICATION SYSTEM (SystemLucky289 LINE Bot & Result Alerts)
+     ========================================================================== */
+
+  let lineModalContainer = null;
+
+  // Simple toast notifier
+  function showToast(message, isError = false) {
+    let toast = document.getElementById('lucky-toast-notification');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'lucky-toast-notification';
+      toast.style.position = 'fixed';
+      toast.style.bottom = '24px';
+      toast.style.right = '24px';
+      toast.style.zIndex = '99999';
+      toast.style.padding = '12px 20px';
+      toast.style.borderRadius = '12px';
+      toast.style.fontSize = '14px';
+      toast.style.fontWeight = '700';
+      toast.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+      toast.style.transition = 'all 0.3s ease';
+      toast.style.display = 'flex';
+      toast.style.alignItems = 'center';
+      toast.style.gap = '8px';
+      document.body.appendChild(toast);
+    }
+    toast.style.background = isError ? 'linear-gradient(135deg, #ef4444, #b91c1c)' : 'linear-gradient(135deg, #06c755, #05a043)';
+    toast.style.color = '#ffffff';
+    toast.style.border = isError ? '1px solid #f87171' : '1px solid #34d399';
+    toast.innerHTML = (isError ? '⚠️ ' : '✅ ') + message;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateY(0)';
+
+    clearTimeout(toast.__timer);
+    toast.__timer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+    }, 3500);
+  }
+
+  // Load LINE Bot Config
+  async function getLineConfig() {
+    let config = { channelAccessToken: '', targetId: 'U3a7529a26c7c9a1a06d4cd374349a33c', enabled: true };
+    try {
+      const raw = localStorage.getItem('lotto_line_bot_config');
+      if (raw) {
+        config = { ...config, ...JSON.parse(raw) };
+      }
+    } catch(e) {}
+    try {
+      const res = await fetch('/api/line/config');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.config) {
+          config = { ...config, ...data.config };
+        }
+      }
+    } catch(e) {}
+    return config;
+  }
+
+  // Save LINE Bot Config
+  async function saveLineConfig(config) {
+    try {
+      localStorage.setItem('lotto_line_bot_config', JSON.stringify(config));
+    } catch(e) {}
+    try {
+      await fetch('/api/line/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(config)
+      });
+    } catch(e) {}
+  }
+
+  // Open LINE Settings Modal
+  window.openLineSettingsModal = async function() {
+    const config = await getLineConfig();
+
+    if (!lineModalContainer) {
+      lineModalContainer = document.createElement('div');
+      lineModalContainer.id = 'line-settings-modal-overlay';
+      lineModalContainer.className = 'fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-fade-in';
+      lineModalContainer.style.position = 'fixed';
+      lineModalContainer.style.inset = '0';
+      lineModalContainer.style.zIndex = '9999';
+      lineModalContainer.style.background = 'rgba(0, 0, 0, 0.85)';
+      lineModalContainer.style.backdropFilter = 'blur(6px)';
+      lineModalContainer.style.display = 'flex';
+      lineModalContainer.style.alignItems = 'center';
+      lineModalContainer.style.justifyContent = 'center';
+      lineModalContainer.style.padding = '16px';
+
+      lineModalContainer.innerHTML = `
+        <div class="bg-[#18110b] border border-[#06c755]/50 rounded-2xl p-5 sm:p-6 w-full max-w-lg shadow-2xl text-amber-50 relative max-h-[92vh] overflow-y-auto" style="background: #18110b; border: 1px solid rgba(6, 199, 85, 0.5); border-radius: 16px; padding: 24px; width: 100%; max-width: 520px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); color: #fffbeb; position: relative; max-height: 92vh; overflow-y: auto;">
+          <!-- Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(6, 199, 85, 0.3); padding-bottom: 14px; margin-bottom: 18px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <div style="width: 38px; height: 38px; border-radius: 10px; background: rgba(6, 199, 85, 0.15); border: 1px solid rgba(6, 199, 85, 0.4); display: flex; align-items: center; justify-content: center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#06c755">
+                  <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
+                </svg>
+              </div>
+              <div>
+                <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: #ffffff;">ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE</h3>
+                <p style="margin: 2px 0 0; font-size: 11px; color: #a1a1aa;">ส่งผลรางวัลและเลขเด่น-รองเข้า LINE Messaging API / Group อัตโนมัติ</p>
+              </div>
+            </div>
+            <button id="line-modal-close-btn" style="background: none; border: none; color: #a1a1aa; font-size: 20px; cursor: pointer; padding: 4px; line-height: 1;" title="ปิดหน้าต่าง">&times;</button>
+          </div>
+
+          <!-- Body Fields -->
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <!-- Channel Access Token -->
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 700; color: #d4d4d8; margin-bottom: 6px;">
+                🔑 LINE Channel Access Token (Long-lived)
+              </label>
+              <input type="password" id="line-token-input" placeholder="วาง Channel Access Token จาก LINE Developers..." style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px solid rgba(6, 199, 85, 0.3); border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 13px; font-family: monospace; outline: none;" />
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                <span style="font-size: 10px; color: #71717a;">รับได้จาก Messaging API > Channel access token</span>
+                <button type="button" id="line-token-toggle" style="background: none; border: none; color: #06c755; font-size: 11px; cursor: pointer; text-decoration: underline;">แสดง Token</button>
+              </div>
+            </div>
+
+            <!-- Target ID -->
+            <div>
+              <label style="display: block; font-size: 12px; font-weight: 700; color: #d4d4d8; margin-bottom: 6px;">
+                🎯 Target ID (Group ID หรือ User ID)
+              </label>
+              <input type="text" id="line-target-input" placeholder="รหัสกลุ่ม (C...) หรือ User ID (U...)" style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.4); border: 1px solid rgba(6, 199, 85, 0.3); border-radius: 8px; padding: 10px 12px; color: #06c755; font-weight: 700; font-size: 13px; font-family: monospace; outline: none;" />
+              <div style="display: flex; gap: 8px; margin-top: 5px;">
+                <button type="button" id="line-use-personal-btn" style="background: rgba(6, 199, 85, 0.1); border: 1px solid rgba(6, 199, 85, 0.3); color: #86efac; border-radius: 6px; padding: 4px 8px; font-size: 10px; cursor: pointer;">
+                  👤 ใช้รหัสส่วนตัว (U3a752...)
+                </button>
+              </div>
+            </div>
+
+            <!-- Auto alert checkbox -->
+            <label style="display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.08); cursor: pointer;">
+              <input type="checkbox" id="line-enabled-input" style="width: 16px; height: 16px; accent-color: #06c755; cursor: pointer;" />
+              <span style="font-size: 12px; font-weight: 600; color: #e4e4e7;">
+                🔔 ส่งแจ้งเตือนผลอัตโนมัติเมื่อกด Auto-Sync แล้วพบงวดใหม่
+              </span>
+            </label>
+
+            <!-- Guide Box for Group ID -->
+            <div style="background: rgba(6, 199, 85, 0.05); border: 1px solid rgba(6, 199, 85, 0.2); border-radius: 10px; padding: 12px; font-size: 11px; line-height: 1.6; color: #d1fae5;">
+              <div style="font-weight: 800; color: #34d399; margin-bottom: 4px; display: flex; items-center; gap: 6px;">
+                💡 วิธีดูรหัสกลุ่ม LINE (Group ID ขึ้นต้นด้วย C...):
+              </div>
+              <div>1. ดึง LINE Bot ของท่านเข้ากลุ่ม LINE ที่ต้องการรับการแจ้งเตือน</div>
+              <div>2. ใน LINE Developers ให้ตั้งค่า <b>Webhook URL</b> เป็น:</div>
+              <div style="background: rgba(0,0,0,0.5); padding: 5px 8px; border-radius: 6px; font-family: monospace; color: #a7f3d0; margin: 4px 0; word-break: break-all; user-select: all;">
+                https://lotto289.paounda2021.workers.dev/api/line/webhook
+              </div>
+              <div>3. เปิดสวิตช์ <b>Use Webhook</b> เป็น <b>On</b></div>
+              <div>4. พิมพ์ข้อความอะไรก็ได้ในกลุ่ม บอทจะตอบกลับเป็นรหัสกลุ่ม <b>C...</b> และบันทึกเข้าระบบให้อัตโนมัติทันที!</div>
+            </div>
+
+            <!-- Preview Box -->
+            <div style="background: rgba(0,0,0,0.3); border: 1px dashed rgba(6, 199, 85, 0.3); border-radius: 10px; padding: 12px;">
+              <div style="font-size: 11px; font-weight: 700; color: #a1a1aa; margin-bottom: 6px;">
+                📱 ตัวอย่างรูปแบบข้อความแจ้งเตือนที่ระบบจะส่งเข้ากลุ่ม:
+              </div>
+              <div style="background: #111827; border-radius: 8px; padding: 10px; font-family: sans-serif; font-size: 12px; line-height: 1.5; color: #f3f4f6; border-left: 3px solid #06c755;">
+                <div style="font-weight: 800; color: #34d399;">นิเคอิ-ปก (เช้า)</div>
+                <div style="font-weight: 800; font-size: 13px;">ผล 397-28</div>
+                <div style="margin-top: 4px; color: #fef08a;">🌼 นิเคอิ ปก-เช้า เด่น 2 [ล่าง 2 8]</div>
+                <div style="color: #fef08a;">🌼 นิเคอิ ปก-เช้า รอง 7 [บน 9 7]</div>
+                <div style="color: #6ee7b7;">🏷️ รวมทุกหุ้นปกติ 6 รอบ [บน 9 7]</div>
+                <div style="margin-top: 4px; font-size: 13px;">🎉🎉🎉🎉</div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; gap: 10px; margin-top: 6px;">
+              <button type="button" id="line-test-send-btn" style="flex: 1; background: rgba(6, 199, 85, 0.15); border: 1px solid #06c755; color: #34d399; font-weight: 800; padding: 10px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+                🧪 ทดสอบส่งเข้า LINE
+              </button>
+              <button type="button" id="line-save-btn" style="flex: 1; background: #06c755; border: 1px solid #05a043; color: #ffffff; font-weight: 800; padding: 10px 14px; border-radius: 10px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3); transition: all 0.2s;">
+                💾 บันทึกการตั้งค่า
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.body.appendChild(lineModalContainer);
+
+      // Event listeners
+      lineModalContainer.querySelector('#line-modal-close-btn').onclick = () => {
+        lineModalContainer.style.display = 'none';
+      };
+
+      lineModalContainer.onclick = (e) => {
+        if (e.target === lineModalContainer) {
+          lineModalContainer.style.display = 'none';
+        }
+      };
+
+      const tokenInput = lineModalContainer.querySelector('#line-token-input');
+      lineModalContainer.querySelector('#line-token-toggle').onclick = () => {
+        tokenInput.type = tokenInput.type === 'password' ? 'text' : 'password';
+      };
+
+      lineModalContainer.querySelector('#line-use-personal-btn').onclick = () => {
+        lineModalContainer.querySelector('#line-target-input').value = 'U3a7529a26c7c9a1a06d4cd374349a33c';
+      };
+
+      // Test send
+      lineModalContainer.querySelector('#line-test-send-btn').onclick = async () => {
+        const testBtn = lineModalContainer.querySelector('#line-test-send-btn');
+        const tokenVal = tokenInput.value.trim();
+        const targetVal = lineModalContainer.querySelector('#line-target-input').value.trim();
+
+        if (!tokenVal) {
+          alert('กรุณากรอก LINE Channel Access Token ก่อนกดทดสอบ');
+          return;
+        }
+        if (!targetVal) {
+          alert('กรุณากรอก Target ID (Group ID หรือ User ID) ก่อนกดทดสอบ');
+          return;
+        }
+
+        testBtn.innerText = '⏳ กำลังทดสอบส่ง...';
+        testBtn.disabled = true;
+
+        try {
+          // save config first
+          await saveLineConfig({
+            channelAccessToken: tokenVal,
+            targetId: targetVal,
+            enabled: lineModalContainer.querySelector('#line-enabled-input').checked
+          });
+
+          const testMsg = '🔔 ทดสอบการแจ้งเตือนผล SystemLucky289\n\nเชื่อมต่อระบบแจ้งเตือนผลหวยเข้ากลุ่ม LINE สำเร็จเรียบร้อยแล้วครับ! 🎉🎉🎉🎉';
+          const res = await fetch('/api/line/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: testMsg, targetId: targetVal })
+          });
+          const json = await res.json();
+          if (json.success) {
+            showToast('ส่งข้อความทดสอบเข้า LINE สำเร็จเรียบร้อย! 🎉');
+            alert('✅ ส่งข้อความทดสอบเข้า LINE เรียบร้อยแล้ว! กรุณาตรวจสอบในกลุ่ม LINE หรือแชทของคุณ');
+          } else {
+            throw new Error(json.error || 'Failed to send message');
+          }
+        } catch(err) {
+          showToast('เกิดข้อผิดพลาด: ' + err.message, true);
+          alert('❌ การทดสอบล้มเหลว: ' + err.message + '\n\nกรุณาตรวจสอบว่าบอทถูกเชิญเข้ากลุ่มแล้ว หรือ Token ถูกต้อง');
+        } finally {
+          testBtn.innerText = '🧪 ทดสอบส่งเข้า LINE';
+          testBtn.disabled = false;
+        }
+      };
+
+      // Save button
+      lineModalContainer.querySelector('#line-save-btn').onclick = async () => {
+        const tokenVal = tokenInput.value.trim();
+        const targetVal = lineModalContainer.querySelector('#line-target-input').value.trim();
+        const enabledVal = lineModalContainer.querySelector('#line-enabled-input').checked;
+
+        await saveLineConfig({
+          channelAccessToken: tokenVal,
+          targetId: targetVal,
+          enabled: enabledVal
+        });
+
+        showToast('บันทึกการตั้งค่า LINE เรียบร้อยแล้ว!');
+        lineModalContainer.style.display = 'none';
+      };
+    }
+
+    // Populate current values
+    lineModalContainer.querySelector('#line-token-input').value = config.channelAccessToken || '';
+    lineModalContainer.querySelector('#line-target-input').value = config.targetId || 'U3a7529a26c7c9a1a06d4cd374349a33c';
+    lineModalContainer.querySelector('#line-enabled-input').checked = config.enabled !== false;
+
+    lineModalContainer.style.display = 'flex';
+  };
+
+  // Send current result to LINE
+  window.sendCurrentResultToLine = async function(triggerBtn) {
+    const config = await getLineConfig();
+
+    if (!config.channelAccessToken) {
+      alert('กรุณาตั้งค่า LINE Channel Access Token ก่อนใช้งาน');
+      window.openLineSettingsModal();
+      return;
+    }
+
+    const activeType = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_active_lottery_type') : '') || 'NIKKEI';
+    const activeSess = (typeof localStorage !== 'undefined' ? localStorage.getItem('lotto_selected_session') : '') || '';
+
+    // Retrieve draws
+    const draws = getDrawsForLottery('CURRENT');
+    const validDraw = draws.find(d => /^d+$/.test(d.top3 || '')) || draws[0];
+
+    if (!validDraw) {
+      alert('ไม่พบข้อมูลผลรางวัลสำหรับรอบที่กำลังเลือก');
+      return;
+    }
+
+    // Determine titles
+    let title = 'ผลรางวัล';
+    let marketShort = 'หุ้น';
+    if (activeType === 'NIKKEI') {
+      if (activeSess.includes('CHINA')) {
+        title = activeSess.includes('AFTERNOON') ? 'จีน-ปก (บ่าย)' : 'จีน-ปก (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'จีน ปก-บ่าย' : 'จีน ปก-เช้า';
+      } else if (activeSess.includes('HANGSENG')) {
+        title = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง-ปก (บ่าย)' : 'ฮั่งเส็ง-ปก (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง ปก-บ่าย' : 'ฮั่งเส็ง ปก-เช้า';
+      } else {
+        title = activeSess.includes('AFTERNOON') ? 'นิเคอิ-ปก (บ่าย)' : 'นิเคอิ-ปก (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'นิเคอิ ปก-บ่าย' : 'นิเคอิ ปก-เช้า';
+      }
+    } else if (activeType === 'STOCKS_VIP') {
+      if (activeSess.includes('NIKKEI')) {
+        title = activeSess.includes('AFTERNOON') ? 'นิเคอิ-VIP (บ่าย)' : 'นิเคอิ-VIP (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'นิเคอิ VIP-บ่าย' : 'นิเคอิ VIP-เช้า';
+      } else if (activeSess.includes('CHINA')) {
+        title = activeSess.includes('AFTERNOON') ? 'จีน-VIP (บ่าย)' : 'จีน-VIP (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'จีน VIP-บ่าย' : 'จีน VIP-เช้า';
+      } else if (activeSess.includes('HANGSENG')) {
+        title = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง-VIP (บ่าย)' : 'ฮั่งเส็ง-VIP (เช้า)';
+        marketShort = activeSess.includes('AFTERNOON') ? 'ฮั่งเส็ง VIP-บ่าย' : 'ฮั่งเส็ง VIP-เช้า';
+      } else {
+        title = 'หุ้น-VIP';
+        marketShort = 'หุ้น VIP';
+      }
+    } else if (activeType === 'HANOI') {
+      if (activeSess === 'HANOI_SPECIAL') { title = 'ฮานอยพิเศษ'; marketShort = 'ฮานอย พิเศษ'; }
+      else if (activeSess === 'HANOI_VIP') { title = 'ฮานอย VIP'; marketShort = 'ฮานอย VIP'; }
+      else { title = 'ฮานอยปกติ'; marketShort = 'ฮานอย ปกติ'; }
+    } else if (activeType === 'LAOS') { title = 'ลาวพัฒนา'; marketShort = 'ลาวพัฒนา'; }
+    else if (activeType === 'DOWJONES') { title = 'ดาวโจนส์'; marketShort = 'ดาวโจนส์'; }
+    else if (activeType === 'GSB') { title = 'หวยออมสิน'; marketShort = 'ออมสิน'; }
+    else if (activeType === 'GOVERNMENT') { title = 'หวยรัฐบาลไทย'; marketShort = 'รัฐบาลไทย'; }
+
+    // Calculate single digits (เด่น, รอง)
+    const pastDraws = draws.filter(d => d.date !== validDraw.date && /^d+$/.test(d.top3 || ''));
+    const counts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    pastDraws.forEach(d => {
+      `${d.top3 || ''}${d.bottom2 || ''}`.split('').forEach(ch => {
+        const num = parseInt(ch, 10);
+        if (!isNaN(num)) counts[num] = (counts[num] || 0) + 1;
+      });
+    });
+    const sortedDigits = Object.entries(counts).map(([d, c]) => ({ digit: parseInt(d, 10), c })).sort((a,b) => b.c - a.c);
+    const primary = sortedDigits[0] ? sortedDigits[0].digit : 2;
+    const secondary = sortedDigits[1] ? sortedDigits[1].digit : 7;
+
+    const top3 = (validDraw.top3 || '').trim();
+    const bottom2 = (validDraw.bottom2 || '').trim();
+    const top2 = validDraw.top2 || (top3.length >= 2 ? top3.slice(-2) : '');
+
+    const lines = [];
+    lines.push(title);
+    lines.push(`ผล ${top3}-${bottom2}`);
+    lines.push('');
+
+    let hasHits = false;
+    if (bottom2.includes(String(primary))) {
+      lines.push(`🌼 ${marketShort} เด่น ${primary} [ล่าง ${bottom2.split('').join(' ')}]`);
+      hasHits = true;
+    }
+    if (top2.includes(String(primary))) {
+      lines.push(`🌼 ${marketShort} เด่น ${primary} [บน ${top2.split('').join(' ')}]`);
+      hasHits = true;
+    }
+    if (bottom2.includes(String(secondary))) {
+      lines.push(`🌼 ${marketShort} รอง ${secondary} [ล่าง ${bottom2.split('').join(' ')}]`);
+      hasHits = true;
+    }
+    if (top2.includes(String(secondary))) {
+      lines.push(`🌼 ${marketShort} รอง ${secondary} [บน ${top2.split('').join(' ')}]`);
+      hasHits = true;
+    }
+
+    if (activeType === 'NIKKEI') {
+      lines.push(`🏷️ รวมทุกหุ้นปกติ 6 รอบ [บน ${top2.split('').join(' ')}]`);
+    } else if (activeType === 'STOCKS_VIP') {
+      lines.push(`🏷️ รวมหุ้น VIP 6 รอบ [บน ${top2.split('').join(' ')}]`);
+    } else {
+      lines.push(`🏷️ รวมหุ้น [บน ${top2.split('').join(' ')}]`);
+    }
+
+    lines.push('');
+    lines.push('🎉🎉🎉🎉');
+
+    const messageText = lines.join('\n');
+
+    let originalHtml = '';
+    if (triggerBtn) {
+      originalHtml = triggerBtn.innerHTML;
+      triggerBtn.innerHTML = '<span>⏳ กำลังส่งเข้า LINE...</span>';
+      triggerBtn.disabled = true;
+    }
+
+    try {
+      const res = await fetch('/api/line/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: messageText, targetId: config.targetId })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast('🎉 ส่งแจ้งเตือนผลเข้า LINE สำเร็จเรียบร้อยแล้ว!');
+        if (triggerBtn) {
+          triggerBtn.innerHTML = '<span>✓ ส่งเข้า LINE สำเร็จ!</span>';
+          setTimeout(() => {
+            triggerBtn.innerHTML = originalHtml;
+            triggerBtn.disabled = false;
+          }, 2500);
+        }
+      } else {
+        throw new Error(data.error || 'Failed to send message');
+      }
+    } catch(err) {
+      showToast('ส่งไม่สำเร็จ: ' + err.message, true);
+      alert('❌ ส่งผลเข้า LINE ไม่สำเร็จ: ' + err.message);
+      if (triggerBtn) {
+        triggerBtn.innerHTML = originalHtml;
+        triggerBtn.disabled = false;
+      }
+    }
+  };
+
+  // Safe DOM Injector for Navbar LINE Settings Button
+  function injectLineNavbarButton() {
+    if (document.getElementById('btn-line-settings-ui') || document.getElementById('btn-line-settings-jsx')) return;
+    const allButtons = Array.from(document.querySelectorAll('button'));
+    const syncBtn = allButtons.find(b => b.innerText && (b.innerText.includes('Auto-Sync') || b.innerText.includes('ดึงผลรางวัลด่วน')));
+    if (!syncBtn || !syncBtn.parentElement) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'btn-line-settings-ui';
+    btn.title = 'ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE';
+    btn.className = 'bg-[#06c755]/20 hover:bg-[#06c755]/30 text-[#06c755] border border-[#06c755]/50 text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-md cursor-pointer ml-1.5';
+    btn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" class="w-3.5 h-3.5 text-[#06c755]">
+        <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
+      </svg>
+      <span>💬 แจ้งเตือน LINE</span>
+    `;
+    btn.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.openLineSettingsModal();
+    };
+
+    syncBtn.parentElement.insertBefore(btn, syncBtn.nextSibling);
+  }
+
+  // Safe DOM Injector for Prediction Card LINE Send Button
+  function injectLineSendButton() {
+    if (document.getElementById('btn-line-send-result-ui') || document.getElementById('btn-line-send-result-jsx')) return;
+    const allButtons = Array.from(document.querySelectorAll('button'));
+    const copyBtns = allButtons.filter(b => b.innerText && b.innerText.includes('คัดลอกแนวทาง') && !b.id.includes('export'));
+    if (copyBtns.length === 0) return;
+
+    const targetBtn = copyBtns.find(b => b.className.includes('from-amber-400') || (b.parentElement && b.parentElement.innerHTML.includes('ฟันเด่น'))) || copyBtns[copyBtns.length - 1];
+    if (!targetBtn || !targetBtn.parentElement) return;
+
+    const btn = document.createElement('button');
+    btn.id = 'btn-line-send-result-ui';
+    btn.title = 'ส่งผลรางวัลและเลขที่เข้าเป้าเข้า LINE ทันที';
+    btn.className = 'px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-1.5 shrink-0 cursor-pointer shadow-lg bg-[#06c755] hover:bg-[#05b54d] text-white border border-[#06c755]/40 hover:scale-105 active:scale-95 shadow-md mr-2';
+    btn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 text-white">
+        <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
+      </svg>
+      <span>📲 ส่งผลเข้า LINE</span>
+    `;
+    btn.onclick = function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      window.sendCurrentResultToLine(btn);
+    };
+
+    targetBtn.parentElement.insertBefore(btn, targetBtn);
+  }
+
+  function runAllInjectors() {
+    injectDownloadButton();
+    injectLineNavbarButton();
+    injectLineSendButton();
+  }
+
   // Periodic and reactive checks
-  setInterval(injectDownloadButton, 500);
+  setInterval(runAllInjectors, 400);
   if (typeof document !== 'undefined') {
     if (document.body) {
-      const observer = new MutationObserver(injectDownloadButton);
+      const observer = new MutationObserver(runAllInjectors);
       observer.observe(document.body, { childList: true, subtree: true });
     } else {
       document.addEventListener('DOMContentLoaded', function() {
-        const observer = new MutationObserver(injectDownloadButton);
+        const observer = new MutationObserver(runAllInjectors);
         observer.observe(document.body, { childList: true, subtree: true });
       });
     }
