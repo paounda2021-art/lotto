@@ -4,6 +4,14 @@ const path = require('path');
 const srcPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-CN-5_2d9.js');
 let code = fs.readFileSync(srcPath, 'utf8');
 
+// 0. Fix any broken const chain around h and draws:O
+const brokenH = 'h=W.useMemo(()=>Ey(T,r),[T,r]);W.useEffect(()=>{try{window.__CURRENT_ACTIVE_DAY__=r;window.__CURRENT_STAT_H__=h;localStorage.setItem("lotto_selected_day",r)}catch(err){}},[r,h]),{draws:O,isFuture:g,isAllRecorded:f}=d0(a,r,i)';
+const cleanH = 'h=W.useMemo(()=>Ey(T,r),[T,r]),{draws:O,isFuture:g,isAllRecorded:f}=d0(a,r,i)';
+if (code.includes(brokenH)) {
+  code = code.replace(brokenH, cleanH);
+  console.log('Fixed broken const chain around h and draws:O.');
+}
+
 // 1. Line buttons patches
 if (!code.includes('btn-line-settings-jsx')) {
   const target1 = 'n.jsx("span",{children:"🔄 ดึงผลรางวัลด่วน (Auto-Sync)"})]}),';
@@ -30,14 +38,20 @@ if (!code.includes('__CURRENT_ACTIVE_DAY__')) {
   const tp = 'p=b=>{d(b),b===i?s("NEXT"):N!=null&&N.dayOfWeek&&b===N.dayOfWeek&&s("VERIFY")}';
   const rp = 'p=b=>{try{window.__CURRENT_ACTIVE_DAY__=b;localStorage.setItem("lotto_selected_day",b)}catch(err){}d(b),b===i?s("NEXT"):N!=null&&N.dayOfWeek&&b===N.dayOfWeek&&s("VERIFY")}';
 
-  const th = 'h=W.useMemo(()=>Ey(T,r),[T,r])';
-  const rh = 'h=W.useMemo(()=>Ey(T,r),[T,r]);W.useEffect(()=>{try{window.__CURRENT_ACTIVE_DAY__=r;window.__CURRENT_STAT_H__=h;localStorage.setItem("lotto_selected_day",r)}catch(err){}},[r,h])';
-
   if (code.includes(t3)) code = code.replace(t3, r3);
   if (code.includes(tu)) code = code.replace(tu, ru);
   if (code.includes(tp)) code = code.replace(tp, rp);
-  if (code.includes(th)) code = code.replace(th, rh);
-  console.log('Applied day sync patches to index JS.');
+  console.log('Applied day sync handlers to index JS.');
+}
+
+// Safely add useEffect for current day and h after M declaration ends (so const chain is never broken)
+if (!code.includes('window.__CURRENT_STAT_H__=h')) {
+  const targetAfterM = 'children:"❌ ไม่เข้า"})}};';
+  const replAfterM = 'children:"❌ ไม่เข้า"})}};W.useEffect(()=>{try{window.__CURRENT_ACTIVE_DAY__=r;window.__CURRENT_STAT_H__=h;localStorage.setItem("lotto_selected_day",r)}catch(err){}},[r,h]);';
+  if (code.includes(targetAfterM)) {
+    code = code.replace(targetAfterM, replAfterM);
+    console.log('Placed __CURRENT_STAT_H__ effect safely after M statement.');
+  }
 }
 
 // 3. Laos next draw weekend skip patch
