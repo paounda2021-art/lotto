@@ -257,7 +257,10 @@ var worker_default = {
               cfg.lastDetectedGroupId = groupId;
               await kvStore.put("line_bot_config", JSON.stringify(cfg));
 
-              if (cfg.channelAccessToken && ev.replyToken) {
+              const userMsg = (ev.message && ev.message.text ? ev.message.text.trim() : '');
+              const isAskingId = userMsg === 'รหัสกลุ่ม' || userMsg === '#groupid' || userMsg === '/id' || userMsg === 'idกลุ่ม';
+
+              if (isAskingId && cfg.channelAccessToken && ev.replyToken) {
                 await fetch("https://api.line.me/v2/bot/message/reply", {
                   method: "POST",
                   headers: {
