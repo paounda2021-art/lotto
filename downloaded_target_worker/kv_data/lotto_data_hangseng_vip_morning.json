@@ -1,5 +1,29 @@
 [
   {
+    "id": "STOCK_VIP_HANGSENG_VIP_MORNING_2026-10-12",
+    "lotteryType": "STOCK_VIP",
+    "session": "HANGSENG_VIP_MORNING",
+    "date": "2026-10-12",
+    "dateFormatted": "12 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "414",
+    "top2": "14",
+    "bottom2": "21"
+  },
+  {
+    "id": "STOCK_VIP_HANGSENG_VIP_MORNING_2026-10-11",
+    "lotteryType": "STOCK_VIP",
+    "session": "HANGSENG_VIP_MORNING",
+    "date": "2026-10-11",
+    "dateFormatted": "11 ต.ค. 2569",
+    "dayOfWeek": "Sun",
+    "dayNameThai": "อาทิตย์",
+    "top3": "360",
+    "top2": "60",
+    "bottom2": "80"
+  },
+  {
     "id": "STOCK_VIP_HANGSENG_VIP_MORNING_2026-10-10",
     "lotteryType": "STOCK_VIP",
     "session": "HANGSENG_VIP_MORNING",

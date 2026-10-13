@@ -1,5 +1,29 @@
 [
   {
+    "id": "STOCK_VIP_NIKKEI_VIP_MORNING_2026-10-12",
+    "lotteryType": "STOCK_VIP",
+    "session": "NIKKEI_VIP_MORNING",
+    "date": "2026-10-12",
+    "dateFormatted": "12 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "054",
+    "top2": "54",
+    "bottom2": "56"
+  },
+  {
+    "id": "STOCK_VIP_NIKKEI_VIP_MORNING_2026-10-11",
+    "lotteryType": "STOCK_VIP",
+    "session": "NIKKEI_VIP_MORNING",
+    "date": "2026-10-11",
+    "dateFormatted": "11 ต.ค. 2569",
+    "dayOfWeek": "Sun",
+    "dayNameThai": "อาทิตย์",
+    "top3": "952",
+    "top2": "52",
+    "bottom2": "99"
+  },
+  {
     "id": "STOCK_VIP_NIKKEI_VIP_MORNING_2026-10-10",
     "lotteryType": "STOCK_VIP",
     "session": "NIKKEI_VIP_MORNING",

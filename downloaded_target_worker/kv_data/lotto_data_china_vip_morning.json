@@ -1,5 +1,29 @@
 [
   {
+    "id": "STOCK_VIP_CHINA_VIP_MORNING_2026-10-12",
+    "lotteryType": "STOCK_VIP",
+    "session": "CHINA_VIP_MORNING",
+    "date": "2026-10-12",
+    "dateFormatted": "12 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "865",
+    "top2": "65",
+    "bottom2": "25"
+  },
+  {
+    "id": "STOCK_VIP_CHINA_VIP_MORNING_2026-10-11",
+    "lotteryType": "STOCK_VIP",
+    "session": "CHINA_VIP_MORNING",
+    "date": "2026-10-11",
+    "dateFormatted": "11 ต.ค. 2569",
+    "dayOfWeek": "Sun",
+    "dayNameThai": "อาทิตย์",
+    "top3": "437",
+    "top2": "37",
+    "bottom2": "79"
+  },
+  {
     "id": "STOCK_VIP_CHINA_VIP_MORNING_2026-10-10",
     "lotteryType": "STOCK_VIP",
     "session": "CHINA_VIP_MORNING",

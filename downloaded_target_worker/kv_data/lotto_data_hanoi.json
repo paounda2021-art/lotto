@@ -1,5 +1,17 @@
 [
   {
+    "id": "HANOI_HANOI_EVENING_2026-10-12",
+    "lotteryType": "HANOI",
+    "session": "HANOI_EVENING",
+    "date": "2026-10-12",
+    "dateFormatted": "12 ต.ค. 2569",
+    "dayOfWeek": "Mon",
+    "dayNameThai": "จันทร์",
+    "top3": "287",
+    "top2": "87",
+    "bottom2": "80"
+  },
+  {
     "id": "HANOI_HANOI_EVENING_2026-10-10",
     "lotteryType": "HANOI",
     "session": "HANOI_EVENING",
