@@ -2,8 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-console.log('1. Building export_modal_combined.js...');
+console.log('1. Building export_modal_combined.js and chase daily CSV...');
 execSync('node scratch/build_enhanced_export_modal.cjs', { stdio: 'inherit' });
+execSync('node scratch/build_chase_table_csv.cjs', { stdio: 'inherit' });
 
 console.log('2. Building index_patched.js...');
 execSync('node scratch/test_bundle_patch.cjs', { stdio: 'inherit' });
