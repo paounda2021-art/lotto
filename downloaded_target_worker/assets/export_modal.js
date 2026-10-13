@@ -424,6 +424,9 @@
               </div>
             </div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+              <a href="/assets/lotto_position_chase_daily.csv" download="lotto_position_chase_daily.csv" style="grid-column: span 2; text-decoration:none;background:linear-gradient(135deg, rgba(59,130,246,0.3), rgba(37,99,235,0.3));border:1px solid #60a5fa;color:#bfdbfe;padding:11px 14px;border-radius:10px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;text-align:center;box-shadow: 0 4px 12px rgba(59,130,246,0.2);">
+                🔢 ดาวน์โหลดชีทแยกหลักสิบ-หน่วย (บน/ล่าง เช้า-บ่าย) CSV
+              </a>
               <a href="/assets/lotto_chase_strategy_daily.csv" download="lotto_chase_strategy_daily.csv" style="grid-column: span 2; text-decoration:none;background:linear-gradient(135deg, rgba(234,179,8,0.3), rgba(245,158,11,0.3));border:1px solid #facc15;color:#fef08a;padding:11px 14px;border-radius:10px;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s;text-align:center;box-shadow: 0 4px 12px rgba(234,179,8,0.2);">
                 🎯 ดาวน์โหลดตารางสูตรล่า 2 หวย (รายวัน จันทร์-ศุกร์) CSV
               </a>
@@ -552,11 +555,28 @@
       <span>🎯 ดาวน์โหลดสูตรล่า 2 หวย (CSV)</span>
     `;
 
-    targetBtn.parentElement.insertBefore(chaseBtn, targetBtn);
+    const posBtn = document.createElement('a');
+    posBtn.id = 'btn-download-position-chase-ui';
+    posBtn.href = '/assets/lotto_position_chase_daily.csv';
+    posBtn.download = 'lotto_position_chase_daily.csv';
+    posBtn.className = 'px-4 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all duration-300 flex items-center gap-2 shrink-0 cursor-pointer shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600 text-white border border-blue-400 hover:brightness-110 hover:scale-105 active:scale-95 mr-2 no-underline';
+    posBtn.title = 'ดาวน์โหลดชีทแยกหลักสิบ-หน่วย (บน/ล่าง เช้า-บ่าย) พร้อมเช็คเป้า';
+    posBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-white">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="3" y1="9" x2="21" y2="9"></line>
+        <line x1="9" y1="21" x2="9" y2="9"></line>
+      </svg>
+      <span>🔢 ชีทแยกหลักสิบ-หน่วย (CSV)</span>
+    `;
+
+    targetBtn.parentElement.insertBefore(posBtn, targetBtn);
+    targetBtn.parentElement.insertBefore(chaseBtn, posBtn);
     targetBtn.parentElement.insertBefore(btn, chaseBtn);
   }
 
 
+  
   
   
   
