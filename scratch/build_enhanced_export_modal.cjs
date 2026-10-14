@@ -237,21 +237,32 @@ const lineModuleCode = `
     return map[dayIndex] || 'Wed';
   }
 
-  function getBangkokDateThaiFormatted() {
+  function getDateForWeekday(targetDayCode) {
     const now = new Date();
     const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
     const bkk = new Date(utc + (3600000 * 7));
-    const d = bkk.getDate();
-    const thaiMonths = ['', 'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
-    const m = thaiMonths[bkk.getMonth() + 1] || 'ต.ค.';
-    const yThai = (bkk.getFullYear() + 543).toString().slice(-2);
+
+    const currentDayIndex = bkk.getDay(); // 0 Sun, 1 Mon ... 6 Sat
+    const mondayOffset = currentDayIndex === 0 ? -6 : 1 - currentDayIndex;
+    const monday = new Date(bkk);
+    monday.setDate(bkk.getDate() + mondayOffset);
+
+    const dayOffsets = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4 };
+    const targetDate = new Date(monday);
+    const offset = dayOffsets[targetDayCode] !== undefined ? dayOffsets[targetDayCode] : 2;
+    targetDate.setDate(monday.getDate() + offset);
+
+    const d = targetDate.getDate();
+    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+    const m = thaiMonths[targetDate.getMonth()] || 'ต.ค.';
+    const yThai = (targetDate.getFullYear() + 543).toString().slice(-2);
     return d + ' ' + m + ' ' + yThai;
   }
 
   function buildChaseLineSlipText(dayCode, filter = 'ALL') {
     const cfg = CHASE_SLIPS_DATA[dayCode] || CHASE_SLIPS_DATA['Wed'];
     const dayName = cfg.dayTh;
-    const dateFormatted = getBangkokDateThaiFormatted();
+    const dateFormatted = getDateForWeekday(dayCode);
 
     let lines = [
       '================================',
@@ -491,10 +502,10 @@ const lineModuleCode = `
             <!-- Day Selection -->
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
               <span style="font-size: 12px; font-weight: 700; color: #d1fae5;">🗓️ เลือกวันทำการ:</span>
-              <div style="display: flex; gap: 4px;">
+              <div style="display: flex; gap: 4px; flex-wrap: wrap;">
                 \${['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(d => \`
-                  <button type="button" class="day-tab-btn \${currentDay === d ? 'active' : ''}" data-day="\${d}" style="padding: 4px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.1)'}; background: \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.05)'}; color: \${currentDay === d ? '#000000' : '#d1d5db'}; transition: all 0.2s;">
-                    \${dayNames[d]}
+                  <button type="button" class="day-tab-btn \${currentDay === d ? 'active' : ''}" data-day="\${d}" style="padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.1)'}; background: \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.05)'}; color: \${currentDay === d ? '#000000' : '#d1d5db'}; transition: all 0.2s;">
+                    \${dayNames[d]} (\${getDateForWeekday(d).split(' ')[0]} \${getDateForWeekday(d).split(' ')[1]})
                   </button>
                 \`).join('')}
               </div>
