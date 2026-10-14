@@ -243,7 +243,8 @@ const lineModuleCode = `
     const bkk = new Date(utc + (3600000 * 7));
 
     const currentDayIndex = bkk.getDay(); // 0 Sun, 1 Mon ... 6 Sat
-    const mondayOffset = currentDayIndex === 0 ? -6 : 1 - currentDayIndex;
+    // On weekends (Sat/Sun when markets are closed), roll forward to the upcoming Monday
+    const mondayOffset = (currentDayIndex === 0) ? 1 : (currentDayIndex === 6) ? 2 : (1 - currentDayIndex);
     const monday = new Date(bkk);
     monday.setDate(bkk.getDate() + mondayOffset);
 
@@ -462,7 +463,7 @@ const lineModuleCode = `
 
   window.openChaseSlipModal = function() {
     let currentDay = getBangkokDayCode();
-    if (!CHASE_SLIPS_DATA[currentDay]) currentDay = 'Wed';
+    if (!CHASE_SLIPS_DATA[currentDay]) currentDay = 'Mon';
     let currentFilter = 'ALL';
 
     if (!chaseSlipModalOverlay) {
