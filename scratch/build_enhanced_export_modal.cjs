@@ -215,6 +215,70 @@ const lineModuleCode = `
         top6: '27 - 28 - 20 - 29 - 17 - 18 - 10 - 19',
         winPairs: '27 - 28 - 20 - 29 - 17 - 18 - 10 - 19'
       }
+    },
+    Sat: {
+      dayTh: 'วันเสาร์',
+      regClosed: true,
+      regMorning: {
+        cardName: 'ตลาดหุ้นปกติ ปิดทำการ (เสาร์-อาทิตย์)',
+        runDigits: '-',
+        bestDigit: '-',
+        top6: '-',
+        winPairs: '-'
+      },
+      regAfternoon: {
+        cardName: 'ตลาดหุ้นปกติ ปิดทำการ (เสาร์-อาทิตย์)',
+        runDigits: '-',
+        bestDigit: '-',
+        top6: '-',
+        winPairs: '-'
+      },
+      vipMorning: {
+        cardName: 'จีน VIP (เช้า) 🥇 ฟอร์มสด สเต็ป 1 แตก 5 ใน 6 วัน',
+        runDigits: '1 - 2 (กัน 6)',
+        bestDigit: '1',
+        top6: '12 - 29 - 32 - 60 - 78 - 10',
+        winPairs: '12 - 29 - 32 - 60 - 78 - 10 - 15 - 16'
+      },
+      vipAfternoon: {
+        cardName: 'นิเคอิ VIP (บ่าย) 👑 สถิติ 100% ไร้พ่าย (ไม่เคยหลุดเลย 0 วัน)',
+        runDigits: '0 - 9',
+        bestDigit: '0',
+        top6: '30 - 35 - 50 - 98 - 09 - 15',
+        winPairs: '30 - 35 - 50 - 98 - 09 - 15 - 08 - 90'
+      }
+    },
+    Sun: {
+      dayTh: 'วันอาทิตย์',
+      regClosed: true,
+      regMorning: {
+        cardName: 'ตลาดหุ้นปกติ ปิดทำการ (เสาร์-อาทิตย์)',
+        runDigits: '-',
+        bestDigit: '-',
+        top6: '-',
+        winPairs: '-'
+      },
+      regAfternoon: {
+        cardName: 'ตลาดหุ้นปกติ ปิดทำการ (เสาร์-อาทิตย์)',
+        runDigits: '-',
+        bestDigit: '-',
+        top6: '-',
+        winPairs: '-'
+      },
+      vipMorning: {
+        cardName: 'จีน VIP (เช้า) 🥇 สถิติไร้พ่าย (สเต็ป 1 แตก)',
+        runDigits: '9 - 5 (กัน 4)',
+        bestDigit: '9',
+        top6: '15 - 20 - 36 - 39 - 50 - 79',
+        winPairs: '15 - 20 - 36 - 39 - 50 - 79 - 80 - 91'
+      },
+      vipAfternoon: {
+        cardName: 'นิเคอิ VIP (บ่าย) 👑 สถิติ 100% ไร้พ่าย (ไม่เคยหลุดเลย 0 วัน)',
+        runDigits: '9 - 3',
+        bestDigit: '9',
+        top6: '19 - 72 - 03 - 10 - 13 - 16',
+        winPairs: '19 - 72 - 03 - 10 - 13 - 16 - 24 - 26'
+      }
     }
   };
 
@@ -243,14 +307,14 @@ const lineModuleCode = `
     const bkk = new Date(utc + (3600000 * 7));
 
     const currentDayIndex = bkk.getDay(); // 0 Sun, 1 Mon ... 6 Sat
-    // On weekends (Sat/Sun when markets are closed), roll forward to the upcoming Monday
-    const mondayOffset = (currentDayIndex === 0) ? 1 : (currentDayIndex === 6) ? 2 : (1 - currentDayIndex);
+    // Days elapsed from Monday of current week (Mon=0, Tue=1, ..., Sun=6)
+    const daysFromMonday = (currentDayIndex === 0) ? 6 : (currentDayIndex - 1);
     const monday = new Date(bkk);
-    monday.setDate(bkk.getDate() + mondayOffset);
+    monday.setDate(bkk.getDate() - daysFromMonday);
 
-    const dayOffsets = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4 };
+    const dayOffsets = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
     const targetDate = new Date(monday);
-    const offset = dayOffsets[targetDayCode] !== undefined ? dayOffsets[targetDayCode] : 2;
+    const offset = dayOffsets[targetDayCode] !== undefined ? dayOffsets[targetDayCode] : 0;
     targetDate.setDate(monday.getDate() + offset);
 
     const d = targetDate.getDate();
@@ -273,29 +337,40 @@ const lineModuleCode = `
       '================================'
     ];
 
-    if (filter === 'ALL' || filter === 'REG_MORNING' || filter === 'MORNING' || filter === 'REGULAR') {
-      lines.push('');
-      lines.push('☀️ [1] หุ้นปกติ รอบเช้า');
-      lines.push('(นิเคอิ 09:30 ➡️ จีน 10:30 ➡️ ฮั่งเส็ง 11:00)');
-      lines.push('• การ์ดต้นทาง : ' + cfg.regMorning.cardName);
-      lines.push('• ฟันเด่นรูด : ' + cfg.regMorning.runDigits + ' (เน้น ' + cfg.regMorning.bestDigit + ')');
-      lines.push('• เจาะ Top 6 : ' + cfg.regMorning.top6);
-      lines.push('• วินสิบ-หน่วย : ' + cfg.regMorning.winPairs);
-    }
+    if (cfg.regClosed) {
+      if (filter === 'REGULAR') {
+        lines.push('');
+        lines.push('🛑 ตลาดหุ้นปกติ (นิเคอิ / จีน / ฮั่งเส็ง) ปิดทำการวันเสาร์-อาทิตย์');
+        lines.push('👉 แนะนำเลือกแท็บ "💎 หุ้น VIP" มีออกรางวัลครบทุกวัน 7 วัน ทั้งเช้าและบ่ายครับ');
+      } else if (filter === 'ALL') {
+        lines.push('');
+        lines.push('📌 ตลาดหุ้นปกติ: ปิดทำการวันเสาร์-อาทิตย์ (เปิดทำการจันทร์-ศุกร์)');
+      }
+    } else {
+      if (filter === 'ALL' || filter === 'REG_MORNING' || filter === 'MORNING' || filter === 'REGULAR') {
+        lines.push('');
+        lines.push('☀️ [1] หุ้นปกติ รอบเช้า');
+        lines.push('(นิเคอิ 09:30 ➡️ จีน 10:30 ➡️ ฮั่งเส็ง 11:00)');
+        lines.push('• การ์ดต้นทาง : ' + cfg.regMorning.cardName);
+        lines.push('• ฟันเด่นรูด : ' + cfg.regMorning.runDigits + ' (เน้น ' + cfg.regMorning.bestDigit + ')');
+        lines.push('• เจาะ Top 6 : ' + cfg.regMorning.top6);
+        lines.push('• วินสิบ-หน่วย : ' + cfg.regMorning.winPairs);
+      }
 
-    if (filter === 'ALL' || filter === 'REG_AFTERNOON' || filter === 'AFTERNOON' || filter === 'REGULAR') {
-      lines.push('');
-      lines.push('🌙 [2] หุ้นปกติ รอบบ่าย');
-      lines.push('(นิเคอิ 13:00 ➡️ จีน 14:00 ➡️ ฮั่งเส็ง 15:30)');
-      lines.push('• การ์ดต้นทาง : ' + cfg.regAfternoon.cardName);
-      lines.push('• ฟันเด่นรูด : ' + cfg.regAfternoon.runDigits + ' (เน้น ' + cfg.regAfternoon.bestDigit + ')');
-      lines.push('• เจาะ Top 6 : ' + cfg.regAfternoon.top6);
-      lines.push('• วินสิบ-หน่วย : ' + cfg.regAfternoon.winPairs);
+      if (filter === 'ALL' || filter === 'REG_AFTERNOON' || filter === 'AFTERNOON' || filter === 'REGULAR') {
+        lines.push('');
+        lines.push('🌙 [2] หุ้นปกติ รอบบ่าย');
+        lines.push('(นิเคอิ 13:00 ➡️ จีน 14:00 ➡️ ฮั่งเส็ง 15:30)');
+        lines.push('• การ์ดต้นทาง : ' + cfg.regAfternoon.cardName);
+        lines.push('• ฟันเด่นรูด : ' + cfg.regAfternoon.runDigits + ' (เน้น ' + cfg.regAfternoon.bestDigit + ')');
+        lines.push('• เจาะ Top 6 : ' + cfg.regAfternoon.top6);
+        lines.push('• วินสิบ-หน่วย : ' + cfg.regAfternoon.winPairs);
+      }
     }
 
     if (filter === 'ALL' || filter === 'VIP_MORNING' || filter === 'MORNING' || filter === 'VIP') {
       lines.push('');
-      lines.push('☀️ [3] หุ้น VIP รอบเช้า');
+      lines.push('☀️ ' + (cfg.regClosed ? '[1]' : '[3]') + ' หุ้น VIP รอบเช้า' + (cfg.regClosed ? ' (เปิดทำการปกติ)' : ''));
       lines.push('(นิเคอิ VIP 09:30 ➡️ จีน VIP 10:30 ➡️ ฮั่งเส็ง VIP 11:00)');
       lines.push('• การ์ดต้นทาง : ' + cfg.vipMorning.cardName);
       lines.push('• ฟันเด่นรูด : ' + cfg.vipMorning.runDigits + ' (เน้น ' + cfg.vipMorning.bestDigit + ')');
@@ -305,7 +380,7 @@ const lineModuleCode = `
 
     if (filter === 'ALL' || filter === 'VIP_AFTERNOON' || filter === 'AFTERNOON' || filter === 'VIP') {
       lines.push('');
-      lines.push('🌙 [4] หุ้น VIP รอบบ่าย');
+      lines.push('🌙 ' + (cfg.regClosed ? '[2]' : '[4]') + ' หุ้น VIP รอบบ่าย' + (cfg.regClosed ? ' (เปิดทำการปกติ)' : ''));
       lines.push('(นิเคอิ VIP 13:00 ➡️ จีน VIP 14:00 ➡️ ฮั่งเส็ง VIP 15:30)');
       lines.push('• การ์ดต้นทาง : ' + cfg.vipAfternoon.cardName);
       lines.push('• ฟันเด่นรูด : ' + cfg.vipAfternoon.runDigits + ' (เน้น ' + cfg.vipAfternoon.bestDigit + ')');
@@ -475,7 +550,7 @@ const lineModuleCode = `
 
     function renderModalContent() {
       const slipText = buildChaseLineSlipText(currentDay, currentFilter);
-      const dayNames = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสฯ', Fri: 'ศุกร์' };
+      const dayNames = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสฯ', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์' };
 
       chaseSlipModalOverlay.innerHTML = \`
         <div style="background: #111827; border: 1px solid #10b981; border-radius: 20px; width: 100%; max-width: 620px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(16, 185, 129, 0.2); overflow: hidden; color: #f3f4f6;">
@@ -504,7 +579,7 @@ const lineModuleCode = `
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
               <span style="font-size: 12px; font-weight: 700; color: #d1fae5;">🗓️ เลือกวันทำการ:</span>
               <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                \${['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(d => \`
+                \${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => \`
                   <button type="button" class="day-tab-btn \${currentDay === d ? 'active' : ''}" data-day="\${d}" style="padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.1)'}; background: \${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.05)'}; color: \${currentDay === d ? '#000000' : '#d1d5db'}; transition: all 0.2s;">
                     \${dayNames[d]} (\${getDateForWeekday(d).split(' ')[0]} \${getDateForWeekday(d).split(' ')[1]})
                   </button>
