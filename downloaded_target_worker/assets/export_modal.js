@@ -617,6 +617,7 @@
   
   
   
+  
   /* ==========================================================================
      LINE NOTIFICATION & CHASE SLIP SYSTEM (SystemLucky289)
      ========================================================================== */
@@ -630,31 +631,31 @@
       dayTh: 'วันจันทร์',
       regMorning: {
         cardName: 'นิเคอิ (เช้า)',
-        runDigits: '4 - 6',
-        bestDigit: '4',
-        top6: '41 - 40 - 49 - 42 - 61 - 60 - 69 - 62',
-        winPairs: '41 - 40 - 49 - 42 - 61 - 60 - 69 - 62'
+        runDigits: '1 - 4',
+        bestDigit: '1',
+        top6: '51 - 60 - 61 - 64 - 86 - 11',
+        winPairs: '51 - 60 - 61 - 64 - 86 - 11 - 14 - 18'
       },
       regAfternoon: {
         cardName: 'จีน (บ่าย)',
-        runDigits: '2 - 1',
-        bestDigit: '2',
-        top6: '20 - 29 - 22 - 23 - 10 - 19 - 12 - 13',
-        winPairs: '20 - 29 - 22 - 23 - 10 - 19 - 12 - 13'
+        runDigits: '9 - 0',
+        bestDigit: '9',
+        top6: '29 - 65 - 80 - 87 - 96 - 11',
+        winPairs: '29 - 65 - 80 - 87 - 96 - 11 - 20 - 24'
       },
       vipMorning: {
         cardName: 'จีน VIP (เช้า)',
-        runDigits: '8 - 0',
-        bestDigit: '8',
-        top6: '81 - 84 - 83 - 89 - 01 - 04 - 03 - 09',
-        winPairs: '81 - 84 - 83 - 89 - 01 - 04 - 03 - 09'
+        runDigits: '6 - 8',
+        bestDigit: '6',
+        top6: '49 - 76 - 86 - 93 - 96 - 10',
+        winPairs: '49 - 76 - 86 - 93 - 96 - 10 - 18 - 26'
       },
       vipAfternoon: {
         cardName: 'จีน VIP (บ่าย)',
-        runDigits: '8 - 2',
+        runDigits: '8 - 4',
         bestDigit: '8',
-        top6: '84 - 81 - 85 - 88 - 24 - 21 - 25 - 28',
-        winPairs: '84 - 81 - 85 - 88 - 24 - 21 - 25 - 28'
+        top6: '23 - 40 - 64 - 10 - 14 - 16',
+        winPairs: '23 - 40 - 64 - 10 - 14 - 16 - 21 - 25'
       }
     },
     Tue: {
@@ -664,28 +665,28 @@
         runDigits: '3 - 0',
         bestDigit: '3',
         top6: '11 - 20 - 39 - 63 - 03 - 06',
-        winPairs: '45 - 43 - 40 - 46 - 35 - 33 - 30 - 36'
+        winPairs: '11 - 20 - 39 - 63 - 03 - 06 - 08 - 23'
       },
       regAfternoon: {
         cardName: 'จีน (บ่าย) [การ์ดนิเคอิ 3-2 ไร้พ่าย 100%]',
         runDigits: '2 - 5',
         bestDigit: '2',
         top6: '20 - 42 - 52 - 69 - 71 - 77',
-        winPairs: '23 - 20 - 22 - 25 - 93 - 90 - 92 - 95'
+        winPairs: '20 - 42 - 52 - 69 - 71 - 77 - 92 - 93'
       },
       vipMorning: {
         cardName: 'ฮั่งเส็ง VIP (เช้า) 🥇',
         runDigits: '7 - 6',
         bestDigit: '7',
         top6: '12 - 29 - 60 - 65 - 74 - 78',
-        winPairs: '82 - 84 - 80 - 81 - 62 - 64 - 60 - 61'
+        winPairs: '12 - 29 - 60 - 65 - 74 - 78 - 80 - 81'
       },
       vipAfternoon: {
         cardName: 'นิเคอิ VIP (บ่าย) 🥇',
         runDigits: '2 - 0',
         bestDigit: '2',
         top6: '24 - 52 - 62 - 76 - 11 - 14',
-        winPairs: '60 - 61 - 69 - 62 - 20 - 21 - 29 - 22'
+        winPairs: '24 - 52 - 62 - 76 - 11 - 14 - 20 - 21'
       }
     },
     Wed: {
@@ -695,90 +696,90 @@
         runDigits: '3 - 6',
         bestDigit: '3',
         top6: '33 - 34 - 63 - 76 - 88 - 05',
-        winPairs: '05 - 00 - 06 - 03 - 25 - 20 - 26 - 23'
+        winPairs: '33 - 34 - 63 - 76 - 88 - 05 - 06 - 11'
       },
       regAfternoon: {
         cardName: 'นิเคอิ (บ่าย) 🥇 สถิติ 100% ไร้พ่าย',
         runDigits: '4 - 1',
         bestDigit: '4',
         top6: '27 - 64 - 73 - 91 - 13 - 16',
-        winPairs: '12 - 16 - 17 - 10 - 42 - 46 - 47 - 40'
+        winPairs: '27 - 64 - 73 - 91 - 13 - 16 - 17 - 20'
       },
       vipMorning: {
         cardName: 'จีน VIP (เช้า) 🥇 แตก 01 สเต็ป 1',
         runDigits: '0 - 9',
         bestDigit: '0',
         top6: '60 - 79 - 85 - 01 - 03 - 09',
-        winPairs: '60 - 61 - 65 - 63 - 00 - 01 - 05 - 03'
+        winPairs: '60 - 79 - 85 - 01 - 03 - 09 - 13 - 18'
       },
       vipAfternoon: {
         cardName: 'จีน VIP (บ่าย) 🥇 สถิติ 100% ไร้พ่าย',
         runDigits: '2 - 3',
         bestDigit: '2',
         top6: '12 - 15 - 37 - 48 - 50 - 53',
-        winPairs: '52 - 54 - 58 - 59 - 32 - 34 - 38 - 39'
+        winPairs: '12 - 15 - 37 - 48 - 50 - 53 - 54 - 58'
       }
     },
     Thu: {
       dayTh: 'วันพฤหัสบดี',
       regMorning: {
         cardName: 'นิเคอิ (เช้า)',
-        runDigits: '4 - 8',
+        runDigits: '4 - 7',
         bestDigit: '4',
-        top6: '41 - 43 - 47 - 49 - 81 - 83 - 87 - 89',
-        winPairs: '41 - 43 - 47 - 49 - 81 - 83 - 87 - 89'
+        top6: '19 - 30 - 41 - 46 - 75 - 83',
+        winPairs: '19 - 30 - 41 - 46 - 75 - 83 - 87 - 94'
       },
       regAfternoon: {
         cardName: 'จีน (บ่าย)',
-        runDigits: '9 - 4',
-        bestDigit: '9',
-        top6: '91 - 98 - 99 - 90 - 41 - 48 - 49 - 40',
-        winPairs: '91 - 98 - 99 - 90 - 41 - 48 - 49 - 40'
+        runDigits: '8 - 7',
+        bestDigit: '8',
+        top6: '12 - 57 - 65 - 75 - 08 - 10',
+        winPairs: '12 - 57 - 65 - 75 - 08 - 10 - 18 - 25'
       },
       vipMorning: {
         cardName: 'จีน VIP (เช้า)',
-        runDigits: '4 - 6',
-        bestDigit: '4',
-        top6: '44 - 45 - 49 - 41 - 64 - 65 - 69 - 61',
-        winPairs: '44 - 45 - 49 - 41 - 64 - 65 - 69 - 61'
+        runDigits: '5 - 6',
+        bestDigit: '5',
+        top6: '32 - 45 - 60 - 61 - 79 - 85',
+        winPairs: '32 - 45 - 60 - 61 - 79 - 85 - 90 - 92'
       },
       vipAfternoon: {
         cardName: 'จีน VIP (บ่าย)',
-        runDigits: '4 - 1',
-        bestDigit: '4',
-        top6: '48 - 47 - 40 - 43 - 18 - 17 - 10 - 13',
-        winPairs: '48 - 47 - 40 - 43 - 18 - 17 - 10 - 13'
+        runDigits: '2 - 4',
+        bestDigit: '2',
+        top6: '18 - 20 - 29 - 34 - 41 - 58',
+        winPairs: '18 - 20 - 29 - 34 - 41 - 58 - 60 - 62'
       }
     },
     Fri: {
       dayTh: 'วันศุกร์',
       regMorning: {
         cardName: 'นิเคอิ (เช้า)',
-        runDigits: '4 - 7',
-        bestDigit: '4',
-        top6: '48 - 45 - 49 - 44 - 78 - 75 - 79 - 74',
-        winPairs: '48 - 45 - 49 - 44 - 78 - 75 - 79 - 74'
+        runDigits: '2 - 8',
+        bestDigit: '2',
+        top6: '68 - 72 - 10 - 11 - 14 - 15',
+        winPairs: '68 - 72 - 10 - 11 - 14 - 15 - 16 - 18'
       },
       regAfternoon: {
         cardName: 'จีน (บ่าย)',
-        runDigits: '0 - 8',
-        bestDigit: '0',
-        top6: '06 - 03 - 07 - 02 - 86 - 83 - 87 - 82',
-        winPairs: '06 - 03 - 07 - 02 - 86 - 83 - 87 - 82'
+        runDigits: '1 - 6',
+        bestDigit: '1',
+        top6: '87 - 41 - 70 - 86 - 96 - 13',
+        winPairs: '87 - 41 - 70 - 86 - 96 - 13 - 15 - 17'
       },
       vipMorning: {
         cardName: 'จีน VIP (เช้า)',
-        runDigits: '0 - 4',
-        bestDigit: '0',
-        top6: '01 - 03 - 05 - 09 - 41 - 43 - 45 - 49',
-        winPairs: '01 - 03 - 05 - 09 - 41 - 43 - 45 - 49'
+        runDigits: '1 - 3',
+        bestDigit: '1',
+        top6: '18 - 32 - 38 - 41 - 71 - 82',
+        winPairs: '18 - 32 - 38 - 41 - 71 - 82 - 12 - 19'
       },
       vipAfternoon: {
         cardName: 'จีน VIP (บ่าย)',
-        runDigits: '2 - 1',
-        bestDigit: '2',
-        top6: '27 - 28 - 20 - 29 - 17 - 18 - 10 - 19',
-        winPairs: '27 - 28 - 20 - 29 - 17 - 18 - 10 - 19'
+        runDigits: '0 - 2',
+        bestDigit: '0',
+        top6: '06 - 23 - 31 - 37 - 59 - 09',
+        winPairs: '06 - 23 - 31 - 37 - 59 - 09 - 18 - 19'
       }
     },
     Sat: {
@@ -847,6 +848,108 @@
     }
   };
 
+  const CHASE_CARD_KEYS = {
+    Mon: {
+      regMorning: 'lotto_data_nikkei_morning',
+      regAfternoon: 'lotto_data_china_afternoon',
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: 'lotto_data_china_vip_afternoon'
+    },
+    Tue: {
+      regMorning: 'lotto_data_china_morning',
+      regAfternoon: 'lotto_data_china_afternoon',
+      vipMorning: 'lotto_data_hangseng_vip_morning',
+      vipAfternoon: 'lotto_data_nikkei_vip_afternoon'
+    },
+    Wed: {
+      regMorning: 'lotto_data_china_morning',
+      regAfternoon: 'lotto_data_nikkei_afternoon',
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: 'lotto_data_china_vip_afternoon'
+    },
+    Thu: {
+      regMorning: 'lotto_data_nikkei_morning',
+      regAfternoon: 'lotto_data_china_afternoon',
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: 'lotto_data_china_vip_afternoon'
+    },
+    Fri: {
+      regMorning: 'lotto_data_nikkei_morning',
+      regAfternoon: 'lotto_data_china_afternoon',
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: 'lotto_data_china_vip_afternoon'
+    },
+    Sat: {
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: null
+    },
+    Sun: {
+      vipMorning: 'lotto_data_china_vip_morning',
+      vipAfternoon: 'lotto_data_nikkei_vip_afternoon'
+    }
+  };
+
+  function computeLiveCardStats(storageKey, dayCode) {
+    if (!storageKey) return null;
+    const draws = getStoredDraws(storageKey);
+    if (!draws || !Array.isArray(draws) || draws.length === 0) return null;
+    const filtered = draws.filter(d => dayCode === 'ALL' || d.dayOfWeek === dayCode);
+    if (filtered.length === 0) return null;
+
+    const digitCounts = {0:0,1:0,2:0,3:0,4:0,5:0,6:0,7:0,8:0,9:0};
+    const pairCounts = {};
+
+    filtered.forEach(d => {
+      const allDigits = (d.top3 || '') + (d.bottom2 || '');
+      allDigits.split('').forEach(ch => {
+        const n = parseInt(ch, 10);
+        if (!isNaN(n)) digitCounts[n] = (digitCounts[n] || 0) + 1;
+      });
+      if (d.top2 && /^[0-9]{2}$/.test(d.top2)) pairCounts[d.top2] = (pairCounts[d.top2] || 0) + 1;
+      if (d.bottom2 && /^[0-9]{2}$/.test(d.bottom2)) pairCounts[d.bottom2] = (pairCounts[d.bottom2] || 0) + 1;
+    });
+
+    const sortedDigits = Object.entries(digitCounts).map(([dig, count]) => {
+      const digit = parseInt(dig, 10);
+      return { digit, count };
+    }).sort((a,b) => b.count - a.count);
+
+    const sortedPairs = Object.entries(pairCounts).map(([pair, count]) => ({ pair, count }))
+      .sort((a,b) => b.count - a.count);
+
+    const d0 = sortedDigits[0]?.digit;
+    const d1 = sortedDigits[1]?.digit;
+    if (d0 === undefined || d1 === undefined) return null;
+
+    return {
+      runDigits: d0 + ' - ' + d1,
+      bestDigit: String(d0),
+      top6: sortedPairs.slice(0, 6).map(p => p.pair).join(' - '),
+      winPairs: sortedPairs.slice(0, 8).map(p => p.pair).join(' - ')
+    };
+  }
+
+  function getResolvedSessionData(dayCode, sessKey) {
+    const cfg = CHASE_SLIPS_DATA[dayCode] || CHASE_SLIPS_DATA['Fri'];
+    const fallback = cfg[sessKey];
+    if (!fallback) return fallback;
+
+    const storageKey = CHASE_CARD_KEYS[dayCode] && CHASE_CARD_KEYS[dayCode][sessKey];
+    if (storageKey) {
+      const live = computeLiveCardStats(storageKey, dayCode);
+      if (live && live.top6) {
+        return {
+          cardName: fallback.cardName,
+          runDigits: live.runDigits,
+          bestDigit: live.bestDigit,
+          top6: live.top6,
+          winPairs: live.winPairs
+        };
+      }
+    }
+    return fallback;
+  }
+
   function getBangkokTodayDate() {
     const now = new Date();
     const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -890,9 +993,14 @@
   }
 
   function buildChaseLineSlipText(dayCode, filter = 'ALL') {
-    const cfg = CHASE_SLIPS_DATA[dayCode] || CHASE_SLIPS_DATA['Wed'];
+    const cfg = CHASE_SLIPS_DATA[dayCode] || CHASE_SLIPS_DATA['Fri'];
     const dayName = cfg.dayTh;
     const dateFormatted = getDateForWeekday(dayCode);
+
+    const regM = getResolvedSessionData(dayCode, 'regMorning');
+    const regA = getResolvedSessionData(dayCode, 'regAfternoon');
+    const vipM = getResolvedSessionData(dayCode, 'vipMorning');
+    const vipA = getResolvedSessionData(dayCode, 'vipAfternoon');
 
     let lines = [
       '================================',
@@ -916,20 +1024,20 @@
         lines.push('');
         lines.push('☀️ [1] หุ้นปกติ รอบเช้า');
         lines.push('(นิเคอิ 09:30 ➡️ จีน 10:30 ➡️ ฮั่งเส็ง 11:00)');
-        lines.push('• การ์ดต้นทาง : ' + cfg.regMorning.cardName);
-        lines.push('• ฟันเด่นรูด : ' + cfg.regMorning.runDigits + ' (เน้น ' + cfg.regMorning.bestDigit + ')');
-        lines.push('• เจาะ Top 6 : ' + cfg.regMorning.top6);
-        lines.push('• วินสิบ-หน่วย : ' + cfg.regMorning.winPairs);
+        lines.push('• การ์ดต้นทาง : ' + regM.cardName);
+        lines.push('• ฟันเด่นรูด : ' + regM.runDigits + ' (เน้น ' + regM.bestDigit + ')');
+        lines.push('• เจาะ Top 6 : ' + regM.top6);
+        lines.push('• วินสิบ-หน่วย : ' + regM.winPairs);
       }
 
       if (filter === 'ALL' || filter === 'REG_AFTERNOON' || filter === 'AFTERNOON' || filter === 'REGULAR') {
         lines.push('');
         lines.push('🌙 [2] หุ้นปกติ รอบบ่าย');
         lines.push('(นิเคอิ 13:00 ➡️ จีน 14:00 ➡️ ฮั่งเส็ง 15:30)');
-        lines.push('• การ์ดต้นทาง : ' + cfg.regAfternoon.cardName);
-        lines.push('• ฟันเด่นรูด : ' + cfg.regAfternoon.runDigits + ' (เน้น ' + cfg.regAfternoon.bestDigit + ')');
-        lines.push('• เจาะ Top 6 : ' + cfg.regAfternoon.top6);
-        lines.push('• วินสิบ-หน่วย : ' + cfg.regAfternoon.winPairs);
+        lines.push('• การ์ดต้นทาง : ' + regA.cardName);
+        lines.push('• ฟันเด่นรูด : ' + regA.runDigits + ' (เน้น ' + regA.bestDigit + ')');
+        lines.push('• เจาะ Top 6 : ' + regA.top6);
+        lines.push('• วินสิบ-หน่วย : ' + regA.winPairs);
       }
     }
 
@@ -937,20 +1045,20 @@
       lines.push('');
       lines.push('☀️ ' + (cfg.regClosed ? '[1]' : '[3]') + ' หุ้น VIP รอบเช้า' + (cfg.regClosed ? ' (เปิดทำการปกติ)' : ''));
       lines.push('(นิเคอิ VIP 09:30 ➡️ จีน VIP 10:30 ➡️ ฮั่งเส็ง VIP 11:00)');
-      lines.push('• การ์ดต้นทาง : ' + cfg.vipMorning.cardName);
-      lines.push('• ฟันเด่นรูด : ' + cfg.vipMorning.runDigits + ' (เน้น ' + cfg.vipMorning.bestDigit + ')');
-      lines.push('• เจาะ Top 6 : ' + cfg.vipMorning.top6);
-      lines.push('• วินสิบ-หน่วย : ' + cfg.vipMorning.winPairs);
+      lines.push('• การ์ดต้นทาง : ' + vipM.cardName);
+      lines.push('• ฟันเด่นรูด : ' + vipM.runDigits + ' (เน้น ' + vipM.bestDigit + ')');
+      lines.push('• เจาะ Top 6 : ' + vipM.top6);
+      lines.push('• วินสิบ-หน่วย : ' + vipM.winPairs);
     }
 
     if (filter === 'ALL' || filter === 'VIP_AFTERNOON' || filter === 'AFTERNOON' || filter === 'VIP') {
       lines.push('');
       lines.push('🌙 ' + (cfg.regClosed ? '[2]' : '[4]') + ' หุ้น VIP รอบบ่าย' + (cfg.regClosed ? ' (เปิดทำการปกติ)' : ''));
       lines.push('(นิเคอิ VIP 13:00 ➡️ จีน VIP 14:00 ➡️ ฮั่งเส็ง VIP 15:30)');
-      lines.push('• การ์ดต้นทาง : ' + cfg.vipAfternoon.cardName);
-      lines.push('• ฟันเด่นรูด : ' + cfg.vipAfternoon.runDigits + ' (เน้น ' + cfg.vipAfternoon.bestDigit + ')');
-      lines.push('• เจาะ Top 6 : ' + cfg.vipAfternoon.top6);
-      lines.push('• วินสิบ-หน่วย : ' + cfg.vipAfternoon.winPairs);
+      lines.push('• การ์ดต้นทาง : ' + vipA.cardName);
+      lines.push('• ฟันเด่นรูด : ' + vipA.runDigits + ' (เน้น ' + vipA.bestDigit + ')');
+      lines.push('• เจาะ Top 6 : ' + vipA.top6);
+      lines.push('• วินสิบ-หน่วย : ' + vipA.winPairs);
     }
 
     lines.push('');
