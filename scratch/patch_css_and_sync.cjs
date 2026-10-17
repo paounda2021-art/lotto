@@ -48,6 +48,21 @@ const cssRule = `
 .btn-line-send {
   display: none !important;
 }
+
+/* ==========================================================================
+   WIN4 2-Column Row Layout (Left = Morning, Right = Afternoon in same row)
+   ========================================================================== */
+.win4-row-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 1rem !important;
+  align-items: stretch !important;
+}
+@media (max-width: 640px) {
+  .win4-row-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');

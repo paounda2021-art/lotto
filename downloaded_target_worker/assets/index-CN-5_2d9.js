@@ -474,7 +474,7 @@ Error generating stack: `+r.message+`
     });
   }
 
-  // STOCKS WIN4 CARD: Separate Regular and VIP, Left = Morning / Right = Afternoon
+  // STOCKS WIN4 CARD: Separate Regular and VIP, Left = Morning / Right = Afternoon in SAME ROW
   const WIN4_MAP = {
     Mon: { regMorning: [0, 1, 4, 8], regAfternoon: [0, 2, 5, 9], vipMorning: [1, 4, 8, 9], vipAfternoon: [1, 2, 4, 8] },
     Tue: { regMorning: [3, 5, 6, 9], regAfternoon: [0, 2, 3, 7], vipMorning: [3, 4, 7, 9], vipAfternoon: [0, 4, 6, 7] },
@@ -563,7 +563,7 @@ Error generating stack: `+r.message+`
 
     if (!digits) {
       return n.jsxs("div", {
-        className: "bg-black/40 border border-gray-700/50 rounded-2xl p-5 text-center space-y-2 flex flex-col justify-center min-h-[220px]",
+        className: "bg-black/50 border border-gray-700/60 rounded-2xl p-5 text-center space-y-2 flex flex-col justify-center min-h-[240px]",
         children: [
           n.jsx("span", {
             className: time === "Morning" ? "text-amber-400 font-bold text-sm block" : "text-purple-400 font-bold text-sm block",
@@ -586,24 +586,28 @@ Error generating stack: `+r.message+`
     const hitCount2D = pairs2D.filter(p => win2D.has(p)).length;
     const hitCount3D = triples3D.filter(t => win3D.has(t) || win3D.has(t.split("").sort().join(""))).length;
 
+    const isM = (time === "Morning");
+    const boxBorder = isM ? "border-amber-500/40" : "border-purple-500/40";
+    const boxTitleColor = isM ? "text-amber-400" : "text-purple-400";
+
     return n.jsxs("div", {
-      className: "bg-black/50 border border-amber-500/30 rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-sm",
+      className: "bg-black/55 border " + boxBorder + " rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-md",
       children: [
         n.jsxs("div", {
-          className: "flex items-center justify-between border-b border-amber-500/20 pb-2",
+          className: "flex items-center justify-between border-b border-gray-700/40 pb-2",
           children: [
             n.jsxs("div", {
               className: "flex items-center gap-1.5 flex-wrap",
               children: [
                 n.jsx("span", {
-                  className: time === "Morning" ? "text-amber-400 text-sm font-black" : "text-purple-400 text-sm font-black",
-                  children: time === "Morning" ? "☀️ รอบเช้า" : "🌙 รอบบ่าย"
+                  className: boxTitleColor + " text-sm font-black tracking-wide",
+                  children: isM ? "☀️ รอบเช้า" : "🌙 รอบบ่าย"
                 }),
                 n.jsx("span", {
                   className: "text-[10px] text-gray-400 font-bold",
                   children: cat === "reg"
-                    ? (time === "Morning" ? "(นิเคอิ 09:30 ➔ จีน 10:30 ➔ ฮั่งเส็ง 11:00)" : "(นิเคอิ 13:00 ➔ จีน 14:00 ➔ ฮั่งเส็ง 15:30)")
-                    : (time === "Morning" ? "(นิเคอิ VIP 09:30 ➔ จีน VIP 10:30 ➔ ฮั่งเส็ง VIP 11:00)" : "(นิเคอิ VIP 13:00 ➔ จีน VIP 14:00 ➔ ฮั่งเส็ง VIP 15:30)")
+                    ? (isM ? "(นิเคอิ 09:30 ➔ จีน 10:30 ➔ ฮั่งเส็ง 11:00)" : "(นิเคอิ 13:00 ➔ จีน 14:00 ➔ ฮั่งเส็ง 15:30)")
+                    : (isM ? "(นิเคอิ VIP 09:30 ➔ จีน VIP 10:30 ➔ ฮั่งเส็ง VIP 11:00)" : "(นิเคอิ VIP 13:00 ➔ จีน VIP 14:00 ➔ ฮั่งเส็ง VIP 15:30)")
                 })
               ]
             }),
@@ -625,7 +629,7 @@ Error generating stack: `+r.message+`
               className: "flex items-center gap-1.5 sm:gap-2",
               children: digits.map(d => n.jsx("div", {
                 key: d,
-                className: "w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-xl sm:text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform",
+                className: "w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-lg sm:text-xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform",
                 children: d
               }))
             }),
@@ -636,7 +640,7 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2",
+          className: "bg-black/40 border border-amber-500/30 rounded-xl p-2.5 sm:p-3 space-y-2",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -672,7 +676,7 @@ Error generating stack: `+r.message+`
                 const isHit = win2D.has(p);
                 return n.jsx("span", {
                   key: p,
-                  className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                  className: "px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
                     (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30"),
                   children: p
                 });
@@ -681,7 +685,7 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2",
+          className: "bg-black/40 border border-cyan-500/30 rounded-xl p-2.5 sm:p-3 space-y-2",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -717,7 +721,7 @@ Error generating stack: `+r.message+`
                 const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                 return n.jsx("span", {
                   key: t,
-                  className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                  className: "px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
                     (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30"),
                   children: t
                 });
@@ -859,7 +863,8 @@ Error generating stack: `+r.message+`
                 ]
               })
             : n.jsxs("div", {
-                className: "grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1",
+                className: "win4-row-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 pt-1",
+                style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1rem" },
                 children: [
                   renderStockSession(r, "reg", "Morning"),
                   renderStockSession(r, "reg", "Afternoon")
@@ -882,7 +887,8 @@ Error generating stack: `+r.message+`
             ]
           }),
           n.jsxs("div", {
-            className: "grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1",
+            className: "win4-row-grid grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4 pt-1",
+            style: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "1rem" },
             children: [
               renderStockSession(r, "vip", "Morning"),
               renderStockSession(r, "vip", "Afternoon")
