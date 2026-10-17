@@ -566,13 +566,15 @@ const newIIFE = `((()=>{
   }
 
   if (isLaos) {
+    const allD = a || [];
+    const isNextMode = (l === "NEXT") || (!O || O.length === 0 || !O[0]?.top2);
+
     const winData = ((() => {
       try {
-        let allD = a || [];
-        const isNextMode = (l === "NEXT") || (!O || O.length === 0 || !O[0]?.top2);
+        let statsD = allD;
         let d0, d1, d2, d3;
-        if (isNextMode && allD && allD[0]) {
-          const latestDr = allD[0];
+        if (isNextMode && statsD && statsD[0]) {
+          const latestDr = statsD[0];
           const raw6D = (latestDr.full6D || "").trim();
           let sum6D = 0;
           if (raw6D.length > 0) {
@@ -591,8 +593,8 @@ const newIIFE = `((()=>{
           d2 = sumDigit !== undefined ? sumDigit : 3;
           d3 = shadowDigit !== undefined ? shadowDigit : 8;
         } else {
-          if (l === "VERIFY" && N && N.date) allD = allD.filter(d => d.date !== N.date);
-          const laosStats = Ey(allD, r);
+          if (l === "VERIFY" && N && N.date) statsD = statsD.filter(d => d.date !== N.date);
+          const laosStats = Ey(statsD, r);
           d0 = laosStats.topSingleDigits && laosStats.topSingleDigits[0] ? laosStats.topSingleDigits[0].digit : null;
           d1 = laosStats.topSingleDigits && laosStats.topSingleDigits[1] ? laosStats.topSingleDigits[1].digit : null;
           d2 = laosStats.topSingleDigits && laosStats.topSingleDigits[2] ? laosStats.topSingleDigits[2].digit : null;
@@ -780,9 +782,8 @@ const newIIFE = `((()=>{
       Fri: [4, 5, 6, 7]
     };
 
-    const isNextMode = (l === "NEXT") || (!O || O.length === 0 || !O[0]?.top2);
     let laos100Digits;
-    if (isNextMode && a && a[0]) {
+    if (isNextMode && allD && allD[0]) {
       const latestDr = a[0];
       const raw6D = (latestDr.full6D || "").trim();
       let sum6D = 0;
