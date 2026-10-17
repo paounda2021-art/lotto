@@ -122,6 +122,45 @@ const cssRule = `
   background: linear-gradient(135deg, rgba(6, 95, 70, 0.95) 0%, rgba(16, 185, 129, 0.8) 100%) !important;
   color: #ffffff !important;
 }
+
+/* ==========================================================================
+   Light Orange Glass Elements for Laos Win 4 Card (ธีมสีส้มอ่อนกลาส)
+   ========================================================================== */
+.win4-chip-orange-default {
+  background: rgba(249, 115, 22, 0.18) !important;
+  border: 1px solid rgba(251, 146, 60, 0.35) !important;
+  color: #ffffff !important;
+}
+.win4-chip-orange-default:hover {
+  background: rgba(249, 115, 22, 0.32) !important;
+}
+
+.win4-chip-orange-hit {
+  background: linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.95), 0 0 6px rgba(251, 146, 60, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.win4-main-digit-orange {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.45) 0%, rgba(249, 115, 22, 0.25) 100%) !important;
+  border: 2px solid rgba(251, 146, 60, 0.75) !important;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.win4-btn-copy-orange {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(194, 65, 12, 0.9) 0%, rgba(249, 115, 22, 0.7) 100%) !important;
+  border: 1px solid rgba(251, 146, 60, 0.6) !important;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3) !important;
+}
+.win4-btn-copy-orange:hover {
+  background: linear-gradient(135deg, rgba(154, 52, 18, 0.95) 0%, rgba(234, 88, 12, 0.85) 100%) !important;
+  color: #ffffff !important;
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');
