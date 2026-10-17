@@ -748,53 +748,19 @@ const newIIFE = `((()=>{
       ]
     });
 
-    // LAOS 100% DRAW-BY-DRAW WIN4 CARD (กล่องการ์ดใน "ชุดคัด" ต่อจากคัดอันแรก - ธีมสีส้มอ่อนกลาส)
+    // LAOS DRAW-BY-DRAW WIN4 CARD (สถิติความถี่รายวันย้อนหลังแท้จริง - ธีมสีส้มอ่อนกลาส)
     const WIN4_LAOS_MAP = {
-      Mon: [2, 4, 5, 7],
-      Tue: [1, 2, 6, 8],
-      Wed: [0, 3, 5, 6],
-      Thu: [0, 5, 6, 9],
-      Fri: [0, 3, 4, 9],
-      Sat: [1, 2, 4, 7],
-      Sun: [1, 2, 4, 7]
+      Mon: [2, 5, 6, 7],
+      Tue: [2, 5, 7, 8],
+      Wed: [0, 1, 6, 8],
+      Thu: [0, 6, 7, 9],
+      Fri: [0, 2, 3, 4],
+      Sat: [0, 2, 5, 7],
+      Sun: [0, 2, 5, 7]
     };
 
     const targetDayCode = r || (O && O[0] ? O[0].dayOfWeek : "Fri");
-    let laos100Digits = WIN4_LAOS_MAP[targetDayCode] || [0, 3, 4, 9];
-
-    // Dynamic 100% guarantee for any past or recorded draw
-    if (O && O[0] && O[0].top3 && O[0].top3.trim() !== "") {
-      const t2 = O[0].top2 || (O[0].top3.length >= 2 ? O[0].top3.slice(-2) : "");
-      const b2 = O[0].bottom2 || "";
-      const testPairs = new Set();
-      for (let i = 0; i < laos100Digits.length; i++) {
-        for (let j = 0; j < laos100Digits.length; j++) {
-          if (i !== j) testPairs.add(String(laos100Digits[i]) + String(laos100Digits[j]));
-        }
-      }
-      if (!testPairs.has(t2) && !testPairs.has(b2)) {
-        const drawDigits = [];
-        const addD = (str) => {
-          if (!str) return;
-          for (const ch of str) {
-            const n = parseInt(ch, 10);
-            if (!isNaN(n) && !drawDigits.includes(n)) drawDigits.push(n);
-          }
-        };
-        addD(t2);
-        if (drawDigits.length < 4) addD(b2);
-        if (h && h.topSingleDigits) {
-          for (const item of h.topSingleDigits) {
-            if (!drawDigits.includes(item.digit)) drawDigits.push(item.digit);
-            if (drawDigits.length >= 4) break;
-          }
-        }
-        for (let n = 0; n <= 9; n++) {
-          if (drawDigits.length < 4 && !drawDigits.includes(n)) drawDigits.push(n);
-        }
-        laos100Digits = drawDigits.slice(0, 4).sort((x, y) => x - y);
-      }
-    }
+    const laos100Digits = WIN4_LAOS_MAP[targetDayCode] || [0, 2, 5, 7];
 
     const laosPairs2D = [];
     for (let i = 0; i < laos100Digits.length; i++) {
@@ -842,11 +808,11 @@ const newIIFE = `((()=>{
               children: [
                 n.jsx("span", {
                   className: "bg-gradient-to-r from-orange-400 to-amber-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm",
-                  children: "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สูตรไร้พ่าย 100%)"
+                  children: "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สถิติตามวันประจำสัปดาห์)"
                 }),
                 n.jsx("h4", {
                   className: "text-sm sm:text-base font-extrabold text-orange-200",
-                  children: "ชุดเลขวินเน้น 4 ตัว รอบต่อรอบ (หวยลาวพัฒนา เข้าเป้า 100%)"
+                  children: "ชุดเลขวินเน้น 4 ตัว รอบต่อรอบ (หวยลาวพัฒนา)"
                 })
               ]
             }),
@@ -864,7 +830,7 @@ const newIIFE = `((()=>{
               children: [
                 n.jsxs("span", {
                   className: "bg-orange-500/20 text-orange-200 border border-orange-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1",
-                  children: ["🎯 สูตรวิน 4 ตัว หวยลาว: ", n.jsx("strong", { className: "text-orange-300 font-black", children: "การันตีสถิติเข้าเป้า 100% (รอบต่อรอบ)" })]
+                  children: ["🎯 สูตรวิน 4 ตัว หวยลาว: ", n.jsx("strong", { className: "text-orange-300 font-black", children: "สถิติความถี่สูงสุดประจำวัน (รอบต่อรอบ)" })]
                 }),
                 n.jsxs("span", {
                   className: "bg-black/40 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-md",
@@ -935,7 +901,7 @@ const newIIFE = `((()=>{
             n.jsx("div", {
               style: { color: "#fdba74" },
               className: "text-xs font-semibold pl-1",
-              children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ สูตรไร้พ่าย 100% (สถิติหวยลาวพัฒนา รอบต่อรอบ เข้าเป้าไม่มีหลุด)"
+              children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ จากสถิติความถี่รายวันย้อนหลัง (รอบต่อรอบ)"
             })
           ]
         }),
