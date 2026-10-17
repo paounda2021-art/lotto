@@ -63,6 +63,15 @@ const cssRule = `
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Ensure non-hit chips always show pure white text */
+.win4-chip-default {
+  color: #ffffff !important;
+}
+/* Ensure hit chips always show pure black text on bright background */
+.win4-chip-hit {
+  color: #000000 !important;
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');

@@ -426,7 +426,13 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: winData.pairs2D.map(p => {
                     const isHit = winData.winning2D && winData.winning2D.has(p);
-                    return n.jsx("span", { key: p, className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " + (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30"), children: p });
+                    return n.jsx("span", {
+                      key: p,
+                      style: { color: isHit ? "#000000" : "#ffffff" },
+                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
+                      children: p
+                    });
                   })
                 })
               ]
@@ -463,7 +469,13 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: winData.triples3D.map(t => {
                     const isHit = winData.winning3D && (winData.winning3D.has(t) || winData.winning3D.has(t.split("").sort().join("")));
-                    return n.jsx("span", { key: t, className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " + (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30"), children: t });
+                    return n.jsx("span", {
+                      key: t,
+                      style: { color: isHit ? "#000000" : "#ffffff" },
+                      className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
+                      children: t
+                    });
                   })
                 })
               ]
@@ -669,8 +681,9 @@ Error generating stack: `+r.message+`
                   const isHit = win2D.has(p);
                   return n.jsx("span", {
                     key: p,
+                    style: { color: isHit ? "#000000" : "#ffffff" },
                     className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30"),
+                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
                     children: p
                   });
                 })
@@ -711,8 +724,9 @@ Error generating stack: `+r.message+`
                   const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                   return n.jsx("span", {
                     key: t,
+                    style: { color: isHit ? "#000000" : "#ffffff" },
                     className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30"),
+                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
                     children: t
                   });
                 })
@@ -803,8 +817,9 @@ Error generating stack: `+r.message+`
                 const isHit = win2D.has(p);
                 return n.jsx("span", {
                   key: p,
+                  style: { color: isHit ? "#000000" : "#ffffff" },
                   className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-fuchsia-500 via-purple-500 to-indigo-400 text-white shadow-[0_0_16px_rgba(217,70,239,0.7)] border-2 border-white scale-110 ring-2 ring-fuchsia-400 animate-pulse" : "bg-purple-900/40 border border-purple-500/40 text-purple-200 hover:bg-purple-800/60"),
+                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-[0_0_16px_rgba(250,204,21,0.8)] border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-purple-900/50 border border-purple-500/50 text-white hover:bg-purple-800/70 shadow-sm win4-chip-default"),
                   children: p
                 });
               })
@@ -821,7 +836,7 @@ Error generating stack: `+r.message+`
                   className: "text-xs font-bold text-indigo-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
-                    hitCount3D > 0 ? n.jsxs("span", { className: "bg-gradient-to-r from-indigo-500 to-fuchsia-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 border border-indigo-300/40", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
+                    hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
                   ]
                 }),
                 n.jsx("button", {
@@ -845,8 +860,9 @@ Error generating stack: `+r.message+`
                 const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                 return n.jsx("span", {
                   key: t,
+                  style: { color: isHit ? "#000000" : "#ffffff" },
                   className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-fuchsia-500 via-purple-500 to-indigo-400 text-white shadow-[0_0_16px_rgba(217,70,239,0.7)] border-2 border-white scale-110 ring-2 ring-fuchsia-400 animate-pulse" : "bg-indigo-900/40 border border-indigo-500/40 text-indigo-200 hover:bg-indigo-800/60"),
+                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-[0_0_16px_rgba(250,204,21,0.8)] border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-indigo-900/50 border border-indigo-500/50 text-white hover:bg-indigo-800/70 shadow-sm win4-chip-default"),
                   children: t
                 });
               })
