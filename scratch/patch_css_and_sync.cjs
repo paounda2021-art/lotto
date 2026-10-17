@@ -13,32 +13,12 @@ execSync('node scratch/test_bundle_patch.cjs', { stdio: 'inherit' });
 console.log('3. Updating index-Cip8XUMO.css with vivid LINE Green classes...');
 const cssRule = `
 /* ==========================================================================
-   LINE Notification Buttons - Vivid Brand Green (#06c755)
+   LINE Notification Buttons hidden per user request: "ซ่อนปุ่ม 2 อันนี้ ออกจากหน้าเว็บก่อน"
    ========================================================================== */
 #btn-line-settings-ui,
 #btn-line-settings-jsx,
 .btn-line-nav {
-  background-color: #06c755 !important;
-  color: #ffffff !important;
-  border: 1px solid #05a043 !important;
-  font-weight: 800 !important;
-  font-size: 12px !important;
-  box-shadow: 0 2px 10px rgba(6, 199, 85, 0.5) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
-}
-#btn-line-settings-ui:hover,
-#btn-line-settings-jsx:hover,
-.btn-line-nav:hover {
-  background-color: #05b54d !important;
-  box-shadow: 0 4px 16px rgba(6, 199, 85, 0.7) !important;
-  transform: translateY(-1px) !important;
-}
-#btn-line-settings-ui span,
-#btn-line-settings-jsx span,
-.btn-line-nav span {
-  color: #ffffff !important;
-  font-weight: 800 !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  display: none !important;
 }
 
 /* Card-level LINE buttons hidden per user request: "ขอซ่อนปุ่มไลน์ในการ์ดด้านล่างไว้ก่อน ให้เหลือไว้เฉพาะบนหัวเว็บ" */
@@ -47,6 +27,14 @@ const cssRule = `
 #btn-line-send-result-jsx,
 .btn-line-send {
   display: none !important;
+}
+
+/* ==========================================================================
+   ปุ่มโพยล่า ให้ยังคงอยู่ (ตามคำสั่งผู้ใช้: "ปุ่มโพยล่า ให้ยังคงอยู่ ซ่อนเฉพาะปุ่มแจ้งไลน์ ส่งไลน์")
+   ========================================================================== */
+#btn-chase-slip-nav-ui,
+.btn-line-slip-nav {
+  display: inline-flex !important;
 }
 
 /* ==========================================================================

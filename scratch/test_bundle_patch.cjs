@@ -12,11 +12,11 @@ if (code.includes(brokenH)) {
   console.log('Fixed broken const chain around h and draws:O.');
 }
 
-// 1. Line buttons patches
-if (!code.includes('btn-line-settings-jsx')) {
-  const target1 = 'n.jsx("span",{children:"🔄 ดึงผลรางวัลด่วน (Auto-Sync)"})]}),';
-  const repl1 = 'n.jsx("span",{children:"🔄 ดึงผลรางวัลด่วน (Auto-Sync)"})]}),n.jsx("button",{id:"btn-line-settings-jsx",onClick:()=>window.openLineSettingsModal&&window.openLineSettingsModal(),title:"ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE",className:"btn-line-nav",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"12px",padding:"6px 14px",borderRadius:"8px",display:"inline-flex",alignItems:"center",gap:"6px",cursor:"pointer",boxShadow:"0 2px 10px rgba(6, 199, 85, 0.5)",marginLeft:"6px",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"💬 แจ้งเตือน LINE"})]}),';
-  if (code.includes(target1)) code = code.replace(target1, repl1);
+// 1. Line buttons patches (hidden per user request: "ซ่อนปุ่ม 2 อันนี้ ออกจากหน้าเว็บก่อน")
+const btnLineSettingsJsx = ',n.jsx("button",{id:"btn-line-settings-jsx",onClick:()=>window.openLineSettingsModal&&window.openLineSettingsModal(),title:"ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE",className:"btn-line-nav",style:{backgroundColor:"#06c755",color:"#ffffff",border:"1px solid #05a043",fontWeight:800,fontSize:"12px",padding:"6px 14px",borderRadius:"8px",display:"inline-flex",alignItems:"center",gap:"6px",cursor:"pointer",boxShadow:"0 2px 10px rgba(6, 199, 85, 0.5)",marginLeft:"6px",textShadow:"0 1px 2px rgba(0,0,0,0.2)"},children:[n.jsx("span",{style:{color:"#ffffff",fontWeight:800},children:"💬 แจ้งเตือน LINE"})]})';
+if (code.includes(btnLineSettingsJsx)) {
+  code = code.replace(btnLineSettingsJsx, '');
+  console.log('Removed btn-line-settings-jsx per user request.');
 }
 
 // Revert card-level LINE buttons (hide per user request: "ขอซ่อนปุ่มไลน์ในการ์ดด้านล่างไว้ก่อน ให้เหลือไว้เฉพาะบนหัวเว็บ")

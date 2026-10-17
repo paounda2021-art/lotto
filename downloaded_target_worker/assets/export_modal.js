@@ -634,6 +634,8 @@
   
   
   
+  
+  
   /* ==========================================================================
      LINE NOTIFICATION & CHASE SLIP SYSTEM (SystemLucky289)
      ========================================================================== */
@@ -1873,32 +1875,17 @@
     const syncBtn = allButtons.find(b => b.innerText && (b.innerText.includes('Auto-Sync') || b.innerText.includes('ดึงผลรางวัลด่วน')));
     if (!syncBtn || !syncBtn.parentElement) return;
 
-    // 1. Settings button
-    if (!document.getElementById('btn-line-settings-ui')) {
-      const btn = document.createElement('button');
-      btn.id = 'btn-line-settings-ui';
-      btn.title = 'ตั้งค่าแจ้งเตือนผลเข้ากลุ่ม LINE';
-      btn.className = 'btn-line-nav';
-      btn.style.cssText = 'background-color: #06c755 !important; color: #ffffff !important; border: 1px solid #05a043 !important; font-weight: 800 !important; font-size: 12px !important; padding: 6px 14px !important; border-radius: 8px !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; cursor: pointer !important; box-shadow: 0 2px 10px rgba(6, 199, 85, 0.5) !important; margin-left: 6px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
-      btn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="#ffffff" style="width: 15px; height: 15px; fill: #ffffff; flex-shrink: 0;">
-          <path d="M12 2C6.48 2 2 5.82 2 10.5c0 2.94 1.77 5.53 4.45 6.99-.2.72-.77 2.65-.89 3.06-.15.52.19.51.4.38.16-.1 2.22-1.51 3.12-2.13.94.26 1.92.4 2.92.4 5.52 0 10-3.82 10-8.5S17.52 2 12 2z"/>
-        </svg>
-        <span style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important;">💬 แจ้งเตือน LINE</span>
-      `;
-      btn.onclick = function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        window.openLineSettingsModal();
-      };
-      syncBtn.parentElement.insertBefore(btn, syncBtn.nextSibling);
-    }
+    // 1. Settings button (hidden per user request: "ซ่อนเฉพาะปุ่มแจ้งไลน์ ส่งไลน์")
+    const existingSettings = document.getElementById('btn-line-settings-ui');
+    if (existingSettings && existingSettings.parentElement) existingSettings.remove();
+    const existingSettingsJsx = document.getElementById('btn-line-settings-jsx');
+    if (existingSettingsJsx && existingSettingsJsx.parentElement) existingSettingsJsx.remove();
 
-    // 2. Chase slip button on navbar
+    // 2. Chase slip button on navbar (ปุ่มโพยล่า ให้ยังคงอยู่)
     if (!document.getElementById('btn-chase-slip-nav-ui')) {
       const slipNavBtn = document.createElement('button');
       slipNavBtn.id = 'btn-chase-slip-nav-ui';
-      slipNavBtn.title = 'คลิกเพื่อเปิดสรุปโพยล่า 3 หวย และคัดลอกส่ง LINE';
+      slipNavBtn.title = 'คลิกเพื่อเปิดสรุปโพยล่า 3 หวย และคัดลอก';
       slipNavBtn.className = 'btn-line-slip-nav';
       slipNavBtn.style.cssText = 'background: linear-gradient(135deg, #10b981, #059669) !important; color: #ffffff !important; border: 1px solid #34d399 !important; font-weight: 800 !important; font-size: 12px !important; padding: 6px 14px !important; border-radius: 8px !important; display: inline-flex !important; align-items: center !important; gap: 6px !important; cursor: pointer !important; box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4) !important; margin-left: 6px !important; text-shadow: 0 1px 2px rgba(0,0,0,0.2) !important; transition: all 0.2s ease !important;';
       slipNavBtn.innerHTML = `
@@ -1906,19 +1893,14 @@
           <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
           <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
         </svg>
-        <span style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important;">📋 โพยล่า 3 หวย (LINE)</span>
+        <span style="color: #ffffff !important; font-weight: 800 !important; font-size: 12px !important;">📋 โพยล่า 3 หวย</span>
       `;
       slipNavBtn.onclick = function(e) {
         e.preventDefault();
         e.stopPropagation();
         window.openChaseSlipModal();
       };
-      const settingsBtn = document.getElementById('btn-line-settings-ui');
-      if (settingsBtn) {
-        settingsBtn.parentElement.insertBefore(slipNavBtn, settingsBtn.nextSibling);
-      } else {
-        syncBtn.parentElement.insertBefore(slipNavBtn, syncBtn.nextSibling);
-      }
+      syncBtn.parentElement.insertBefore(slipNavBtn, syncBtn.nextSibling);
     }
   }
 
