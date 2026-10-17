@@ -442,7 +442,13 @@ const newIIFE = `((()=>{
                           setTimeout(() => { btn.innerText = oldText; }, 1500);
                         }
                       },
-                      className: "text-[10px] bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 border border-emerald-300/40",
+                      style: {
+                        color: "#ffffff",
+                        background: "linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(16, 185, 129, 0.6) 100%)",
+                        border: "1px solid rgba(52, 211, 153, 0.6)",
+                        boxShadow: "0 2px 8px rgba(16, 185, 129, 0.3)"
+                      },
+                      className: "text-[10px] text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 win4-btn-copy-green",
                       children: "📋 คัดลอก 2 ตัว"
                     })
                   ]
@@ -504,7 +510,13 @@ const newIIFE = `((()=>{
                           setTimeout(() => { btn.innerText = oldText; }, 1500);
                         }
                       },
-                      className: "text-[10px] bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-400 hover:to-emerald-400 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 border border-teal-300/40",
+                      style: {
+                        color: "#ffffff",
+                        background: "linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(16, 185, 129, 0.6) 100%)",
+                        border: "1px solid rgba(52, 211, 153, 0.6)",
+                        boxShadow: "0 2px 8px rgba(16, 185, 129, 0.3)"
+                      },
+                      className: "text-[10px] text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 win4-btn-copy-green",
                       children: "📋 คัดลอก 3 ตัว"
                     })
                   ]
