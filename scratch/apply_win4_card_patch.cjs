@@ -114,8 +114,7 @@ const newIIFE = `((()=>{
         return { denVip, denPhi, denRuam, rongRuam, digits, pairs2D, triples3D, replacedDups, winning2D, winning3D };
       } catch(e) { return null; }
     })());
-    if (!winData || !winData.digits || winData.digits.length < 2) return null;
-    return n.jsxs("div", {
+    const card1 = (!winData || !winData.digits || winData.digits.length < 2) ? null : n.jsxs("div", {
       className: "border-2 border-amber-400/60 rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 shadow-glow-gold relative overflow-hidden space-y-3.5",
       children: [
         n.jsx("div", { className: "absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none" }),
@@ -125,7 +124,7 @@ const newIIFE = `((()=>{
             n.jsxs("div", {
               className: "flex items-center gap-2 flex-wrap",
               children: [
-                n.jsx("span", { className: "bg-amber-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider animate-pulse", children: "🔥 ชุดคัดเน้นพิเศษ " + winData.digits.length + " เลข" }),
+                n.jsx("span", { className: "bg-amber-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider animate-pulse", children: "🔥 ชุดคัดเน้นพิเศษ " + winData.digits.length + " เลข (เอนจินสถิติ)" }),
                 n.jsx("h4", { className: "text-sm sm:text-base font-extrabold text-amber-200", children: "ชุดเลขวินเน้น " + winData.digits.length + " ตัว (ใช้ได้ทั้ง บน-ล่าง & 3 ตัวตรง-โต๊ด)" })
               ]
             }),
@@ -240,6 +239,364 @@ const newIIFE = `((()=>{
             })
           ]
         })
+      ]
+    });
+
+    // HANOI 100% 3-ROUND CHASE CARD (กล่องการ์ดใน "ชุดคัด" ต่อจากคัดอันแรก)
+    const WIN4_HANOI_MAP = {
+      Mon: [0, 1, 7, 8],
+      Tue: [1, 3, 7, 8],
+      Wed: [0, 2, 4, 5],
+      Thu: [3, 5, 6, 9],
+      Fri: [1, 2, 3, 5],
+      Sat: [2, 3, 6, 7],
+      Sun: [2, 4, 6, 9]
+    };
+
+    const targetDayCode = r || (O && O[0] ? O[0].dayOfWeek : "Fri");
+    const hanoi100Digits = WIN4_HANOI_MAP[targetDayCode] || WIN4_HANOI_MAP["Fri"];
+    const hanoiPairs2D = [];
+    for (let i = 0; i < hanoi100Digits.length; i++) {
+      for (let j = 0; j < hanoi100Digits.length; j++) {
+        if (i !== j) hanoiPairs2D.push(String(hanoi100Digits[i]) + String(hanoi100Digits[j]));
+      }
+    }
+    const hanoiTriples3D = [];
+    for (let i = 0; i < hanoi100Digits.length; i++) {
+      for (let j = i + 1; j < hanoi100Digits.length; j++) {
+        for (let k = j + 1; k < hanoi100Digits.length; k++) {
+          hanoiTriples3D.push(String(hanoi100Digits[i]) + String(hanoi100Digits[j]) + String(hanoi100Digits[k]));
+        }
+      }
+    }
+
+    // Collect all Hanoi draws for hit checking
+    const targetDate = (l === "VERIFY" && N && N.date) ? N.date : (O && O[0] ? O[0].date : null);
+    const allHanoiDraws = (O || []).concat(a || []);
+    ["special", "", "vip"].forEach(sfx => {
+      const k = sfx ? ("lotto_data_hanoi_" + sfx) : "lotto_data_hanoi";
+      let list = null;
+      if (typeof window !== "undefined" && window.__KV_DRAWS__ && window.__KV_DRAWS__[k]) {
+        list = window.__KV_DRAWS__[k];
+      } else if (typeof localStorage !== "undefined") {
+        try {
+          const raw = localStorage.getItem(k);
+          if (raw) list = JSON.parse(raw);
+        } catch(e){}
+      }
+      if (Array.isArray(list)) {
+        list.forEach(dr => {
+          if (!allHanoiDraws.some(x => x && x.id === dr.id)) allHanoiDraws.push(dr);
+        });
+      }
+    });
+
+    const hanoiWin2D = new Set();
+    const hanoiWin3D = new Set();
+    const sessionHitStatus = {
+      special: { hit: false, hits: [], draw: null },
+      regular: { hit: false, hits: [], draw: null },
+      vip: { hit: false, hits: [], draw: null }
+    };
+
+    allHanoiDraws.forEach(dr => {
+      if (!dr) return;
+      const matchesDay = dr.dayOfWeek === targetDayCode || (dr.date && (!dr.dayOfWeek || dr.dayOfWeek === targetDayCode));
+      const matchesDate = targetDate ? dr.date === targetDate : true;
+      if (matchesDay && matchesDate) {
+        let sessKey = null;
+        if (dr.session === "HANOI_SPECIAL") sessKey = "special";
+        else if (dr.session === "HANOI_EVENING" || dr.session === "HANOI") sessKey = "regular";
+        else if (dr.session === "HANOI_VIP") sessKey = "vip";
+
+        if (sessKey && !sessionHitStatus[sessKey].draw) sessionHitStatus[sessKey].draw = dr;
+
+        const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
+        const b2 = dr.bottom2;
+        const t3 = dr.top3;
+
+        if (t2) {
+          hanoiWin2D.add(t2);
+          if (hanoiPairs2D.includes(t2) && sessKey) {
+            sessionHitStatus[sessKey].hit = true;
+            sessionHitStatus[sessKey].hits.push("บน " + t2);
+          }
+        }
+        if (b2) {
+          hanoiWin2D.add(b2);
+          if (hanoiPairs2D.includes(b2) && sessKey) {
+            sessionHitStatus[sessKey].hit = true;
+            sessionHitStatus[sessKey].hits.push("ล่าง " + b2);
+          }
+        }
+        if (t3) {
+          hanoiWin3D.add(t3);
+          const t3Sorted = t3.split("").sort().join("");
+          hanoiWin3D.add(t3Sorted);
+          if (hanoiTriples3D.includes(t3) && sessKey) {
+            sessionHitStatus[sessKey].hit = true;
+            sessionHitStatus[sessKey].hits.push("ตรง " + t3);
+          } else if (hanoiTriples3D.includes(t3Sorted) && sessKey) {
+            sessionHitStatus[sessKey].hit = true;
+            sessionHitStatus[sessKey].hits.push("โต๊ด " + t3);
+          }
+        }
+      }
+    });
+
+    const hanoiHitCount2D = hanoiPairs2D.filter(p => hanoiWin2D.has(p)).length;
+    const hanoiHitCount3D = hanoiTriples3D.filter(t => hanoiWin3D.has(t) || hanoiWin3D.has(t.split("").sort().join(""))).length;
+    const hanoiTotalHits = hanoiHitCount2D + hanoiHitCount3D;
+
+    const card2 = n.jsxs("div", {
+      className: "border-2 border-amber-400/60 rounded-2xl p-4 sm:p-5 bg-gradient-to-r from-amber-500/20 via-orange-500/20 to-yellow-500/20 shadow-glow-gold relative overflow-hidden space-y-3.5",
+      children: [
+        n.jsx("div", { className: "absolute -right-6 -bottom-6 w-24 h-24 bg-amber-500/10 rounded-full blur-xl pointer-events-none" }),
+        n.jsxs("div", {
+          className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-amber-500/20 pb-2.5",
+          children: [
+            n.jsxs("div", {
+              className: "flex items-center gap-2 flex-wrap",
+              children: [
+                n.jsx("span", { className: "bg-amber-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider animate-pulse", children: "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สูตรไร้พ่าย 100%)" }),
+                n.jsx("h4", { className: "text-sm sm:text-base font-extrabold text-amber-200", children: "ชุดเลขวินเน้น 4 ตัว ล่า 3 รอบ (ฮานอยพิเศษ ➔ ปกติ ➔ VIP)" })
+              ]
+            }),
+            n.jsx("span", { className: "text-[10px] sm:text-xs text-amber-300 font-bold bg-amber-900/60 border border-amber-500/40 px-2.5 py-1 rounded-lg self-start sm:self-auto", children: "⚡ 2 ตัว (บน-ล่าง): " + hanoiPairs2D.length + " ชุด | 3 ตัวตรง: " + hanoiTriples3D.length + " ชุด (24 โต๊ด)" })
+          ]
+        }),
+        n.jsxs("div", {
+          className: "flex flex-wrap items-center justify-between gap-2.5 text-[11px] font-bold text-gray-300",
+          children: [
+            n.jsxs("div", {
+              className: "flex items-center gap-2 flex-wrap",
+              children: [
+                n.jsx("span", { className: "bg-emerald-500 text-black text-xs font-black px-2.5 py-0.5 rounded-md", children: "🎯 สถานะล่า 3 นอย" }),
+                hanoiTotalHits > 0
+                  ? n.jsxs("span", { className: "bg-emerald-500 text-black text-[11px] font-black px-2.5 py-0.5 rounded-md shadow-glow-emerald animate-pulse", children: ["✓ เข้าเป้าแล้ว ", hanoiTotalHits, " ชุด"] })
+                  : n.jsx("span", { className: "bg-amber-500/20 text-amber-300 text-[11px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40", children: "⚡ ล่า 3 สเต็ป (สูตรไร้พ่าย 100%)" })
+              ]
+            }),
+            n.jsxs("div", {
+              className: "flex items-center gap-1.5 bg-black/60 border border-amber-500/40 px-2.5 py-1 rounded-xl shadow-inner flex-wrap",
+              children: [
+                n.jsxs("span", {
+                  className: "text-[11px] font-black text-amber-300 flex items-center gap-1 pr-1",
+                  children: ["🗓️ ย้อนดูวัน (วัน", n.jsx("strong", { className: "text-white underline decoration-amber-400 underline-offset-2", children: h.dayName }), "):"]
+                }),
+                n.jsx("div", {
+                  className: "flex items-center gap-1",
+                  children: [
+                    { code: "Mon", label: "จ." },
+                    { code: "Tue", label: "อ." },
+                    { code: "Wed", label: "พ." },
+                    { code: "Thu", label: "พฤ." },
+                    { code: "Fri", label: "ศ." },
+                    { code: "Sat", label: "ส." },
+                    { code: "Sun", label: "อา." }
+                  ].map(dItem => {
+                    const isSel = (r === dItem.code);
+                    return n.jsx("button", {
+                      key: dItem.code,
+                      type: "button",
+                      onClick: () => {
+                        if (typeof p === "function") {
+                          p(dItem.code);
+                        } else if (typeof d === "function") {
+                          d(dItem.code);
+                        }
+                      },
+                      title: "คลิกเพื่อย้อนดูสถิติและชุดวินเด่น วัน" + ({ Mon:"จันทร์", Tue:"อังคาร", Wed:"พุธ", Thu:"พฤหัสบดี", Fri:"ศุกร์", Sat:"เสาร์", Sun:"อาทิตย์" }[dItem.code]),
+                      className: "px-2 py-0.5 rounded-lg text-xs font-black transition-all cursor-pointer " +
+                        (isSel
+                          ? "bg-gradient-to-r from-amber-400 to-yellow-400 text-black shadow-glow-gold scale-105 border border-yellow-200 ring-2 ring-amber-400"
+                          : "bg-black/50 text-gray-300 hover:text-white hover:bg-gray-800/90 border border-gray-700/60 active:scale-95"),
+                      children: dItem.label
+                    });
+                  })
+                })
+              ]
+            })
+          ]
+        }),
+        n.jsxs("div", {
+          className: "grid grid-cols-1 sm:grid-cols-3 gap-2 py-1",
+          children: [
+            { key: "special", step: "สเต็ป 1", name: "🟠 ฮานอยพิเศษ (17:30)" },
+            { key: "regular", step: "สเต็ป 2", name: "🔴 ฮานอยปกติ (18:30)" },
+            { key: "vip", step: "สเต็ป 3", name: "🟣 ฮานอย VIP (19:30)" }
+          ].map(st => {
+            const sInfo = sessionHitStatus[st.key];
+            const isHit = sInfo && sInfo.hit;
+            const hasDraw = sInfo && sInfo.draw;
+            return n.jsxs("div", {
+              key: st.key,
+              className: "rounded-xl p-2.5 flex items-center justify-between border " +
+                (isHit
+                  ? "bg-emerald-950/40 border-emerald-500/60 shadow-[0_0_12px_rgba(16,185,129,0.3)] ring-1 ring-emerald-400"
+                  : hasDraw
+                    ? "bg-black/40 border-gray-700/50"
+                    : "bg-black/30 border-gray-800/40"),
+              children: [
+                n.jsxs("div", {
+                  className: "space-y-0.5",
+                  children: [
+                    n.jsxs("div", {
+                      className: "flex items-center gap-1.5",
+                      children: [
+                        n.jsx("span", {
+                          className: "text-[10px] font-black px-1.5 py-0.2 rounded " + (isHit ? "bg-emerald-400 text-black font-extrabold" : "bg-gray-800 text-gray-300"),
+                          children: st.step
+                        }),
+                        n.jsx("span", {
+                          className: "text-xs font-black " + (isHit ? "text-emerald-300" : "text-gray-300"),
+                          children: st.name
+                        })
+                      ]
+                    }),
+                    hasDraw
+                      ? n.jsxs("div", {
+                          className: "text-[11px] text-gray-400 font-mono",
+                          children: [
+                            "บน: ", n.jsx("strong", { className: isHit ? "text-emerald-200" : "text-gray-200", children: sInfo.draw.top3 || sInfo.draw.top2 || "-" }),
+                            " | ล่าง: ", n.jsx("strong", { className: isHit ? "text-emerald-200" : "text-gray-200", children: sInfo.draw.bottom2 || "-" })
+                          ]
+                        })
+                      : n.jsx("div", { className: "text-[11px] text-gray-500 italic", children: "⏳ รอผลออกรางวัล" })
+                  ]
+                }),
+                isHit
+                  ? n.jsxs("span", {
+                      className: "bg-emerald-500 text-black text-[10px] font-black px-2 py-1 rounded-md shadow-sm animate-pulse shrink-0",
+                      children: ["✓ แตก ", sInfo.hits.join(", ")]
+                    })
+                  : hasDraw
+                    ? n.jsx("span", { className: "text-[10px] text-gray-400 font-bold px-1.5 py-0.5 rounded bg-gray-800/80 shrink-0", children: "หลุดรอบนี้" })
+                    : n.jsx("span", { className: "text-[10px] text-amber-300/80 font-bold px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20 shrink-0", children: "รอสเต็ปนี้" })
+              ]
+            });
+          })
+        }),
+        n.jsxs("div", {
+          className: "flex items-center gap-3 flex-wrap py-1",
+          children: [
+            n.jsx("div", {
+              className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
+              children: hanoi100Digits.map(d => n.jsx("div", {
+                key: d,
+                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform shrink-0",
+                children: d
+              }))
+            }),
+            n.jsx("div", {
+              className: "text-xs text-amber-300/90 font-semibold pl-1",
+              children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ สูตรไร้พ่าย 100% (สถิติล่า 3 นอย เข้าเป้าทุกวันไม่มีหลุด)"
+            })
+          ]
+        }),
+        n.jsxs("div", {
+          className: "grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-amber-500/20",
+          children: [
+            n.jsxs("div", {
+              className: "bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2",
+              children: [
+                n.jsxs("div", {
+                  className: "flex items-center justify-between",
+                  children: [
+                    n.jsxs("span", {
+                      className: "text-xs font-bold text-amber-300 flex items-center gap-1.5",
+                      children: [
+                        "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + hanoiPairs2D.length + " ชุด):",
+                        hanoiHitCount2D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hanoiHitCount2D, " ชุด"] }) : null
+                      ]
+                    }),
+                    n.jsx("button", {
+                      onClick: (e) => {
+                        const btn = e.currentTarget;
+                        if (navigator.clipboard) {
+                          navigator.clipboard.writeText(hanoiPairs2D.join(", "));
+                          const oldText = btn.innerText;
+                          btn.innerText = "✓ คัดลอกแล้ว!";
+                          setTimeout(() => { btn.innerText = oldText; }, 1500);
+                        }
+                      },
+                      className: "text-[10px] bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                      children: "📋 คัดลอก 2 ตัว"
+                    })
+                  ]
+                }),
+                n.jsx("div", {
+                  className: "flex flex-wrap gap-1.5",
+                  children: hanoiPairs2D.map(p => {
+                    const isHit = hanoiWin2D.has(p);
+                    return n.jsx("span", {
+                      key: p,
+                      style: { color: isHit ? "#000000" : "#ffffff" },
+                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
+                      children: p
+                    });
+                  })
+                })
+              ]
+            }),
+            n.jsxs("div", {
+              className: "bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2",
+              children: [
+                n.jsxs("div", {
+                  className: "flex items-center justify-between",
+                  children: [
+                    n.jsxs("span", {
+                      className: "text-xs font-bold text-cyan-300 flex items-center gap-1.5",
+                      children: [
+                        "⚡ ชุดเลขวิน 3 ตัวตรง (" + hanoiTriples3D.length + " ชุด / 24 โต๊ด):",
+                        hanoiHitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hanoiHitCount3D, " ชุด"] }) : null
+                      ]
+                    }),
+                    n.jsx("button", {
+                      onClick: (e) => {
+                        const btn = e.currentTarget;
+                        if (navigator.clipboard) {
+                          navigator.clipboard.writeText(hanoiTriples3D.join(", "));
+                          const oldText = btn.innerText;
+                          btn.innerText = "✓ คัดลอกแล้ว!";
+                          setTimeout(() => { btn.innerText = oldText; }, 1500);
+                        }
+                      },
+                      className: "text-[10px] bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                      children: "📋 คัดลอก 3 ตัว"
+                    })
+                  ]
+                }),
+                n.jsx("div", {
+                  className: "flex flex-wrap gap-1.5",
+                  children: hanoiTriples3D.map(t => {
+                    const isHit = hanoiWin3D.has(t) || hanoiWin3D.has(t.split("").sort().join(""));
+                    return n.jsx("span", {
+                      key: t,
+                      style: { color: isHit ? "#000000" : "#ffffff" },
+                      className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
+                      children: t
+                    });
+                  })
+                })
+              ]
+            })
+          ]
+        })
+      ]
+    });
+
+    if (!card1 && !card2) return null;
+    if (!card1) return card2;
+    if (!card2) return card1;
+
+    return n.jsxs("div", {
+      className: "space-y-4",
+      children: [
+        card1,
+        card2
       ]
     });
   }
