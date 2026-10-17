@@ -739,7 +739,13 @@ Error generating stack: `+r.message+`
 
     // AFTERNOON: GLASS PURPLE THEME (ธีมม่วงกลาส)
     return n.jsxs("div", {
-      className: "bg-gradient-to-b from-[#250b38]/70 via-[#190b2c]/80 to-[#0e051c]/90 border-2 border-purple-500/50 backdrop-blur-md rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-[0_8px_32px_rgba(168,85,247,0.3)] relative overflow-hidden",
+      style: {
+        background: "linear-gradient(180deg, rgba(37, 11, 56, 0.9) 0%, rgba(24, 9, 42, 0.92) 50%, rgba(14, 5, 28, 0.96) 100%)",
+        border: "2px solid rgba(168, 85, 247, 0.6)",
+        boxShadow: "0 8px 32px rgba(168, 85, 247, 0.3), inset 0 0 16px rgba(168, 85, 247, 0.15)",
+        backdropFilter: "blur(12px)"
+      },
+      className: "rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between relative overflow-hidden win4-card-afternoon",
       children: [
         n.jsx("div", { className: "absolute -right-6 -bottom-6 w-28 h-28 bg-purple-600/20 rounded-full blur-2xl pointer-events-none" }),
         n.jsxs("div", {
@@ -757,11 +763,23 @@ Error generating stack: `+r.message+`
             }),
             (hitCount2D > 0 || hitCount3D > 0)
               ? n.jsxs("span", {
-                  className: "bg-gradient-to-r from-fuchsia-500 via-purple-500 to-indigo-500 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md shadow-[0_0_12px_rgba(217,70,239,0.5)] animate-pulse border border-fuchsia-200/40",
+                  style: {
+                    background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "1px solid rgba(245, 208, 254, 0.5)",
+                    boxShadow: "0 0 14px rgba(217, 70, 239, 0.7)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.4)"
+                  },
+                  className: "text-[10px] font-black px-2.5 py-0.5 rounded-md animate-pulse win4-badge-afternoon-hit",
                   children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
                 })
               : n.jsx("span", {
-                  className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-500/40",
+                  style: {
+                    background: "rgba(88, 28, 135, 0.5)",
+                    color: "#e9d5ff",
+                    border: "1px solid rgba(168, 85, 247, 0.4)"
+                  },
+                  className: "text-[10px] font-bold px-2 py-0.5 rounded-md",
                   children: "⚡ ล่า 3 สเต็ป"
                 })
           ]
@@ -773,7 +791,14 @@ Error generating stack: `+r.message+`
               className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
               children: digits.map(d => n.jsx("div", {
                 key: d,
-                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-fuchsia-500 to-indigo-400 text-white font-black text-2xl flex items-center justify-center shadow-[0_4px_16px_rgba(168,85,247,0.5)] border-2 border-purple-200/90 scale-100 hover:scale-105 transition-transform shrink-0",
+                style: {
+                  background: "linear-gradient(135deg, #a855f7 0%, #d946ef 50%, #818cf8 100%)",
+                  color: "#ffffff",
+                  border: "2px solid rgba(245, 208, 254, 0.9)",
+                  boxShadow: "0 4px 20px rgba(168, 85, 247, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.6)",
+                  textShadow: "0 2px 4px rgba(0, 0, 0, 0.5)"
+                },
+                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl font-black text-2xl flex items-center justify-center scale-100 hover:scale-105 transition-transform shrink-0 win4-digit-afternoon",
                 children: d
               }))
             }),
@@ -784,7 +809,12 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "bg-purple-950/60 border border-purple-500/40 rounded-xl p-3 space-y-2 backdrop-blur-sm shadow-inner relative z-10",
+          style: {
+            background: "rgba(28, 12, 46, 0.75)",
+            border: "1px solid rgba(168, 85, 247, 0.4)",
+            boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.4)"
+          },
+          className: "rounded-xl p-3 space-y-2 backdrop-blur-sm relative z-10 win4-box-afternoon-2d",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -793,7 +823,16 @@ Error generating stack: `+r.message+`
                   className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + pairs2D.length + " ชุด):",
-                    hitCount2D > 0 ? n.jsxs("span", { className: "bg-gradient-to-r from-fuchsia-500 to-purple-500 text-white text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 border border-fuchsia-300/40", children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"] }) : null
+                    hitCount2D > 0 ? n.jsxs("span", {
+                      style: {
+                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 100%)",
+                        color: "#ffffff",
+                        border: "1px solid rgba(245, 208, 254, 0.5)",
+                        boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
+                      },
+                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                      children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"]
+                    }) : null
                   ]
                 }),
                 n.jsx("button", {
@@ -817,9 +856,19 @@ Error generating stack: `+r.message+`
                 const isHit = win2D.has(p);
                 return n.jsx("span", {
                   key: p,
-                  style: { color: isHit ? "#000000" : "#ffffff" },
+                  style: isHit ? {
+                    background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "2px solid #ffffff",
+                    boxShadow: "0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)"
+                  } : {
+                    background: "rgba(88, 28, 135, 0.45)",
+                    border: "1px solid rgba(168, 85, 247, 0.45)",
+                    color: "#ffffff"
+                  },
                   className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-[0_0_16px_rgba(250,204,21,0.8)] border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-purple-900/50 border border-purple-500/50 text-white hover:bg-purple-800/70 shadow-sm win4-chip-default"),
+                    (isHit ? "scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "hover:bg-purple-800/70 shadow-sm win4-chip-afternoon-default"),
                   children: p
                 });
               })
@@ -827,7 +876,12 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "bg-indigo-950/60 border border-indigo-500/40 rounded-xl p-3 space-y-2 backdrop-blur-sm shadow-inner relative z-10",
+          style: {
+            background: "rgba(20, 10, 42, 0.75)",
+            border: "1px solid rgba(129, 140, 248, 0.4)",
+            boxShadow: "inset 0 2px 6px rgba(0, 0, 0, 0.4)"
+          },
+          className: "rounded-xl p-3 space-y-2 backdrop-blur-sm relative z-10 win4-box-afternoon-3d",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -836,7 +890,16 @@ Error generating stack: `+r.message+`
                   className: "text-xs font-bold text-indigo-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
-                    hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
+                    hitCount3D > 0 ? n.jsxs("span", {
+                      style: {
+                        background: "linear-gradient(90deg, #a855f7 0%, #6366f1 100%)",
+                        color: "#ffffff",
+                        border: "1px solid rgba(224, 231, 255, 0.5)",
+                        boxShadow: "0 0 10px rgba(99, 102, 241, 0.6)"
+                      },
+                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                      children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"]
+                    }) : null
                   ]
                 }),
                 n.jsx("button", {
@@ -860,9 +923,19 @@ Error generating stack: `+r.message+`
                 const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                 return n.jsx("span", {
                   key: t,
-                  style: { color: isHit ? "#000000" : "#ffffff" },
+                  style: isHit ? {
+                    background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "2px solid #ffffff",
+                    boxShadow: "0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)"
+                  } : {
+                    background: "rgba(67, 24, 120, 0.45)",
+                    border: "1px solid rgba(129, 140, 248, 0.45)",
+                    color: "#ffffff"
+                  },
                   className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-[0_0_16px_rgba(250,204,21,0.8)] border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-indigo-900/50 border border-indigo-500/50 text-white hover:bg-indigo-800/70 shadow-sm win4-chip-default"),
+                    (isHit ? "scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "hover:bg-indigo-800/70 shadow-sm win4-chip-afternoon-default"),
                   children: t
                 });
               })
