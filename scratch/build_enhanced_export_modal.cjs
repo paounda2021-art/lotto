@@ -426,66 +426,83 @@ const lineModuleCode = `
     return d + ' ' + m + ' ' + yThai;
   }
 
-  function computeWin4(regSess, vipSess, dayCode, isMorning) {
-    const pool = [];
+  const SESSION_WIN4_DATA = {
+    Mon: {
+      regMorning: [0, 1, 4, 8],
+      regAfternoon: [0, 1, 5, 9],
+      vipMorning: [1, 6, 8, 9],
+      vipAfternoon: [1, 2, 4, 8]
+    },
+    Tue: {
+      regMorning: [3, 5, 6, 9],
+      regAfternoon: [2, 3, 6, 7],
+      vipMorning: [3, 4, 6, 7],
+      vipAfternoon: [2, 5, 6, 9]
+    },
+    Wed: {
+      regMorning: [0, 2, 3, 6],
+      regAfternoon: [1, 4, 5, 7],
+      vipMorning: [0, 3, 7, 9],
+      vipAfternoon: [1, 2, 3, 6]
+    },
+    Thu: {
+      regMorning: [1, 4, 7, 9],
+      regAfternoon: [1, 7, 8, 9],
+      vipMorning: [1, 4, 6, 9],
+      vipAfternoon: [0, 2, 4, 8]
+    },
+    Fri: {
+      regMorning: [2, 6, 7, 8],
+      regAfternoon: [1, 3, 4, 6],
+      vipMorning: [0, 3, 4, 9],
+      vipAfternoon: [0, 6, 7, 8]
+    },
+    Sat: {
+      regMorning: null,
+      regAfternoon: null,
+      vipMorning: [0, 1, 2, 6],
+      vipAfternoon: [0, 6, 8, 9]
+    },
+    Sun: {
+      regMorning: null,
+      regAfternoon: null,
+      vipMorning: [3, 4, 5, 9],
+      vipAfternoon: [1, 3, 7, 9]
+    }
+  };
 
-    function addFromStr(str) {
-      if (!str) return;
-      const m = str.match(/\d+/g);
-      if (m) m.forEach(d => {
-        const n = parseInt(d, 10);
-        if (!isNaN(n)) pool.push(n);
-      });
+  function computeSessionWin4(dayCode, sessKey, sessObj) {
+    if (dayCode === 'Sat' || dayCode === 'Sun') {
+      if (sessKey === 'regMorning' || sessKey === 'regAfternoon') return null;
     }
 
-    if (regSess && regSess.runDigits && regSess.runDigits !== '-') {
-      addFromStr(regSess.runDigits);
-    }
-    if (vipSess && vipSess.runDigits && vipSess.runDigits !== '-') {
-      addFromStr(vipSess.runDigits);
-    }
-
-    // Special weekend pools if regular stocks closed
-    if (dayCode === 'Sat') {
-      if (isMorning) {
-        pool.push(1, 2, 6, 8, 7, 4);
-      } else {
-        pool.push(0, 3, 2, 8, 9, 6);
+    let digits = null;
+    const dayWin4 = SESSION_WIN4_DATA[dayCode] || SESSION_WIN4_DATA['Fri'];
+    if (dayWin4 && dayWin4[sessKey] && Array.isArray(dayWin4[sessKey])) {
+      digits = dayWin4[sessKey].slice();
+    } else {
+      const pool = [];
+      if (sessObj && sessObj.runDigits && sessObj.runDigits !== '-') {
+        const m = sessObj.runDigits.match(/\d+/g);
+        if (m) m.forEach(d => pool.push(parseInt(d, 10)));
       }
-    } else if (dayCode === 'Sun') {
-      if (isMorning) {
-        pool.push(9, 5, 4, 6, 8, 1);
-      } else {
-        pool.push(9, 3, 2, 8, 1, 5);
+      if (sessObj && sessObj.top6 && sessObj.top6 !== '-') {
+        const m2 = sessObj.top6.match(/\d/g);
+        if (m2) m2.forEach(d => pool.push(parseInt(d, 10)));
       }
-    }
-
-    const runnerUps = {
-      Mon: { morning: [6, 9], afternoon: [6, 5] },
-      Tue: { morning: [5, 8], afternoon: [7, 6] },
-      Wed: { morning: [5, 1], afternoon: [1, 5] },
-      Thu: { morning: [1, 2], afternoon: [0, 5] },
-      Fri: { morning: [6, 5], afternoon: [7, 9] },
-    };
-    if (runnerUps[dayCode]) {
-      const extra = isMorning ? runnerUps[dayCode].morning : runnerUps[dayCode].afternoon;
-      if (extra) extra.forEach(d => pool.push(d));
-    }
-
-    for (let i = 0; i <= 9; i++) pool.push(i);
-
-    const seen = new Set();
-    const digits = [];
-    for (const d of pool) {
-      if (!seen.has(d)) {
-        seen.add(d);
-        digits.push(d);
-        if (digits.length === 4) break;
+      for (let i = 0; i <= 9; i++) pool.push(i);
+      const seen = new Set();
+      digits = [];
+      for (const d of pool) {
+        if (!seen.has(d)) {
+          seen.add(d);
+          digits.push(d);
+          if (digits.length === 4) break;
+        }
       }
     }
 
     digits.sort((a,b) => a - b);
-
     const pairs = [];
     const pairsFull = [];
     for (let i = 0; i < digits.length; i++) {
@@ -517,33 +534,79 @@ const lineModuleCode = `
     const vipM = getResolvedSessionData(dayCode, 'vipMorning');
     const vipA = getResolvedSessionData(dayCode, 'vipAfternoon');
 
-    const win4M = computeWin4(regM, vipM, dayCode, true);
-    const win4A = computeWin4(regA, vipA, dayCode, false);
+    const win4RegM = computeSessionWin4(dayCode, 'regMorning', regM);
+    const win4RegA = computeSessionWin4(dayCode, 'regAfternoon', regA);
+    const win4VipM = computeSessionWin4(dayCode, 'vipMorning', vipM);
+    const win4VipA = computeSessionWin4(dayCode, 'vipAfternoon', vipA);
 
     if (filter === 'WIN4') {
       let lines = [
         '================================',
         '🎲 สรุปวินเด่น 4 ตัว SystemLucky289',
         '🗓️ ประจำ: ' + dayName + 'ที่ ' + dateFormatted,
-        '(คัดรวมจากตัวรูดเด่น-รอง หุ้นปกติ + หุ้น VIP)',
-        '================================',
-        '',
-        '☀️ [1] ชุดวินเด่น 4 ตัว - รอบเช้า',
-        '• เด่น 4 ตัววิน : ' + win4M.digitsStr,
-        '• วิน 2 ตัว (6 คู่ตรง) : ' + win4M.pairsStr,
-        '• วินไป-กลับ (12 ชุด) : ' + win4M.pairsFullStr,
-        '• วินเบิ้ลกันหลุด (4 คู่) : ' + win4M.doublesStr,
-        '',
-        '🌙 [2] ชุดวินเด่น 4 ตัว - รอบบ่าย',
-        '• เด่น 4 ตัววิน : ' + win4A.digitsStr,
-        '• วิน 2 ตัว (6 คู่ตรง) : ' + win4A.pairsStr,
-        '• วินไป-กลับ (12 ชุด) : ' + win4A.pairsFullStr,
-        '• วินเบิ้ลกันหลุด (4 คู่) : ' + win4A.doublesStr,
-        '',
-        '================================',
-        '💡 วิธีเล่น: เล่นวิน 2 ตัวไป-กลับ เข้าสเต็ปไหนให้หยุดทันที!',
-        '🤖 คำนวณอัตโนมัติด้วยระบบ LOTTO289'
+        '(สูตรคัดแยกเช้า-บ่าย หุ้นปกติ และ VIP อิสระไม่ปนกัน)',
+        '================================'
       ];
+
+      if (cfg.regClosed) {
+        lines.push('');
+        lines.push('🛑 [หมวดที่ 1] หุ้นปกติ (ตลาดหุ้นหลัก)');
+        lines.push('• ตลาดหุ้นปกติ ปิดทำการวันเสาร์-อาทิตย์ (เปิดทำการจันทร์-ศุกร์)');
+        lines.push('• มีเฉพาะตลาดหุ้น VIP ที่ออกรางวัลครบทุกวัน 7 วัน');
+        lines.push('');
+        lines.push('--------------------------------');
+        lines.push('💎 [หมวดที่ 2] หุ้น VIP');
+        lines.push('☀️ [1] ชุดวินเด่น 4 ตัว - หุ้น VIP รอบเช้า');
+        lines.push('(นิเคอิ VIP 09:30 ➡️ จีน VIP 10:30 ➡️ ฮั่งเส็ง VIP 11:00)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4VipM.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4VipM.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4VipM.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4VipM.doublesStr);
+        lines.push('');
+        lines.push('🌙 [2] ชุดวินเด่น 4 ตัว - หุ้น VIP รอบบ่าย');
+        lines.push('(นิเคอิ VIP 13:00 ➡️ จีน VIP 14:00 ➡️ ฮั่งเส็ง VIP 15:30)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4VipA.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4VipA.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4VipA.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4VipA.doublesStr);
+      } else {
+        lines.push('');
+        lines.push('🎌 [หมวดที่ 1] หุ้นปกติ (ตลาดหุ้นหลัก)');
+        lines.push('☀️ [1] ชุดวินเด่น 4 ตัว - หุ้นปกติ รอบเช้า');
+        lines.push('(นิเคอิ 09:30 ➡️ จีน 10:30 ➡️ ฮั่งเส็ง 11:00)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4RegM.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4RegM.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4RegM.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4RegM.doublesStr);
+        lines.push('');
+        lines.push('🌙 [2] ชุดวินเด่น 4 ตัว - หุ้นปกติ รอบบ่าย');
+        lines.push('(นิเคอิ 13:00 ➡️ จีน 14:00 ➡️ ฮั่งเส็ง 15:30)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4RegA.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4RegA.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4RegA.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4RegA.doublesStr);
+        lines.push('');
+        lines.push('--------------------------------');
+        lines.push('💎 [หมวดที่ 2] หุ้น VIP');
+        lines.push('☀️ [3] ชุดวินเด่น 4 ตัว - หุ้น VIP รอบเช้า');
+        lines.push('(นิเคอิ VIP 09:30 ➡️ จีน VIP 10:30 ➡️ ฮั่งเส็ง VIP 11:00)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4VipM.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4VipM.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4VipM.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4VipM.doublesStr);
+        lines.push('');
+        lines.push('🌙 [4] ชุดวินเด่น 4 ตัว - หุ้น VIP รอบบ่าย');
+        lines.push('(นิเคอิ VIP 13:00 ➡️ จีน VIP 14:00 ➡️ ฮั่งเส็ง VIP 15:30)');
+        lines.push('• คัดเด่น 4 ตัววิน : ' + win4VipA.digitsStr);
+        lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4VipA.pairsStr);
+        lines.push('• วินไป-กลับ (12 ชุด) : ' + win4VipA.pairsFullStr);
+        lines.push('• วินเบิ้ลกันหลุด (4 คู่) : ' + win4VipA.doublesStr);
+      }
+
+      lines.push('');
+      lines.push('================================');
+      lines.push('💡 วิธีเล่น: เล่นวิน 2 ตัวไป-กลับ เข้าสเต็ปไหนให้หยุดทันที!');
+      lines.push('🤖 คำนวณอัตโนมัติด้วยระบบ LOTTO289');
       return lines.join('\\n');
     }
 
@@ -573,6 +636,9 @@ const lineModuleCode = `
         lines.push('• ฟันเด่นรูด : ' + regM.runDigits + ' (เน้น ' + regM.bestDigit + ')');
         lines.push('• เจาะ Top 6 : ' + regM.top6);
         lines.push('• วินสิบ-หน่วย : ' + regM.winPairs);
+        if (win4RegM) {
+          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
+        }
       }
 
       if (filter === 'ALL' || filter === 'REG_AFTERNOON' || filter === 'AFTERNOON' || filter === 'REGULAR') {
@@ -583,6 +649,9 @@ const lineModuleCode = `
         lines.push('• ฟันเด่นรูด : ' + regA.runDigits + ' (เน้น ' + regA.bestDigit + ')');
         lines.push('• เจาะ Top 6 : ' + regA.top6);
         lines.push('• วินสิบ-หน่วย : ' + regA.winPairs);
+        if (win4RegA) {
+          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+        }
       }
     }
 
@@ -594,6 +663,9 @@ const lineModuleCode = `
       lines.push('• ฟันเด่นรูด : ' + vipM.runDigits + ' (เน้น ' + vipM.bestDigit + ')');
       lines.push('• เจาะ Top 6 : ' + vipM.top6);
       lines.push('• วินสิบ-หน่วย : ' + vipM.winPairs);
+      if (win4VipM) {
+        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+      }
     }
 
     if (filter === 'ALL' || filter === 'VIP_AFTERNOON' || filter === 'AFTERNOON' || filter === 'VIP') {
@@ -604,33 +676,60 @@ const lineModuleCode = `
       lines.push('• ฟันเด่นรูด : ' + vipA.runDigits + ' (เน้น ' + vipA.bestDigit + ')');
       lines.push('• เจาะ Top 6 : ' + vipA.top6);
       lines.push('• วินสิบ-หน่วย : ' + vipA.winPairs);
+      if (win4VipA) {
+        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      }
     }
 
     if (filter === 'ALL') {
       lines.push('');
       lines.push('--------------------------------');
-      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว - แยกเช้า/บ่าย (ปกติ+VIP)]');
-      lines.push('☀️ รอบเช้า เด่น 4 ตัว : ' + win4M.digitsStr);
-      lines.push('  • วิน 2 ตัว (6 คู่ตรง) : ' + win4M.pairsStr + ' (กลับด้วย)');
-      lines.push('  • กันเบิ้ล (4 คู่) : ' + win4M.doublesStr);
-      lines.push('');
-      lines.push('🌙 รอบบ่าย เด่น 4 ตัว : ' + win4A.digitsStr);
-      lines.push('  • วิน 2 ตัว (6 คู่ตรง) : ' + win4A.pairsStr + ' (กลับด้วย)');
-      lines.push('  • กันเบิ้ล (4 คู่) : ' + win4A.doublesStr);
+      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว (แยกปกติ และ VIP)]');
+      if (cfg.regClosed) {
+        lines.push('📌 ตลาดหุ้นปกติ: ปิดทำการเสาร์-อาทิตย์');
+        lines.push('💎 หุ้น VIP:');
+        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      } else {
+        lines.push('🎌 หุ้นปกติ:');
+        lines.push('  ☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
+        lines.push('  🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+        lines.push('💎 หุ้น VIP:');
+        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      }
     } else if (filter === 'MORNING') {
       lines.push('');
       lines.push('--------------------------------');
-      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบเช้า (ปกติ+VIP)]');
-      lines.push('• เด่น 4 ตัววิน : ' + win4M.digitsStr);
-      lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4M.pairsStr + ' (กลับด้วย)');
-      lines.push('• กันเบิ้ล (4 คู่) : ' + win4M.doublesStr);
+      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบเช้า (แยกปกติ และ VIP)]');
+      if (cfg.regClosed) {
+        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+      } else {
+        lines.push('🎌 หุ้นปกติ (เช้า) : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
+        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+      }
     } else if (filter === 'AFTERNOON') {
       lines.push('');
       lines.push('--------------------------------');
-      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบบ่าย (ปกติ+VIP)]');
-      lines.push('• เด่น 4 ตัววิน : ' + win4A.digitsStr);
-      lines.push('• วิน 2 ตัว (6 คู่ตรง) : ' + win4A.pairsStr + ' (กลับด้วย)');
-      lines.push('• กันเบิ้ล (4 คู่) : ' + win4A.doublesStr);
+      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบบ่าย (แยกปกติ และ VIP)]');
+      if (cfg.regClosed) {
+        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      } else {
+        lines.push('🎌 หุ้นปกติ (บ่าย) : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      }
+    } else if (filter === 'REGULAR' && !cfg.regClosed) {
+      lines.push('');
+      lines.push('--------------------------------');
+      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว หุ้นปกติ]');
+      lines.push('☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
+      lines.push('🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+    } else if (filter === 'VIP') {
+      lines.push('');
+      lines.push('--------------------------------');
+      lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว หุ้น VIP]');
+      lines.push('☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+      lines.push('🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
     }
 
     lines.push('');
@@ -801,8 +900,11 @@ const lineModuleCode = `
       const regA = getResolvedSessionData(currentDay, 'regAfternoon');
       const vipM = getResolvedSessionData(currentDay, 'vipMorning');
       const vipA = getResolvedSessionData(currentDay, 'vipAfternoon');
-      const win4M = computeWin4(regM, vipM, currentDay, true);
-      const win4A = computeWin4(regA, vipA, currentDay, false);
+      const win4RegM = computeSessionWin4(currentDay, 'regMorning', regM);
+      const win4RegA = computeSessionWin4(currentDay, 'regAfternoon', regA);
+      const win4VipM = computeSessionWin4(currentDay, 'vipMorning', vipM);
+      const win4VipA = computeSessionWin4(currentDay, 'vipAfternoon', vipA);
+      const dayCfg = CHASE_SLIPS_DATA[currentDay] || CHASE_SLIPS_DATA['Fri'];
 
       chaseSlipModalOverlay.innerHTML = \`
         <div style="background: #111827; border: 1px solid #10b981; border-radius: 20px; width: 100%; max-width: 620px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(16, 185, 129, 0.2); overflow: hidden; color: #f3f4f6;">
@@ -857,19 +959,46 @@ const lineModuleCode = `
           </div>
 
           <!-- Visual Quick Win4 Banner -->
-          <div style="margin: 12px 20px 0 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 10px 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;">
-            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <div style="margin: 12px 20px 0 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px;">
               <span style="font-size: 11px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 4px;">
-                🎲 วินเด่น 4 ตัว:
+                🎲 ชุดวินเด่น 4 ตัว (แยกปกติ และ VIP อิสระ):
               </span>
-              <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 3px 9px; border-radius: 7px; border: 1px solid rgba(52, 211, 153, 0.4); color: #6ee7b7; font-weight: 800;">
-                ☀️ เช้า: \${win4M.digitsStr}
-              </span>
-              <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 3px 9px; border-radius: 7px; border: 1px solid rgba(96, 165, 250, 0.4); color: #93c5fd; font-weight: 800;">
-                🌙 บ่าย: \${win4A.digitsStr}
-              </span>
+              <span style="font-size: 10px; color: #9ca3af; font-weight: 600;">(คัดจากตัวรูดเด่น-รอง สเต็ป 1 ➡️ 2 ➡️ 3)</span>
             </div>
-            <span style="font-size: 10px; color: #9ca3af; font-weight: 600;">(คัดรวมจากเด่น-รอง หุ้นปกติ + VIP)</span>
+            \${dayCfg.regClosed ? \`
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 11px; font-weight: 800; color: #c084fc;">💎 หุ้น VIP:</span>
+                <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.4); color: #e9d5ff; font-weight: 800;">
+                  ☀️ เช้า: \${win4VipM ? win4VipM.digitsStr : '-'}
+                </span>
+                <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.4); color: #e9d5ff; font-weight: 800;">
+                  🌙 บ่าย: \${win4VipA ? win4VipA.digitsStr : '-'}
+                </span>
+                <span style="font-size: 10px; color: #ef4444; font-weight: 700;">(🛑 ตลาดปกติปิดเสาร์-อาทิตย์)</span>
+              </div>
+            \` : \`
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; font-weight: 800; color: #34d399;">🎌 หุ้นปกติ:</span>
+                  <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(52, 211, 153, 0.4); color: #6ee7b7; font-weight: 800;">
+                    ☀️ เช้า: \${win4RegM ? win4RegM.digitsStr : '-'}
+                  </span>
+                  <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(52, 211, 153, 0.4); color: #6ee7b7; font-weight: 800;">
+                    🌙 บ่าย: \${win4RegA ? win4RegA.digitsStr : '-'}
+                  </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                  <span style="font-size: 11px; font-weight: 800; color: #c084fc;">💎 หุ้น VIP:</span>
+                  <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.4); color: #e9d5ff; font-weight: 800;">
+                    ☀️ เช้า: \${win4VipM ? win4VipM.digitsStr : '-'}
+                  </span>
+                  <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.4); color: #e9d5ff; font-weight: 800;">
+                    🌙 บ่าย: \${win4VipA ? win4VipA.digitsStr : '-'}
+                  </span>
+                </div>
+              </div>
+            \`}
           </div>
 
           <!-- Body Textarea Preview -->
