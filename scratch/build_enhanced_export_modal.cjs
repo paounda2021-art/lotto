@@ -429,24 +429,24 @@ const lineModuleCode = `
   const SESSION_WIN4_DATA = {
     Mon: {
       regMorning: [0, 1, 4, 8],
-      regAfternoon: [0, 1, 5, 9],
-      vipMorning: [1, 6, 8, 9],
+      regAfternoon: [0, 2, 5, 9],
+      vipMorning: [1, 4, 8, 9],
       vipAfternoon: [1, 2, 4, 8]
     },
     Tue: {
       regMorning: [3, 5, 6, 9],
-      regAfternoon: [2, 3, 6, 7],
-      vipMorning: [3, 4, 6, 7],
-      vipAfternoon: [2, 5, 6, 9]
+      regAfternoon: [0, 2, 3, 7],
+      vipMorning: [3, 4, 7, 9],
+      vipAfternoon: [0, 4, 6, 7]
     },
     Wed: {
-      regMorning: [0, 2, 3, 6],
-      regAfternoon: [1, 4, 5, 7],
+      regMorning: [1, 2, 3, 6],
+      regAfternoon: [0, 1, 7, 9],
       vipMorning: [0, 3, 7, 9],
-      vipAfternoon: [1, 2, 3, 6]
+      vipAfternoon: [2, 3, 4, 7]
     },
     Thu: {
-      regMorning: [1, 4, 7, 9],
+      regMorning: [1, 3, 4, 9],
       regAfternoon: [1, 7, 8, 9],
       vipMorning: [1, 4, 6, 9],
       vipAfternoon: [0, 2, 4, 8]
@@ -454,7 +454,7 @@ const lineModuleCode = `
     Fri: {
       regMorning: [2, 6, 7, 8],
       regAfternoon: [1, 3, 4, 6],
-      vipMorning: [0, 3, 4, 9],
+      vipMorning: [0, 1, 5, 8],
       vipAfternoon: [0, 6, 7, 8]
     },
     Sat: {
@@ -466,7 +466,7 @@ const lineModuleCode = `
     Sun: {
       regMorning: null,
       regAfternoon: null,
-      vipMorning: [3, 4, 5, 9],
+      vipMorning: [0, 1, 5, 8],
       vipAfternoon: [1, 3, 7, 9]
     }
   };
@@ -637,7 +637,7 @@ const lineModuleCode = `
         lines.push('• เจาะ Top 6 : ' + regM.top6);
         lines.push('• วินสิบ-หน่วย : ' + regM.winPairs);
         if (win4RegM) {
-          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
+          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegM.digitsStr + ' (วิน 6 คู่: ' + win4RegM.pairsStr + ' | กลับด้วย)');
         }
       }
 
@@ -650,7 +650,7 @@ const lineModuleCode = `
         lines.push('• เจาะ Top 6 : ' + regA.top6);
         lines.push('• วินสิบ-หน่วย : ' + regA.winPairs);
         if (win4RegA) {
-          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+          lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4RegA.digitsStr + ' (วิน 6 คู่: ' + win4RegA.pairsStr + ' | กลับด้วย)');
         }
       }
     }
@@ -664,7 +664,7 @@ const lineModuleCode = `
       lines.push('• เจาะ Top 6 : ' + vipM.top6);
       lines.push('• วินสิบ-หน่วย : ' + vipM.winPairs);
       if (win4VipM) {
-        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
       }
     }
 
@@ -677,7 +677,7 @@ const lineModuleCode = `
       lines.push('• เจาะ Top 6 : ' + vipA.top6);
       lines.push('• วินสิบ-หน่วย : ' + vipA.winPairs);
       if (win4VipA) {
-        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+        lines.push('• 🎲 เด่น 4 ตัววิน : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
       }
     }
 
@@ -688,48 +688,48 @@ const lineModuleCode = `
       if (cfg.regClosed) {
         lines.push('📌 ตลาดหุ้นปกติ: ปิดทำการเสาร์-อาทิตย์');
         lines.push('💎 หุ้น VIP:');
-        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
-        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
+        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
       } else {
         lines.push('🎌 หุ้นปกติ:');
-        lines.push('  ☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
-        lines.push('  🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+        lines.push('  ☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน 6 คู่: ' + win4RegM.pairsStr + ' | กลับด้วย)');
+        lines.push('  🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน 6 คู่: ' + win4RegA.pairsStr + ' | กลับด้วย)');
         lines.push('💎 หุ้น VIP:');
-        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
-        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+        lines.push('  ☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
+        lines.push('  🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
       }
     } else if (filter === 'MORNING') {
       lines.push('');
       lines.push('--------------------------------');
       lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบเช้า (แยกปกติ และ VIP)]');
       if (cfg.regClosed) {
-        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
       } else {
-        lines.push('🎌 หุ้นปกติ (เช้า) : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
-        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
+        lines.push('🎌 หุ้นปกติ (เช้า) : ' + win4RegM.digitsStr + ' (วิน 6 คู่: ' + win4RegM.pairsStr + ' | กลับด้วย)');
+        lines.push('💎 หุ้น VIP (เช้า) : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
       }
     } else if (filter === 'AFTERNOON') {
       lines.push('');
       lines.push('--------------------------------');
       lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว รอบบ่าย (แยกปกติ และ VIP)]');
       if (cfg.regClosed) {
-        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
       } else {
-        lines.push('🎌 หุ้นปกติ (บ่าย) : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
-        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+        lines.push('🎌 หุ้นปกติ (บ่าย) : ' + win4RegA.digitsStr + ' (วิน 6 คู่: ' + win4RegA.pairsStr + ' | กลับด้วย)');
+        lines.push('💎 หุ้น VIP (บ่าย) : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
       }
     } else if (filter === 'REGULAR' && !cfg.regClosed) {
       lines.push('');
       lines.push('--------------------------------');
       lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว หุ้นปกติ]');
-      lines.push('☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน: ' + win4RegM.pairsStr + ')');
-      lines.push('🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน: ' + win4RegA.pairsStr + ')');
+      lines.push('☀️ เช้า : ' + win4RegM.digitsStr + ' (วิน 6 คู่: ' + win4RegM.pairsStr + ' | กลับด้วย)');
+      lines.push('🌙 บ่าย : ' + win4RegA.digitsStr + ' (วิน 6 คู่: ' + win4RegA.pairsStr + ' | กลับด้วย)');
     } else if (filter === 'VIP') {
       lines.push('');
       lines.push('--------------------------------');
       lines.push('🎲 [⭐ สรุปชุดวินเด่น 4 ตัว หุ้น VIP]');
-      lines.push('☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน: ' + win4VipM.pairsStr + ')');
-      lines.push('🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน: ' + win4VipA.pairsStr + ')');
+      lines.push('☀️ เช้า : ' + win4VipM.digitsStr + ' (วิน 6 คู่: ' + win4VipM.pairsStr + ' | กลับด้วย)');
+      lines.push('🌙 บ่าย : ' + win4VipA.digitsStr + ' (วิน 6 คู่: ' + win4VipA.pairsStr + ' | กลับด้วย)');
     }
 
     lines.push('');
