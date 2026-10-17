@@ -1681,23 +1681,42 @@ Error generating stack: `+r.message+`
   const getWinningSetsHelper = (dayCode, cat, time) => {
     const win2D = new Set();
     const win3D = new Set();
-    const targetDate = (l === "VERIFY" && N && N.date) ? N.date : (O && O[0] ? O[0].date : null);
+
+    // Determine targetDate:
+    // In VERIFY mode, use N.date
+    // In normal mode, if day has no recorded results for this upcoming draw (NEXT mode or future day), targetDate is null
+    const isGlobalNext = (l === "NEXT") || (typeof g !== "undefined" && g === true);
+
+    let targetDate = null;
+    if (l === "VERIFY" && N && N.date) {
+      targetDate = N.date;
+    } else if (!isGlobalNext && O && O.length > 0 && O[0]?.date) {
+      const oMatchesDay = O.some(d => d && (d.dayOfWeek === dayCode || (d.date && !d.dayOfWeek)));
+      if (oMatchesDay) {
+        targetDate = O[0].date;
+      }
+    }
+
+    if (!targetDate) {
+      return { win2D, win3D, isWaiting: true };
+    }
+
+    let hasActualResultsForSession = false;
     const allDraws = (O || []).concat(a || []);
     allDraws.forEach(dr => {
-      if (!dr) return;
+      if (!dr || dr.date !== targetDate) return;
       const isVip = dr.session?.includes("VIP") || dr.lotteryType?.includes("VIP");
       const isM = dr.session?.includes("MORNING") || dr.session === "MORNING";
       const isA = dr.session?.includes("AFTERNOON") || dr.session === "AFTERNOON";
       if ((cat === "vip" ? isVip : !isVip) && (time === "Morning" ? isM : isA)) {
-        const matchesDay = dr.dayOfWeek === dayCode || (dr.date && (!dr.dayOfWeek || dr.dayOfWeek === dayCode));
-        const matchesDate = targetDate ? dr.date === targetDate : true;
-        if (matchesDay && matchesDate) {
-          if (dr.top3 && !dr.top3.includes("งด") && dr.top3 !== "กผล") {
-            win3D.add(dr.top3); win3D.add(dr.top3.split("").sort().join(""));
-          }
-          const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
+        if (dr.top3 && !dr.top3.includes("งด") && dr.top3 !== "กผล" && dr.top3.trim() !== "") {
+          hasActualResultsForSession = true;
+          win3D.add(dr.top3); win3D.add(dr.top3.split("").sort().join(""));
+          const t2 = dr.top2 || (dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
           if (t2) win2D.add(t2);
-          if (dr.bottom2 && !dr.bottom2.includes("งด")) win2D.add(dr.bottom2);
+        }
+        if (dr.bottom2 && !dr.bottom2.includes("งด") && dr.bottom2.trim() !== "") {
+          win2D.add(dr.bottom2);
         }
       }
     });
@@ -1715,19 +1734,26 @@ Error generating stack: `+r.message+`
         } catch(e){}
       }
       if (Array.isArray(list)) {
-        const match = list.find(d => targetDate ? d.date === targetDate : d.dayOfWeek === dayCode);
-        if (match) {
-          if (match.top3 && !match.top3.includes("งด") && match.top3 !== "กผล") {
-            win3D.add(match.top3); win3D.add(match.top3.split("").sort().join(""));
-          }
-          const t2 = match.top2 || (match.top3 && match.top3.length >= 2 ? match.top3.slice(-2) : "");
+        const match = list.find(d => d && d.date === targetDate);
+        if (match && match.top3 && !match.top3.includes("งด") && match.top3 !== "กผล" && match.top3.trim() !== "") {
+          hasActualResultsForSession = true;
+          win3D.add(match.top3); win3D.add(match.top3.split("").sort().join(""));
+          const t2 = match.top2 || (match.top3.length >= 2 ? match.top3.slice(-2) : "");
           if (t2) win2D.add(t2);
-          if (match.bottom2 && !match.bottom2.includes("งด")) win2D.add(match.bottom2);
+          if (match.bottom2 && !match.bottom2.includes("งด") && match.bottom2.trim() !== "") {
+            win2D.add(match.bottom2);
+          }
         }
       }
     });
 
-    return { win2D, win3D };
+    const isWaiting = !hasActualResultsForSession;
+    if (isWaiting) {
+      win2D.clear();
+      win3D.clear();
+    }
+
+    return { win2D, win3D, isWaiting };
   };
 
   const renderStockSession = (dayCode, cat, time) => {
@@ -1759,9 +1785,9 @@ Error generating stack: `+r.message+`
     }
 
     const { pairs2D, triples3D } = getWin4PairsHelper(digits);
-    const { win2D, win3D } = getWinningSetsHelper(dayCode, cat, time);
-    const hitCount2D = pairs2D.filter(p => win2D.has(p)).length;
-    const hitCount3D = triples3D.filter(t => win3D.has(t) || win3D.has(t.split("").sort().join(""))).length;
+    const { win2D, win3D, isWaiting } = getWinningSetsHelper(dayCode, cat, time);
+    const hitCount2D = isWaiting ? 0 : pairs2D.filter(p => win2D.has(p)).length;
+    const hitCount3D = isWaiting ? 0 : triples3D.filter(t => win3D.has(t) || win3D.has(t.split("").sort().join(""))).length;
 
     if (isM) {
       // MORNING (GOLDEN SUNSHINE THEME)
@@ -1781,15 +1807,21 @@ Error generating stack: `+r.message+`
                   })
                 ]
               }),
-              (hitCount2D > 0 || hitCount3D > 0)
-                ? n.jsxs("span", {
-                    className: "bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-glow-emerald animate-pulse",
-                    children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
+              isWaiting
+                ? n.jsx("span", {
+                    className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-amber-500/40",
+                    children: "⏳ รอผลออกรางวัล"
                   })
-                : n.jsx("span", {
-                    className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40",
-                    children: "⚡ ล่า 3 สเต็ป"
-                  })
+                : ((hitCount2D > 0 || hitCount3D > 0)
+                    ? n.jsxs("span", {
+                        className: "bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-glow-emerald animate-pulse",
+                        children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
+                      })
+                    : n.jsx("span", {
+                        className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40",
+                        children: "⚡ ล่า 3 สเต็ป"
+                      })
+                  )
             ]
           }),
           n.jsxs("div", {
@@ -1819,7 +1851,9 @@ Error generating stack: `+r.message+`
                     className: "text-xs font-bold text-amber-300 flex items-center gap-1.5",
                     children: [
                       "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + pairs2D.length + " ชุด):",
-                      hitCount2D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"] }) : null
+                      isWaiting
+                        ? n.jsx("span", { className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40 ml-1.5", children: "⏳ รอผลออกรางวัล" })
+                        : (hitCount2D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"] }) : null)
                     ]
                   }),
                   n.jsx("button", {
@@ -1840,7 +1874,7 @@ Error generating stack: `+r.message+`
               n.jsx("div", {
                 className: "flex flex-wrap gap-1.5",
                 children: pairs2D.map(p => {
-                  const isHit = win2D.has(p);
+                  const isHit = !isWaiting && win2D.has(p);
                   return n.jsx("span", {
                     key: p,
                     style: { color: isHit ? "#000000" : "#ffffff" },
@@ -1862,7 +1896,9 @@ Error generating stack: `+r.message+`
                     className: "text-xs font-bold text-cyan-300 flex items-center gap-1.5",
                     children: [
                       "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
-                      hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
+                      isWaiting
+                        ? n.jsx("span", { className: "bg-cyan-500/20 text-cyan-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-cyan-500/40 ml-1.5", children: "⏳ รอผลออกรางวัล" })
+                        : (hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null)
                     ]
                   }),
                   n.jsx("button", {
@@ -1883,7 +1919,7 @@ Error generating stack: `+r.message+`
               n.jsx("div", {
                 className: "flex flex-wrap gap-1.5",
                 children: triples3D.map(t => {
-                  const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
+                  const isHit = !isWaiting && (win3D.has(t) || win3D.has(t.split("").sort().join("")));
                   return n.jsx("span", {
                     key: t,
                     style: { color: isHit ? "#000000" : "#ffffff" },
@@ -1916,21 +1952,27 @@ Error generating stack: `+r.message+`
                 })
               ]
             }),
-            (hitCount2D > 0 || hitCount3D > 0)
-              ? n.jsxs("span", {
-                  style: {
-                    background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
-                    color: "#ffffff",
-                    border: "1px solid rgba(245, 208, 254, 0.5)",
-                    boxShadow: "0 0 12px rgba(217, 70, 239, 0.6)"
-                  },
-                  className: "text-[10px] font-black px-2.5 py-0.5 rounded-md shadow-sm animate-pulse win4-badge-afternoon-hit",
-                  children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
+            isWaiting
+              ? n.jsx("span", {
+                  className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2.5 py-0.5 rounded-md border border-purple-500/40",
+                  children: "⏳ รอผลออกรางวัล"
                 })
-              : n.jsx("span", {
-                  className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-500/40",
-                  children: "⚡ ล่า 3 สเต็ป"
-                })
+              : ((hitCount2D > 0 || hitCount3D > 0)
+                  ? n.jsxs("span", {
+                      style: {
+                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                        color: "#ffffff",
+                        border: "1px solid rgba(245, 208, 254, 0.5)",
+                        boxShadow: "0 0 12px rgba(217, 70, 239, 0.6)"
+                      },
+                      className: "text-[10px] font-black px-2.5 py-0.5 rounded-md shadow-sm animate-pulse win4-badge-afternoon-hit",
+                      children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
+                    })
+                  : n.jsx("span", {
+                      className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-500/40",
+                      children: "⚡ ล่า 3 สเต็ป"
+                    })
+                )
           ]
         }),
         n.jsxs("div", {
@@ -1960,16 +2002,21 @@ Error generating stack: `+r.message+`
                   className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + pairs2D.length + " ชุด):",
-                    hitCount2D > 0 ? n.jsxs("span", {
-                      style: {
-                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
-                        color: "#ffffff",
-                        border: "1px solid rgba(245, 208, 254, 0.5)",
-                        boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
-                      },
-                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
-                      children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"]
-                    }) : null
+                    isWaiting
+                      ? n.jsx("span", {
+                          className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-500/40 ml-1.5",
+                          children: "⏳ รอผลออกรางวัล"
+                        })
+                      : (hitCount2D > 0 ? n.jsxs("span", {
+                          style: {
+                            background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                            color: "#ffffff",
+                            border: "1px solid rgba(245, 208, 254, 0.5)",
+                            boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
+                          },
+                          className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                          children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"]
+                        }) : null)
                   ]
                 }),
                 n.jsx("button", {
@@ -1990,7 +2037,7 @@ Error generating stack: `+r.message+`
             n.jsx("div", {
               className: "flex flex-wrap gap-1.5",
               children: pairs2D.map(p => {
-                const isHit = win2D.has(p);
+                const isHit = !isWaiting && win2D.has(p);
                 return n.jsx("span", {
                   key: p,
                   style: isHit ? {
@@ -2022,16 +2069,21 @@ Error generating stack: `+r.message+`
                   className: "text-xs font-bold text-indigo-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
-                    hitCount3D > 0 ? n.jsxs("span", {
-                      style: {
-                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
-                        color: "#ffffff",
-                        border: "1px solid rgba(245, 208, 254, 0.5)",
-                        boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
-                      },
-                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
-                      children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"]
-                    }) : null
+                    isWaiting
+                      ? n.jsx("span", {
+                          className: "bg-indigo-900/60 text-indigo-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-indigo-500/40 ml-1.5",
+                          children: "⏳ รอผลออกรางวัล"
+                        })
+                      : (hitCount3D > 0 ? n.jsxs("span", {
+                          style: {
+                            background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                            color: "#ffffff",
+                            border: "1px solid rgba(245, 208, 254, 0.5)",
+                            boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
+                          },
+                          className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                          children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"]
+                        }) : null)
                   ]
                 }),
                 n.jsx("button", {
@@ -2052,7 +2104,7 @@ Error generating stack: `+r.message+`
             n.jsx("div", {
               className: "flex flex-wrap gap-1.5",
               children: triples3D.map(t => {
-                const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
+                const isHit = !isWaiting && (win3D.has(t) || win3D.has(t.split("").sort().join("")));
                 return n.jsx("span", {
                   key: t,
                   style: isHit ? {
