@@ -7,9 +7,8 @@ execSync('node scratch/build_enhanced_export_modal.cjs', { stdio: 'inherit' });
 execSync('node scratch/build_chase_table_csv.cjs', { stdio: 'inherit' });
 execSync('node scratch/build_position_chase_csv.cjs', { stdio: 'inherit' });
 
-console.log('2. Building index_patched.js and applying win4 patch...');
+console.log('2. Building index_patched.js...');
 execSync('node scratch/test_bundle_patch.cjs', { stdio: 'inherit' });
-execSync('node scratch/apply_win4_card_patch.cjs', { stdio: 'inherit' });
 
 console.log('3. Updating index-Cip8XUMO.css with vivid LINE Green classes...');
 const cssRule = `
@@ -73,65 +72,6 @@ const cssRule = `
 .win4-chip-hit {
   color: #000000 !important;
 }
-
-/* ==========================================================================
-   WIN4 Afternoon Glass Purple Theme (รอบบ่าย - ธีมม่วงกลาส)
-   ========================================================================== */
-.win4-card-afternoon {
-  background: linear-gradient(180deg, rgba(37, 11, 56, 0.9) 0%, rgba(24, 9, 42, 0.92) 50%, rgba(14, 5, 28, 0.96) 100%) !important;
-  border: 2px solid rgba(168, 85, 247, 0.6) !important;
-  box-shadow: 0 8px 32px rgba(168, 85, 247, 0.3), inset 0 0 16px rgba(168, 85, 247, 0.15) !important;
-  backdrop-filter: blur(12px) !important;
-}
-
-/* 4 Main Digits in Afternoon: Vivid Purple Glass */
-.win4-digit-afternoon {
-  background: linear-gradient(135deg, #a855f7 0%, #d946ef 50%, #818cf8 100%) !important;
-  color: #ffffff !important;
-  border: 2px solid rgba(245, 208, 254, 0.9) !important;
-  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.7), inset 0 1px 2px rgba(255, 255, 255, 0.6) !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Sub-boxes for 2D & 3D in Afternoon */
-.win4-box-afternoon-2d {
-  background: rgba(28, 12, 46, 0.75) !important;
-  border: 1px solid rgba(168, 85, 247, 0.4) !important;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
-}
-.win4-box-afternoon-3d {
-  background: rgba(20, 10, 42, 0.75) !important;
-  border: 1px solid rgba(129, 140, 248, 0.4) !important;
-  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4) !important;
-}
-
-/* Afternoon Non-hit Chips: Clean Glass Purple with White Text */
-.win4-chip-afternoon-default {
-  background: rgba(88, 28, 135, 0.45) !important;
-  border: 1px solid rgba(168, 85, 247, 0.45) !important;
-  color: #ffffff !important;
-}
-.win4-chip-afternoon-default:hover {
-  background: rgba(126, 34, 206, 0.6) !important;
-}
-
-/* Afternoon Hit Chips: Glowing Flashing Purple Glass with White Text */
-.win4-chip-afternoon-hit {
-  background: linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%) !important;
-  color: #ffffff !important;
-  border: 2px solid #ffffff !important;
-  box-shadow: 0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
-}
-
-/* Afternoon Summary Badges */
-.win4-badge-afternoon-hit {
-  background: linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%) !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(245, 208, 254, 0.5) !important;
-  box-shadow: 0 0 14px rgba(217, 70, 239, 0.7) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
-}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');
@@ -156,6 +96,9 @@ fs.copyFileSync(srcExport, path.join(__dirname, '..', 'dist', 'assets', 'export_
 
 fs.copyFileSync(srcIndex, path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-CN-5_2d9.js'));
 fs.copyFileSync(srcIndex, path.join(__dirname, '..', 'dist', 'assets', 'index-CN-5_2d9.js'));
+
+console.log('4.1 Applying win4 card patch to bundle...');
+execSync('node scratch/apply_win4_card_patch.cjs', { stdio: 'inherit' });
 
 console.log('5. Validating syntax with node --check...');
 execSync('node --check dist/assets/export_modal.js');
