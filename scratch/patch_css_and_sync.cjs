@@ -116,6 +116,13 @@ const cssRule = `
   box-shadow: 0 0 16px rgba(16, 185, 129, 0.95), 0 0 6px rgba(52, 211, 153, 0.8) !important;
   text-shadow: none !important;
 }
+
+.win4-main-digit-green {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(16, 185, 129, 0.5) 100%) !important;
+  border: 2px solid #34d399 !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.45) !important;
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');

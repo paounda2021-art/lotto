@@ -163,12 +163,19 @@ const replacement = `// HANOI 100% 3-ROUND CHASE CARD (กล่องการ�
               className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
               children: hanoi100Digits.map(d => n.jsx("div", {
                 key: d,
-                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-400 to-emerald-300 text-black font-black text-2xl flex items-center justify-center shadow-[0_4px_16px_rgba(16,185,129,0.4)] border-2 border-emerald-100 scale-100 hover:scale-105 transition-transform shrink-0",
+                style: {
+                  color: "#ffffff",
+                  background: "linear-gradient(135deg, rgba(6, 78, 59, 0.85) 0%, rgba(16, 185, 129, 0.5) 100%)",
+                  border: "2px solid #34d399",
+                  boxShadow: "0 0 16px rgba(16, 185, 129, 0.45)"
+                },
+                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl text-white font-black text-2xl flex items-center justify-center scale-100 hover:scale-105 transition-transform shrink-0 win4-main-digit-green",
                 children: d
               }))
             }),
             n.jsx("div", {
-              className: "text-xs text-emerald-200/90 font-semibold pl-1",
+              style: { color: "#6ee7b7" },
+              className: "text-xs font-semibold pl-1",
               children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ สูตรไร้พ่าย 100% (สถิติล่า 3 นอย เข้าเป้าทุกวันไม่มีหลุด)"
             })
           ]
