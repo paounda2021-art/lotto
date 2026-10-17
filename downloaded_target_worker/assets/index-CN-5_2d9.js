@@ -1682,22 +1682,17 @@ Error generating stack: `+r.message+`
     const win2D = new Set();
     const win3D = new Set();
 
-    // Determine targetDate:
-    // In VERIFY mode, use N.date
-    // In normal mode, if day has no recorded results for this upcoming draw (NEXT mode or future day), targetDate is null
-    const isGlobalNext = (l === "NEXT") || (typeof g !== "undefined" && g === true);
-
+    // Determine targetDate from O (draws of the selected day from d0(a, r, i)):
     let targetDate = null;
-    if (l === "VERIFY" && N && N.date) {
-      targetDate = N.date;
-    } else if (!isGlobalNext && O && O.length > 0 && O[0]?.date) {
-      const oMatchesDay = O.some(d => d && (d.dayOfWeek === dayCode || (d.date && !d.dayOfWeek)));
+    if (O && O.length > 0 && O[0]?.date) {
+      const oMatchesDay = O.some(d => d && (d.dayOfWeek === dayCode || !d.dayOfWeek));
       if (oMatchesDay) {
         targetDate = O[0].date;
       }
     }
 
-    if (!targetDate) {
+    // If day is in future (g === true) or no draws recorded for this day, wait for results
+    if (!targetDate || (typeof g !== "undefined" && g === true)) {
       return { win2D, win3D, isWaiting: true };
     }
 
