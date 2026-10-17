@@ -58,11 +58,9 @@ var worker_default = {
           "lotto_data_nikkei",
           "lotto_data_stock_vip",
           "lotto_data_laos",
-          "lotto_data_dowjones",
           "lotto_data_hanoi_special",
           "lotto_data_hanoi",
           "lotto_data_hanoi_vip",
-          "lotto_data_malay",
           "lotto_data_gsb",
           "lotto_data_gov"
         ];

@@ -78,5 +78,41 @@ if (code.includes(targetYy)) {
   console.log('Applied Laos Yy next day fallback patch.');
 }
 
+// 4. Remove MALAY and DOWJONES from navigation tabs & database (per user request: "ลบหวยมาเลย์ กับ ดาวน์โจนออกจากหน้าเว็บและฐานข้อมูลสถิติ")
+const malayBtn = 'n.jsx("button",{onClick:()=>t("MALAY"),className:`px-3 py-1 rounded-lg text-xs font-bold transition-all ${e==="MALAY"?"bg-blue-600 text-white shadow-lg shadow-blue-500/30 font-extrabold":"text-gray-400 hover:text-white"}`,children:"🇲🇾 หวยมาเลย์"}),';
+const dowjonesBtn = 'n.jsx("button",{onClick:()=>t("DOWJONES"),className:`px-3 py-1 rounded-lg text-xs font-bold transition-all ${e==="DOWJONES"?"bg-cyan-500 text-black shadow-glow-cyan font-extrabold":"text-gray-400 hover:text-white"}`,children:"🇺🇸 หุ้นดาวโจนส์"}),';
+
+if (code.includes(malayBtn)) {
+  code = code.replace(malayBtn, '');
+  console.log('Removed MALAY button from navigation tabs.');
+}
+if (code.includes(dowjonesBtn)) {
+  code = code.replace(dowjonesBtn, '');
+  console.log('Removed DOWJONES button from navigation tabs.');
+}
+
+const targetActiveType = 'const[e,t]=W.useState(()=>localStorage.getItem("lotto_active_lottery_type")||"NIKKEI")';
+const replActiveType = 'const[e,t]=W.useState(()=>{try{const cur=localStorage.getItem("lotto_active_lottery_type");if(cur==="MALAY"||cur==="DOWJONES"){localStorage.setItem("lotto_active_lottery_type","NIKKEI");return"NIKKEI"}return cur||"NIKKEI"}catch(err){return"NIKKEI"}})';
+
+if (code.includes(targetActiveType)) {
+  code = code.replace(targetActiveType, replActiveType);
+  console.log('Patched lotto_active_lottery_type to fallback to NIKKEI when MALAY or DOWJONES is selected.');
+}
+
+const targetEngineVer = 'const K="11.0.0_add_stock_vip";';
+const replEngineVer = 'const K="12.0.0_remove_malay_dowjones";try{localStorage.removeItem("lotto_data_malay");localStorage.removeItem("lotto_data_dowjones");if(typeof window!=="undefined"&&window.__KV_DRAWS__){delete window.__KV_DRAWS__.lotto_data_malay;delete window.__KV_DRAWS__.lotto_data_dowjones;}}catch(e){}';
+
+if (code.includes(targetEngineVer)) {
+  code = code.replace(targetEngineVer, replEngineVer);
+  console.log('Patched engine version to purge lotto_data_malay and lotto_data_dowjones from localStorage and KV cache.');
+}
+
+const oldFooter = 'children:"© 2026 AI Predictor & Statistical Calculator (นิคเคอิ, หวยลาวพัฒนา, หวยหุ้นดาวโจนส์). อ้างอิงผลจาก exphuay & LottoTH"';
+const newFooter = 'children:"© 2026 AI Predictor & Statistical Calculator (นิคเคอิ, หวยลาวพัฒนา, หวยฮานอย). อ้างอิงผลจาก exphuay & LottoTH"';
+if (code.includes(oldFooter)) {
+  code = code.replace(oldFooter, newFooter);
+  console.log('Updated footer copyright text.');
+}
+
 fs.writeFileSync('scratch/index_patched.js', code, 'utf8');
 console.log('Saved scratch/index_patched.js successfully.');
