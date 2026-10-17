@@ -161,6 +161,45 @@ const cssRule = `
   background: linear-gradient(135deg, rgba(154, 52, 18, 0.95) 0%, rgba(234, 88, 12, 0.85) 100%) !important;
   color: #ffffff !important;
 }
+
+/* ==========================================================================
+   Purple Glass Elements for Hanoi Win 4 Card (ธีมม่วงกลาส - เลข 6 รางวัล 100%)
+   ========================================================================== */
+.win4-chip-purple-default {
+  background: rgba(147, 51, 234, 0.18) !important;
+  border: 1px solid rgba(192, 132, 252, 0.35) !important;
+  color: #ffffff !important;
+}
+.win4-chip-purple-default:hover {
+  background: rgba(147, 51, 234, 0.32) !important;
+}
+
+.win4-chip-purple-hit {
+  background: linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #c084fc 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.95), 0 0 6px rgba(192, 132, 252, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.win4-main-digit-purple {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.45) 0%, rgba(168, 85, 247, 0.25) 100%) !important;
+  border: 2px solid rgba(192, 132, 252, 0.75) !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.35) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.win4-btn-copy-purple {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, rgba(126, 34, 206, 0.9) 0%, rgba(168, 85, 247, 0.7) 100%) !important;
+  border: 1px solid rgba(192, 132, 252, 0.6) !important;
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.3) !important;
+}
+.win4-btn-copy-purple:hover {
+  background: linear-gradient(135deg, rgba(107, 33, 168, 0.95) 0%, rgba(147, 51, 234, 0.85) 100%) !important;
+  color: #ffffff !important;
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');
