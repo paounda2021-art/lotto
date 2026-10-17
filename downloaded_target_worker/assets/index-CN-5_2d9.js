@@ -623,24 +623,24 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "flex items-center gap-2.5 flex-wrap py-1",
+          className: "flex items-center gap-3 flex-wrap py-1",
           children: [
             n.jsx("div", {
-              className: "flex items-center gap-1.5 sm:gap-2",
+              className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
               children: digits.map(d => n.jsx("div", {
                 key: d,
-                className: "w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-lg sm:text-xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform",
+                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform shrink-0",
                 children: d
               }))
             }),
             n.jsx("div", {
-              className: "text-[11px] text-amber-300/90 font-semibold pl-1",
+              className: "text-xs text-amber-300/90 font-semibold pl-1",
               children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ (สูตรไร้พ่าย 100%)"
             })
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-amber-500/30 rounded-xl p-2.5 sm:p-3 space-y-2",
+          className: "bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -676,7 +676,7 @@ Error generating stack: `+r.message+`
                 const isHit = win2D.has(p);
                 return n.jsx("span", {
                   key: p,
-                  className: "px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                  className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
                     (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30"),
                   children: p
                 });
@@ -685,7 +685,7 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-cyan-500/30 rounded-xl p-2.5 sm:p-3 space-y-2",
+          className: "bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
@@ -721,7 +721,7 @@ Error generating stack: `+r.message+`
                 const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                 return n.jsx("span", {
                   key: t,
-                  className: "px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                  className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
                     (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse" : "bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/30"),
                   children: t
                 });
