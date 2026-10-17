@@ -1094,9 +1094,7 @@ Error generating stack: `+r.message+`
                     { code: "Tue", label: "อ." },
                     { code: "Wed", label: "พ." },
                     { code: "Thu", label: "พฤ." },
-                    { code: "Fri", label: "ศ." },
-                    { code: "Sat", label: "ส." },
-                    { code: "Sun", label: "อา." }
+                    { code: "Fri", label: "ศ." }
                   ].map(dItem => {
                     const isSel = (r === dItem.code);
                     return n.jsx("button", {
