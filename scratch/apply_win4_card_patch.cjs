@@ -359,63 +359,213 @@ const newIIFE = `((()=>{
     const hitCount2D = pairs2D.filter(p => win2D.has(p)).length;
     const hitCount3D = triples3D.filter(t => win3D.has(t) || win3D.has(t.split("").sort().join(""))).length;
 
+    if (isM) {
+      // MORNING (GOLDEN SUNSHINE THEME)
+      return n.jsxs("div", {
+        className: "bg-black/55 border border-amber-500/40 rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-md",
+        children: [
+          n.jsxs("div", {
+            className: "flex items-center justify-between border-b border-gray-700/40 pb-2",
+            children: [
+              n.jsxs("div", {
+                className: "flex items-center gap-1.5 flex-wrap",
+                children: [
+                  n.jsx("span", { className: "text-amber-400 text-sm font-black tracking-wide", children: "☀️ รอบเช้า" }),
+                  n.jsx("span", {
+                    className: "text-[10px] text-gray-400 font-bold",
+                    children: cat === "reg" ? "(นิเคอิ 09:30 ➔ จีน 10:30 ➔ ฮั่งเส็ง 11:00)" : "(นิเคอิ VIP 09:30 ➔ จีน VIP 10:30 ➔ ฮั่งเส็ง VIP 11:00)"
+                  })
+                ]
+              }),
+              (hitCount2D > 0 || hitCount3D > 0)
+                ? n.jsxs("span", {
+                    className: "bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-glow-emerald animate-pulse",
+                    children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
+                  })
+                : n.jsx("span", {
+                    className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40",
+                    children: "⚡ ล่า 3 สเต็ป"
+                  })
+            ]
+          }),
+          n.jsxs("div", {
+            className: "flex items-center gap-3 flex-wrap py-1",
+            children: [
+              n.jsx("div", {
+                className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
+                children: digits.map(d => n.jsx("div", {
+                  key: d,
+                  className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform shrink-0",
+                  children: d
+                }))
+              }),
+              n.jsx("div", {
+                className: "text-xs text-amber-300/90 font-semibold pl-1",
+                children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ (สูตรไร้พ่าย 100%)"
+              })
+            ]
+          }),
+          n.jsxs("div", {
+            className: "bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2",
+            children: [
+              n.jsxs("div", {
+                className: "flex items-center justify-between",
+                children: [
+                  n.jsxs("span", {
+                    className: "text-xs font-bold text-amber-300 flex items-center gap-1.5",
+                    children: [
+                      "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + pairs2D.length + " ชุด):",
+                      hitCount2D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"] }) : null
+                    ]
+                  }),
+                  n.jsx("button", {
+                    onClick: (e) => {
+                      const btn = e.currentTarget;
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(pairs2D.join(", "));
+                        const oldText = btn.innerText;
+                        btn.innerText = "✓ คัดลอกแล้ว!";
+                        setTimeout(() => { btn.innerText = oldText; }, 1500);
+                      }
+                    },
+                    className: "text-[10px] bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                    children: "📋 คัดลอก 2 ตัว"
+                  })
+                ]
+              }),
+              n.jsx("div", {
+                className: "flex flex-wrap gap-1.5",
+                children: pairs2D.map(p => {
+                  const isHit = win2D.has(p);
+                  return n.jsx("span", {
+                    key: p,
+                    style: { color: isHit ? "#000000" : "#ffffff" },
+                    className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
+                    children: p
+                  });
+                })
+              })
+            ]
+          }),
+          n.jsxs("div", {
+            className: "bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2",
+            children: [
+              n.jsxs("div", {
+                className: "flex items-center justify-between",
+                children: [
+                  n.jsxs("span", {
+                    className: "text-xs font-bold text-cyan-300 flex items-center gap-1.5",
+                    children: [
+                      "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
+                      hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
+                    ]
+                  }),
+                  n.jsx("button", {
+                    onClick: (e) => {
+                      const btn = e.currentTarget;
+                      if (navigator.clipboard) {
+                        navigator.clipboard.writeText(triples3D.join(", "));
+                        const oldText = btn.innerText;
+                        btn.innerText = "✓ คัดลอกแล้ว!";
+                        setTimeout(() => { btn.innerText = oldText; }, 1500);
+                      }
+                    },
+                    className: "text-[10px] bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                    children: "📋 คัดลอก 3 ตัว"
+                  })
+                ]
+              }),
+              n.jsx("div", {
+                className: "flex flex-wrap gap-1.5",
+                children: triples3D.map(t => {
+                  const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
+                  return n.jsx("span", {
+                    key: t,
+                    style: { color: isHit ? "#000000" : "#ffffff" },
+                    className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
+                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
+                    children: t
+                  });
+                })
+              })
+            ]
+          })
+        ]
+      });
+    }
+
+    // AFTERNOON (ORIGINAL BROWN BACKGROUND + PURPLE GLASS ELEMENTS)
     return n.jsxs("div", {
-      className: "bg-black/55 border " + boxBorder + " rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-md",
+      className: "bg-black/55 border border-purple-500/40 rounded-2xl p-3.5 sm:p-4 space-y-3 flex flex-col justify-between shadow-md relative overflow-hidden",
       children: [
         n.jsxs("div", {
-          className: "flex items-center justify-between border-b border-gray-700/40 pb-2",
+          className: "flex items-center justify-between border-b border-purple-500/30 pb-2 relative z-10",
           children: [
             n.jsxs("div", {
               className: "flex items-center gap-1.5 flex-wrap",
               children: [
-                n.jsx("span", { className: boxTitleColor + " text-sm font-black tracking-wide", children: isM ? "☀️ รอบเช้า" : "🌙 รอบบ่าย" }),
+                n.jsx("span", { className: "text-purple-300 text-sm font-black tracking-wide", children: "🌙 รอบบ่าย" }),
                 n.jsx("span", {
-                  className: "text-[10px] text-gray-400 font-bold",
-                  children: cat === "reg"
-                    ? (isM ? "(นิเคอิ 09:30 ➔ จีน 10:30 ➔ ฮั่งเส็ง 11:00)" : "(นิเคอิ 13:00 ➔ จีน 14:00 ➔ ฮั่งเส็ง 15:30)")
-                    : (isM ? "(นิเคอิ VIP 09:30 ➔ จีน VIP 10:30 ➔ ฮั่งเส็ง VIP 11:00)" : "(นิเคอิ VIP 13:00 ➔ จีน VIP 14:00 ➔ ฮั่งเส็ง VIP 15:30)")
+                  className: "text-[10px] text-purple-200/80 font-bold",
+                  children: cat === "reg" ? "(นิเคอิ 13:00 ➔ จีน 14:00 ➔ ฮั่งเส็ง 15:30)" : "(นิเคอิ VIP 13:00 ➔ จีน VIP 14:00 ➔ ฮั่งเส็ง VIP 15:30)"
                 })
               ]
             }),
             (hitCount2D > 0 || hitCount3D > 0)
               ? n.jsxs("span", {
-                  className: "bg-emerald-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-glow-emerald animate-pulse",
+                  style: {
+                    background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "1px solid rgba(245, 208, 254, 0.5)",
+                    boxShadow: "0 0 12px rgba(217, 70, 239, 0.6)"
+                  },
+                  className: "text-[10px] font-black px-2.5 py-0.5 rounded-md shadow-sm animate-pulse win4-badge-afternoon-hit",
                   children: ["✓ เข้าเป้าแล้ว ", (hitCount2D + hitCount3D), " ชุด"]
                 })
               : n.jsx("span", {
-                  className: "bg-amber-500/20 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-md border border-amber-500/40",
+                  className: "bg-purple-900/60 text-purple-200 text-[10px] font-bold px-2 py-0.5 rounded-md border border-purple-500/40",
                   children: "⚡ ล่า 3 สเต็ป"
                 })
           ]
         }),
         n.jsxs("div", {
-          className: "flex items-center gap-3 flex-wrap py-1",
+          className: "flex items-center gap-3 flex-wrap py-1 relative z-10",
           children: [
             n.jsx("div", {
               className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
               children: digits.map(d => n.jsx("div", {
                 key: d,
-                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black font-black text-2xl flex items-center justify-center shadow-lg border-2 border-amber-100 scale-100 hover:scale-105 transition-transform shrink-0",
+                className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-purple-600 via-fuchsia-500 to-indigo-400 text-white font-black text-2xl flex items-center justify-center shadow-[0_4px_16px_rgba(168,85,247,0.5)] border-2 border-purple-200/90 scale-100 hover:scale-105 transition-transform shrink-0",
                 children: d
               }))
             }),
             n.jsx("div", {
-              className: "text-xs text-amber-300/90 font-semibold pl-1",
+              className: "text-xs text-purple-200/90 font-semibold pl-1",
               children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ (สูตรไร้พ่าย 100%)"
             })
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-amber-500/30 rounded-xl p-3 space-y-2",
+          className: "bg-black/40 border border-purple-500/40 rounded-xl p-3 space-y-2 relative z-10",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
               children: [
                 n.jsxs("span", {
-                  className: "text-xs font-bold text-amber-300 flex items-center gap-1.5",
+                  className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + pairs2D.length + " ชุด):",
-                    hitCount2D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"] }) : null
+                    hitCount2D > 0 ? n.jsxs("span", {
+                      style: {
+                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                        color: "#ffffff",
+                        border: "1px solid rgba(245, 208, 254, 0.5)",
+                        boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
+                      },
+                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                      children: ["✓ เข้าเป้า ", hitCount2D, " ชุด"]
+                    }) : null
                   ]
                 }),
                 n.jsx("button", {
@@ -428,7 +578,7 @@ const newIIFE = `((()=>{
                       setTimeout(() => { btn.innerText = oldText; }, 1500);
                     }
                   },
-                  className: "text-[10px] bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                  className: "text-[10px] bg-gradient-to-r from-purple-600 via-fuchsia-600 to-purple-500 hover:from-purple-500 hover:to-fuchsia-500 text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 border border-purple-400/40",
                   children: "📋 คัดลอก 2 ตัว"
                 })
               ]
@@ -439,9 +589,19 @@ const newIIFE = `((()=>{
                 const isHit = win2D.has(p);
                 return n.jsx("span", {
                   key: p,
-                  style: { color: isHit ? "#000000" : "#ffffff" },
+                  style: isHit ? {
+                    background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "2px solid #ffffff",
+                    boxShadow: "0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)"
+                  } : {
+                    background: "rgba(88, 28, 135, 0.45)",
+                    border: "1px solid rgba(168, 85, 247, 0.45)",
+                    color: "#ffffff"
+                  },
                   className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
+                    (isHit ? "scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "hover:bg-purple-800/70 shadow-sm win4-chip-afternoon-default"),
                   children: p
                 });
               })
@@ -449,16 +609,25 @@ const newIIFE = `((()=>{
           ]
         }),
         n.jsxs("div", {
-          className: "bg-black/40 border border-cyan-500/30 rounded-xl p-3 space-y-2",
+          className: "bg-black/40 border border-indigo-500/40 rounded-xl p-3 space-y-2 relative z-10",
           children: [
             n.jsxs("div", {
               className: "flex items-center justify-between",
               children: [
                 n.jsxs("span", {
-                  className: "text-xs font-bold text-cyan-300 flex items-center gap-1.5",
+                  className: "text-xs font-bold text-indigo-300 flex items-center gap-1.5",
                   children: [
                     "⚡ ชุดเลขวิน 3 ตัวตรง (" + triples3D.length + " ชุด / 24 โต๊ด):",
-                    hitCount3D > 0 ? n.jsxs("span", { className: "bg-amber-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5", children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"] }) : null
+                    hitCount3D > 0 ? n.jsxs("span", {
+                      style: {
+                        background: "linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                        color: "#ffffff",
+                        border: "1px solid rgba(245, 208, 254, 0.5)",
+                        boxShadow: "0 0 10px rgba(217, 70, 239, 0.6)"
+                      },
+                      className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5 win4-badge-afternoon-hit",
+                      children: ["✓ เข้าเป้า ", hitCount3D, " ชุด"]
+                    }) : null
                   ]
                 }),
                 n.jsx("button", {
@@ -471,7 +640,7 @@ const newIIFE = `((()=>{
                       setTimeout(() => { btn.innerText = oldText; }, 1500);
                     }
                   },
-                  className: "text-[10px] bg-gradient-to-r from-cyan-400 to-teal-400 hover:from-cyan-300 hover:to-teal-300 text-black font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95",
+                  className: "text-[10px] bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-500 hover:from-indigo-500 hover:to-purple-500 text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 border border-indigo-400/40",
                   children: "📋 คัดลอก 3 ตัว"
                 })
               ]
@@ -482,9 +651,19 @@ const newIIFE = `((()=>{
                 const isHit = win3D.has(t) || win3D.has(t.split("").sort().join(""));
                 return n.jsx("span", {
                   key: t,
-                  style: { color: isHit ? "#000000" : "#ffffff" },
+                  style: isHit ? {
+                    background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
+                    color: "#ffffff",
+                    border: "2px solid #ffffff",
+                    boxShadow: "0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8)",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.5)"
+                  } : {
+                    background: "rgba(67, 24, 120, 0.45)",
+                    border: "1px solid rgba(129, 140, 248, 0.45)",
+                    color: "#ffffff"
+                  },
                   className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
+                    (isHit ? "scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "hover:bg-indigo-800/70 shadow-sm win4-chip-afternoon-default"),
                   children: t
                 });
               })

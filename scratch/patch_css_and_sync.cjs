@@ -72,6 +72,32 @@ const cssRule = `
 .win4-chip-hit {
   color: #000000 !important;
 }
+
+/* Afternoon Purple Glass Elements */
+.win4-chip-afternoon-default {
+  background: rgba(88, 28, 135, 0.45) !important;
+  border: 1px solid rgba(168, 85, 247, 0.45) !important;
+  color: #ffffff !important;
+}
+.win4-chip-afternoon-default:hover {
+  background: rgba(126, 34, 206, 0.6) !important;
+}
+
+.win4-chip-afternoon-hit {
+  background: linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%) !important;
+  color: #ffffff !important;
+  border: 2px solid #ffffff !important;
+  box-shadow: 0 0 18px rgba(217, 70, 239, 0.95), 0 0 8px rgba(168, 85, 247, 0.8) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+.win4-badge-afternoon-hit {
+  background: linear-gradient(90deg, #d946ef 0%, #a855f7 50%, #6366f1 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(245, 208, 254, 0.5) !important;
+  box-shadow: 0 0 14px rgba(217, 70, 239, 0.7) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) !important;
+}
 `;
 
 const workerCssPath = path.join(__dirname, '..', 'downloaded_target_worker', 'assets', 'index-Cip8XUMO.css');
