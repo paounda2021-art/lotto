@@ -1,0 +1,1547 @@
+[
+  {
+    "group": "หุ้นปกติ",
+    "name": "นิเคอิ (เช้า)",
+    "time": "09:30",
+    "totalDraws": 90,
+    "topRank1": {
+      "digit": 8,
+      "count": 14,
+      "pct": "15.6"
+    },
+    "topRank2": {
+      "digit": 1,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank3": {
+      "digit": 3,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank4": {
+      "digit": 6,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank5": {
+      "digit": 2,
+      "count": 10,
+      "pct": "11.1"
+    },
+    "allSorted": [
+      {
+        "digit": 8,
+        "count": 14,
+        "pct": "15.6"
+      },
+      {
+        "digit": 1,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 3,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 6,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 2,
+        "count": 10,
+        "pct": "11.1"
+      },
+      {
+        "digit": 4,
+        "count": 9,
+        "pct": "10.0"
+      },
+      {
+        "digit": 9,
+        "count": 9,
+        "pct": "10.0"
+      },
+      {
+        "digit": 0,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 5,
+        "count": 5,
+        "pct": "5.6"
+      },
+      {
+        "digit": 7,
+        "count": 4,
+        "pct": "4.4"
+      }
+    ],
+    "evenPct": "55.6",
+    "oddPct": "44.4",
+    "highPct": "47.8",
+    "lowPct": "52.2",
+    "tueTop1": {
+      "digit": 8,
+      "count": 4,
+      "pct": "23.5"
+    },
+    "tueTop2": {
+      "digit": 1,
+      "count": 2,
+      "pct": "11.8"
+    },
+    "tueTop3": {
+      "digit": 3,
+      "count": 2,
+      "pct": "11.8"
+    },
+    "tueTotal": 17
+  },
+  {
+    "group": "หุ้นปกติ",
+    "name": "จีน (เช้า)",
+    "time": "10:30",
+    "totalDraws": 89,
+    "topRank1": {
+      "digit": 1,
+      "count": 14,
+      "pct": "15.7"
+    },
+    "topRank2": {
+      "digit": 2,
+      "count": 11,
+      "pct": "12.4"
+    },
+    "topRank3": {
+      "digit": 4,
+      "count": 11,
+      "pct": "12.4"
+    },
+    "topRank4": {
+      "digit": 7,
+      "count": 11,
+      "pct": "12.4"
+    },
+    "topRank5": {
+      "digit": 3,
+      "count": 10,
+      "pct": "11.2"
+    },
+    "allSorted": [
+      {
+        "digit": 1,
+        "count": 14,
+        "pct": "15.7"
+      },
+      {
+        "digit": 2,
+        "count": 11,
+        "pct": "12.4"
+      },
+      {
+        "digit": 4,
+        "count": 11,
+        "pct": "12.4"
+      },
+      {
+        "digit": 7,
+        "count": 11,
+        "pct": "12.4"
+      },
+      {
+        "digit": 3,
+        "count": 10,
+        "pct": "11.2"
+      },
+      {
+        "digit": 5,
+        "count": 9,
+        "pct": "10.1"
+      },
+      {
+        "digit": 6,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 8,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 9,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 0,
+        "count": 5,
+        "pct": "5.6"
+      }
+    ],
+    "evenPct": "43.8",
+    "oddPct": "56.2",
+    "highPct": "42.7",
+    "lowPct": "57.3",
+    "tueTop1": {
+      "digit": 2,
+      "count": 4,
+      "pct": "22.2"
+    },
+    "tueTop2": {
+      "digit": 7,
+      "count": 4,
+      "pct": "22.2"
+    },
+    "tueTop3": {
+      "digit": 4,
+      "count": 3,
+      "pct": "16.7"
+    },
+    "tueTotal": 18
+  },
+  {
+    "group": "หุ้นปกติ",
+    "name": "ฮั่งเส็ง (เช้า)",
+    "time": "11:00",
+    "totalDraws": 93,
+    "topRank1": {
+      "digit": 3,
+      "count": 16,
+      "pct": "17.2"
+    },
+    "topRank2": {
+      "digit": 7,
+      "count": 13,
+      "pct": "14.0"
+    },
+    "topRank3": {
+      "digit": 2,
+      "count": 11,
+      "pct": "11.8"
+    },
+    "topRank4": {
+      "digit": 6,
+      "count": 10,
+      "pct": "10.8"
+    },
+    "topRank5": {
+      "digit": 0,
+      "count": 9,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 3,
+        "count": 16,
+        "pct": "17.2"
+      },
+      {
+        "digit": 7,
+        "count": 13,
+        "pct": "14.0"
+      },
+      {
+        "digit": 2,
+        "count": 11,
+        "pct": "11.8"
+      },
+      {
+        "digit": 6,
+        "count": 10,
+        "pct": "10.8"
+      },
+      {
+        "digit": 0,
+        "count": 9,
+        "pct": "9.7"
+      },
+      {
+        "digit": 4,
+        "count": 8,
+        "pct": "8.6"
+      },
+      {
+        "digit": 1,
+        "count": 7,
+        "pct": "7.5"
+      },
+      {
+        "digit": 8,
+        "count": 7,
+        "pct": "7.5"
+      },
+      {
+        "digit": 5,
+        "count": 6,
+        "pct": "6.5"
+      },
+      {
+        "digit": 9,
+        "count": 6,
+        "pct": "6.5"
+      }
+    ],
+    "evenPct": "48.4",
+    "oddPct": "51.6",
+    "highPct": "45.2",
+    "lowPct": "54.8",
+    "tueTop1": {
+      "digit": 0,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop2": {
+      "digit": 3,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop3": {
+      "digit": 8,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้นปกติ",
+    "name": "นิเคอิ (บ่าย)",
+    "time": "13:00",
+    "totalDraws": 90,
+    "topRank1": {
+      "digit": 4,
+      "count": 14,
+      "pct": "15.6"
+    },
+    "topRank2": {
+      "digit": 0,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank3": {
+      "digit": 2,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank4": {
+      "digit": 3,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "topRank5": {
+      "digit": 6,
+      "count": 11,
+      "pct": "12.2"
+    },
+    "allSorted": [
+      {
+        "digit": 4,
+        "count": 14,
+        "pct": "15.6"
+      },
+      {
+        "digit": 0,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 2,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 3,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 6,
+        "count": 11,
+        "pct": "12.2"
+      },
+      {
+        "digit": 1,
+        "count": 8,
+        "pct": "8.9"
+      },
+      {
+        "digit": 7,
+        "count": 7,
+        "pct": "7.8"
+      },
+      {
+        "digit": 5,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 8,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 9,
+        "count": 5,
+        "pct": "5.6"
+      }
+    ],
+    "evenPct": "58.9",
+    "oddPct": "41.1",
+    "highPct": "38.9",
+    "lowPct": "61.1",
+    "tueTop1": {
+      "digit": 4,
+      "count": 4,
+      "pct": "23.5"
+    },
+    "tueTop2": {
+      "digit": 6,
+      "count": 3,
+      "pct": "17.6"
+    },
+    "tueTop3": {
+      "digit": 2,
+      "count": 2,
+      "pct": "11.8"
+    },
+    "tueTotal": 17
+  },
+  {
+    "group": "หุ้นปกติ",
+    "name": "จีน (บ่าย)",
+    "time": "14:00",
+    "totalDraws": 89,
+    "topRank1": {
+      "digit": 4,
+      "count": 18,
+      "pct": "20.2"
+    },
+    "topRank2": {
+      "digit": 1,
+      "count": 13,
+      "pct": "14.6"
+    },
+    "topRank3": {
+      "digit": 8,
+      "count": 10,
+      "pct": "11.2"
+    },
+    "topRank4": {
+      "digit": 0,
+      "count": 9,
+      "pct": "10.1"
+    },
+    "topRank5": {
+      "digit": 5,
+      "count": 8,
+      "pct": "9.0"
+    },
+    "allSorted": [
+      {
+        "digit": 4,
+        "count": 18,
+        "pct": "20.2"
+      },
+      {
+        "digit": 1,
+        "count": 13,
+        "pct": "14.6"
+      },
+      {
+        "digit": 8,
+        "count": 10,
+        "pct": "11.2"
+      },
+      {
+        "digit": 0,
+        "count": 9,
+        "pct": "10.1"
+      },
+      {
+        "digit": 5,
+        "count": 8,
+        "pct": "9.0"
+      },
+      {
+        "digit": 2,
+        "count": 7,
+        "pct": "7.9"
+      },
+      {
+        "digit": 6,
+        "count": 7,
+        "pct": "7.9"
+      },
+      {
+        "digit": 9,
+        "count": 7,
+        "pct": "7.9"
+      },
+      {
+        "digit": 3,
+        "count": 6,
+        "pct": "6.7"
+      },
+      {
+        "digit": 7,
+        "count": 4,
+        "pct": "4.5"
+      }
+    ],
+    "evenPct": "57.3",
+    "oddPct": "42.7",
+    "highPct": "40.4",
+    "lowPct": "59.6",
+    "tueTop1": {
+      "digit": 5,
+      "count": 5,
+      "pct": "27.8"
+    },
+    "tueTop2": {
+      "digit": 4,
+      "count": 3,
+      "pct": "16.7"
+    },
+    "tueTop3": {
+      "digit": 1,
+      "count": 2,
+      "pct": "11.1"
+    },
+    "tueTotal": 18
+  },
+  {
+    "group": "หุ้นปกติ",
+    "name": "ฮั่งเส็ง (บ่าย)",
+    "time": "15:30",
+    "totalDraws": 93,
+    "topRank1": {
+      "digit": 0,
+      "count": 13,
+      "pct": "14.0"
+    },
+    "topRank2": {
+      "digit": 2,
+      "count": 12,
+      "pct": "12.9"
+    },
+    "topRank3": {
+      "digit": 3,
+      "count": 12,
+      "pct": "12.9"
+    },
+    "topRank4": {
+      "digit": 1,
+      "count": 10,
+      "pct": "10.8"
+    },
+    "topRank5": {
+      "digit": 7,
+      "count": 10,
+      "pct": "10.8"
+    },
+    "allSorted": [
+      {
+        "digit": 0,
+        "count": 13,
+        "pct": "14.0"
+      },
+      {
+        "digit": 2,
+        "count": 12,
+        "pct": "12.9"
+      },
+      {
+        "digit": 3,
+        "count": 12,
+        "pct": "12.9"
+      },
+      {
+        "digit": 1,
+        "count": 10,
+        "pct": "10.8"
+      },
+      {
+        "digit": 7,
+        "count": 10,
+        "pct": "10.8"
+      },
+      {
+        "digit": 5,
+        "count": 8,
+        "pct": "8.6"
+      },
+      {
+        "digit": 6,
+        "count": 8,
+        "pct": "8.6"
+      },
+      {
+        "digit": 8,
+        "count": 8,
+        "pct": "8.6"
+      },
+      {
+        "digit": 4,
+        "count": 7,
+        "pct": "7.5"
+      },
+      {
+        "digit": 9,
+        "count": 5,
+        "pct": "5.4"
+      }
+    ],
+    "evenPct": "51.6",
+    "oddPct": "48.4",
+    "highPct": "41.9",
+    "lowPct": "58.1",
+    "tueTop1": {
+      "digit": 0,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop2": {
+      "digit": 1,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop3": {
+      "digit": 2,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "นิเคอิ VIP (เช้า)",
+    "time": "09:30",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 2,
+      "count": 19,
+      "pct": "14.2"
+    },
+    "topRank2": {
+      "digit": 0,
+      "count": 16,
+      "pct": "11.9"
+    },
+    "topRank3": {
+      "digit": 9,
+      "count": 15,
+      "pct": "11.2"
+    },
+    "topRank4": {
+      "digit": 4,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank5": {
+      "digit": 6,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "allSorted": [
+      {
+        "digit": 2,
+        "count": 19,
+        "pct": "14.2"
+      },
+      {
+        "digit": 0,
+        "count": 16,
+        "pct": "11.9"
+      },
+      {
+        "digit": 9,
+        "count": 15,
+        "pct": "11.2"
+      },
+      {
+        "digit": 4,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 6,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 5,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 7,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 1,
+        "count": 11,
+        "pct": "8.2"
+      },
+      {
+        "digit": 8,
+        "count": 11,
+        "pct": "8.2"
+      },
+      {
+        "digit": 3,
+        "count": 10,
+        "pct": "7.5"
+      }
+    ],
+    "evenPct": "55.2",
+    "oddPct": "44.8",
+    "highPct": "47.8",
+    "lowPct": "52.2",
+    "tueTop1": {
+      "digit": 2,
+      "count": 4,
+      "pct": "21.1"
+    },
+    "tueTop2": {
+      "digit": 5,
+      "count": 4,
+      "pct": "21.1"
+    },
+    "tueTop3": {
+      "digit": 3,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "จีน VIP (เช้า)",
+    "time": "10:30",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 5,
+      "count": 19,
+      "pct": "14.2"
+    },
+    "topRank2": {
+      "digit": 4,
+      "count": 18,
+      "pct": "13.4"
+    },
+    "topRank3": {
+      "digit": 1,
+      "count": 16,
+      "pct": "11.9"
+    },
+    "topRank4": {
+      "digit": 3,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank5": {
+      "digit": 2,
+      "count": 13,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 5,
+        "count": 19,
+        "pct": "14.2"
+      },
+      {
+        "digit": 4,
+        "count": 18,
+        "pct": "13.4"
+      },
+      {
+        "digit": 1,
+        "count": 16,
+        "pct": "11.9"
+      },
+      {
+        "digit": 3,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 2,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 0,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 7,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 8,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 6,
+        "count": 10,
+        "pct": "7.5"
+      },
+      {
+        "digit": 9,
+        "count": 8,
+        "pct": "6.0"
+      }
+    ],
+    "evenPct": "48.5",
+    "oddPct": "51.5",
+    "highPct": "45.5",
+    "lowPct": "54.5",
+    "tueTop1": {
+      "digit": 4,
+      "count": 5,
+      "pct": "26.3"
+    },
+    "tueTop2": {
+      "digit": 1,
+      "count": 4,
+      "pct": "21.1"
+    },
+    "tueTop3": {
+      "digit": 3,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "ฮั่งเส็ง VIP (เช้า)",
+    "time": "11:00",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 4,
+      "count": 20,
+      "pct": "14.9"
+    },
+    "topRank2": {
+      "digit": 3,
+      "count": 17,
+      "pct": "12.7"
+    },
+    "topRank3": {
+      "digit": 7,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank4": {
+      "digit": 0,
+      "count": 13,
+      "pct": "9.7"
+    },
+    "topRank5": {
+      "digit": 2,
+      "count": 13,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 4,
+        "count": 20,
+        "pct": "14.9"
+      },
+      {
+        "digit": 3,
+        "count": 17,
+        "pct": "12.7"
+      },
+      {
+        "digit": 7,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 0,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 2,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 5,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 6,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 8,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 9,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 1,
+        "count": 7,
+        "pct": "5.2"
+      }
+    ],
+    "evenPct": "53.0",
+    "oddPct": "47.0",
+    "highPct": "47.8",
+    "lowPct": "52.2",
+    "tueTop1": {
+      "digit": 8,
+      "count": 4,
+      "pct": "21.1"
+    },
+    "tueTop2": {
+      "digit": 4,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop3": {
+      "digit": 6,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "นิเคอิ VIP (บ่าย)",
+    "time": "13:00",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 0,
+      "count": 21,
+      "pct": "15.7"
+    },
+    "topRank2": {
+      "digit": 3,
+      "count": 17,
+      "pct": "12.7"
+    },
+    "topRank3": {
+      "digit": 1,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank4": {
+      "digit": 7,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank5": {
+      "digit": 9,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "allSorted": [
+      {
+        "digit": 0,
+        "count": 21,
+        "pct": "15.7"
+      },
+      {
+        "digit": 3,
+        "count": 17,
+        "pct": "12.7"
+      },
+      {
+        "digit": 1,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 7,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 9,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 2,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 6,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 8,
+        "count": 11,
+        "pct": "8.2"
+      },
+      {
+        "digit": 5,
+        "count": 10,
+        "pct": "7.5"
+      },
+      {
+        "digit": 4,
+        "count": 9,
+        "pct": "6.7"
+      }
+    ],
+    "evenPct": "48.5",
+    "oddPct": "51.5",
+    "highPct": "45.5",
+    "lowPct": "54.5",
+    "tueTop1": {
+      "digit": 0,
+      "count": 5,
+      "pct": "26.3"
+    },
+    "tueTop2": {
+      "digit": 2,
+      "count": 4,
+      "pct": "21.1"
+    },
+    "tueTop3": {
+      "digit": 6,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "จีน VIP (บ่าย)",
+    "time": "14:00",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 3,
+      "count": 17,
+      "pct": "12.7"
+    },
+    "topRank2": {
+      "digit": 8,
+      "count": 17,
+      "pct": "12.7"
+    },
+    "topRank3": {
+      "digit": 2,
+      "count": 15,
+      "pct": "11.2"
+    },
+    "topRank4": {
+      "digit": 4,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "topRank5": {
+      "digit": 9,
+      "count": 14,
+      "pct": "10.4"
+    },
+    "allSorted": [
+      {
+        "digit": 3,
+        "count": 17,
+        "pct": "12.7"
+      },
+      {
+        "digit": 8,
+        "count": 17,
+        "pct": "12.7"
+      },
+      {
+        "digit": 2,
+        "count": 15,
+        "pct": "11.2"
+      },
+      {
+        "digit": 4,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 9,
+        "count": 14,
+        "pct": "10.4"
+      },
+      {
+        "digit": 0,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 5,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 1,
+        "count": 11,
+        "pct": "8.2"
+      },
+      {
+        "digit": 7,
+        "count": 11,
+        "pct": "8.2"
+      },
+      {
+        "digit": 6,
+        "count": 10,
+        "pct": "7.5"
+      }
+    ],
+    "evenPct": "51.5",
+    "oddPct": "48.5",
+    "highPct": "47.8",
+    "lowPct": "52.2",
+    "tueTop1": {
+      "digit": 0,
+      "count": 5,
+      "pct": "26.3"
+    },
+    "tueTop2": {
+      "digit": 3,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop3": {
+      "digit": 5,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "หุ้น VIP",
+    "name": "ฮั่งเส็ง VIP (บ่าย)",
+    "time": "15:30",
+    "totalDraws": 134,
+    "topRank1": {
+      "digit": 4,
+      "count": 20,
+      "pct": "14.9"
+    },
+    "topRank2": {
+      "digit": 6,
+      "count": 19,
+      "pct": "14.2"
+    },
+    "topRank3": {
+      "digit": 5,
+      "count": 16,
+      "pct": "11.9"
+    },
+    "topRank4": {
+      "digit": 3,
+      "count": 15,
+      "pct": "11.2"
+    },
+    "topRank5": {
+      "digit": 7,
+      "count": 13,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 4,
+        "count": 20,
+        "pct": "14.9"
+      },
+      {
+        "digit": 6,
+        "count": 19,
+        "pct": "14.2"
+      },
+      {
+        "digit": 5,
+        "count": 16,
+        "pct": "11.9"
+      },
+      {
+        "digit": 3,
+        "count": 15,
+        "pct": "11.2"
+      },
+      {
+        "digit": 7,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 8,
+        "count": 13,
+        "pct": "9.7"
+      },
+      {
+        "digit": 1,
+        "count": 12,
+        "pct": "9.0"
+      },
+      {
+        "digit": 0,
+        "count": 9,
+        "pct": "6.7"
+      },
+      {
+        "digit": 2,
+        "count": 9,
+        "pct": "6.7"
+      },
+      {
+        "digit": 9,
+        "count": 8,
+        "pct": "6.0"
+      }
+    ],
+    "evenPct": "52.2",
+    "oddPct": "47.8",
+    "highPct": "51.5",
+    "lowPct": "48.5",
+    "tueTop1": {
+      "digit": 5,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop2": {
+      "digit": 9,
+      "count": 3,
+      "pct": "15.8"
+    },
+    "tueTop3": {
+      "digit": 1,
+      "count": 2,
+      "pct": "10.5"
+    },
+    "tueTotal": 19
+  },
+  {
+    "group": "ฮานอย",
+    "name": "ฮานอยพิเศษ",
+    "time": "17:30",
+    "totalDraws": 103,
+    "topRank1": {
+      "digit": 0,
+      "count": 15,
+      "pct": "14.6"
+    },
+    "topRank2": {
+      "digit": 3,
+      "count": 14,
+      "pct": "13.6"
+    },
+    "topRank3": {
+      "digit": 5,
+      "count": 14,
+      "pct": "13.6"
+    },
+    "topRank4": {
+      "digit": 7,
+      "count": 12,
+      "pct": "11.7"
+    },
+    "topRank5": {
+      "digit": 4,
+      "count": 10,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 0,
+        "count": 15,
+        "pct": "14.6"
+      },
+      {
+        "digit": 3,
+        "count": 14,
+        "pct": "13.6"
+      },
+      {
+        "digit": 5,
+        "count": 14,
+        "pct": "13.6"
+      },
+      {
+        "digit": 7,
+        "count": 12,
+        "pct": "11.7"
+      },
+      {
+        "digit": 4,
+        "count": 10,
+        "pct": "9.7"
+      },
+      {
+        "digit": 1,
+        "count": 9,
+        "pct": "8.7"
+      },
+      {
+        "digit": 9,
+        "count": 9,
+        "pct": "8.7"
+      },
+      {
+        "digit": 8,
+        "count": 8,
+        "pct": "7.8"
+      },
+      {
+        "digit": 2,
+        "count": 6,
+        "pct": "5.8"
+      },
+      {
+        "digit": 6,
+        "count": 6,
+        "pct": "5.8"
+      }
+    ],
+    "evenPct": "43.7",
+    "oddPct": "56.3",
+    "highPct": "47.6",
+    "lowPct": "52.4",
+    "tueTop1": {
+      "digit": 1,
+      "count": 5,
+      "pct": "35.7"
+    },
+    "tueTop2": {
+      "digit": 9,
+      "count": 4,
+      "pct": "28.6"
+    },
+    "tueTop3": {
+      "digit": 3,
+      "count": 2,
+      "pct": "14.3"
+    },
+    "tueTotal": 14
+  },
+  {
+    "group": "ฮานอย",
+    "name": "ฮานอยปกติ",
+    "time": "18:30",
+    "totalDraws": 103,
+    "topRank1": {
+      "digit": 1,
+      "count": 16,
+      "pct": "15.5"
+    },
+    "topRank2": {
+      "digit": 4,
+      "count": 14,
+      "pct": "13.6"
+    },
+    "topRank3": {
+      "digit": 9,
+      "count": 14,
+      "pct": "13.6"
+    },
+    "topRank4": {
+      "digit": 7,
+      "count": 12,
+      "pct": "11.7"
+    },
+    "topRank5": {
+      "digit": 5,
+      "count": 10,
+      "pct": "9.7"
+    },
+    "allSorted": [
+      {
+        "digit": 1,
+        "count": 16,
+        "pct": "15.5"
+      },
+      {
+        "digit": 4,
+        "count": 14,
+        "pct": "13.6"
+      },
+      {
+        "digit": 9,
+        "count": 14,
+        "pct": "13.6"
+      },
+      {
+        "digit": 7,
+        "count": 12,
+        "pct": "11.7"
+      },
+      {
+        "digit": 5,
+        "count": 10,
+        "pct": "9.7"
+      },
+      {
+        "digit": 2,
+        "count": 9,
+        "pct": "8.7"
+      },
+      {
+        "digit": 6,
+        "count": 8,
+        "pct": "7.8"
+      },
+      {
+        "digit": 0,
+        "count": 7,
+        "pct": "6.8"
+      },
+      {
+        "digit": 3,
+        "count": 7,
+        "pct": "6.8"
+      },
+      {
+        "digit": 8,
+        "count": 6,
+        "pct": "5.8"
+      }
+    ],
+    "evenPct": "42.7",
+    "oddPct": "57.3",
+    "highPct": "48.5",
+    "lowPct": "51.5",
+    "tueTop1": {
+      "digit": 1,
+      "count": 4,
+      "pct": "28.6"
+    },
+    "tueTop2": {
+      "digit": 0,
+      "count": 3,
+      "pct": "21.4"
+    },
+    "tueTop3": {
+      "digit": 5,
+      "count": 3,
+      "pct": "21.4"
+    },
+    "tueTotal": 14
+  },
+  {
+    "group": "ฮานอย",
+    "name": "ฮานอย VIP",
+    "time": "19:30",
+    "totalDraws": 103,
+    "topRank1": {
+      "digit": 0,
+      "count": 13,
+      "pct": "12.6"
+    },
+    "topRank2": {
+      "digit": 1,
+      "count": 13,
+      "pct": "12.6"
+    },
+    "topRank3": {
+      "digit": 8,
+      "count": 12,
+      "pct": "11.7"
+    },
+    "topRank4": {
+      "digit": 9,
+      "count": 12,
+      "pct": "11.7"
+    },
+    "topRank5": {
+      "digit": 6,
+      "count": 11,
+      "pct": "10.7"
+    },
+    "allSorted": [
+      {
+        "digit": 0,
+        "count": 13,
+        "pct": "12.6"
+      },
+      {
+        "digit": 1,
+        "count": 13,
+        "pct": "12.6"
+      },
+      {
+        "digit": 8,
+        "count": 12,
+        "pct": "11.7"
+      },
+      {
+        "digit": 9,
+        "count": 12,
+        "pct": "11.7"
+      },
+      {
+        "digit": 6,
+        "count": 11,
+        "pct": "10.7"
+      },
+      {
+        "digit": 7,
+        "count": 11,
+        "pct": "10.7"
+      },
+      {
+        "digit": 4,
+        "count": 10,
+        "pct": "9.7"
+      },
+      {
+        "digit": 3,
+        "count": 8,
+        "pct": "7.8"
+      },
+      {
+        "digit": 5,
+        "count": 7,
+        "pct": "6.8"
+      },
+      {
+        "digit": 2,
+        "count": 6,
+        "pct": "5.8"
+      }
+    ],
+    "evenPct": "50.5",
+    "oddPct": "49.5",
+    "highPct": "51.5",
+    "lowPct": "48.5",
+    "tueTop1": {
+      "digit": 0,
+      "count": 3,
+      "pct": "21.4"
+    },
+    "tueTop2": {
+      "digit": 5,
+      "count": 2,
+      "pct": "14.3"
+    },
+    "tueTop3": {
+      "digit": 8,
+      "count": 2,
+      "pct": "14.3"
+    },
+    "tueTotal": 14
+  }
+]

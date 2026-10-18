@@ -1,0 +1,93 @@
+const React = {
+  createElement: (type, props, ...children) => ({ type, props: { ...props, children } })
+};
+
+// In index bundle:
+// n.jsx = (type, props) => ...
+// n.jsxs = (type, props) => ...
+const n = {
+  jsx: (type, props) => ({ type, props }),
+  jsxs: (type, props) => ({ type, props })
+};
+
+const sessionHits = [
+  { key: 'HANOI_SPECIAL', label: '🟠 ฮานอยพิเศษ (17:30)', top3: '463', top2: '63', bottom2: '33', hasResult: true, isHit: true, hits: [{ type: 'ROOD', text: '✓ รูดเข้า [บน 6]', badgeClass: 'bg-amber-500/20 text-yellow-300 border border-amber-500/40' }] },
+  { key: 'HANOI_EVENING', label: '🔴 ฮานอยปกติ (18:30)', top3: '153', top2: '53', bottom2: '34', hasResult: true, isHit: true, hits: [{ type: 'ROOD', text: '✓ รูดเข้า [บน 1]', badgeClass: 'bg-amber-500/20 text-yellow-300 border border-amber-500/40' }] },
+  { key: 'HANOI_VIP', label: '🟣 ฮานอย VIP (19:30)', top3: '-', top2: '-', bottom2: '-', hasResult: false, isHit: false, hits: [] }
+];
+
+const finished = sessionHits.filter(s => s.hasResult);
+const hitCount = finished.filter(s => s.isHit).length;
+
+const element = n.jsxs("div", {
+  className: "bg-black/50 border border-amber-500/30 rounded-xl p-3.5 space-y-3 mt-3",
+  children: [
+    n.jsxs("div", {
+      className: "flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-gray-800 pb-2",
+      children: [
+        n.jsxs("div", {
+          className: "flex items-center gap-2 flex-wrap",
+          children: [
+            n.jsx("span", {
+              className: "text-xs font-black text-amber-300 flex items-center gap-1.5",
+              children: "🎯 ตรวจสอบผลการเข้าเป้า (เช็คผล 3 นอย):"
+            }),
+            finished.length === 0
+              ? n.jsx("span", { className: "text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded-md border border-gray-700", children: "⏳ รอประกาศผลรางวัล" })
+              : hitCount > 0
+                ? n.jsxs("span", { className: "text-[10px] bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-md border border-emerald-500/40 font-bold animate-pulse", children: ["🔥 เข้าเป้า ", hitCount, "/", finished.length, " รอบ"] })
+                : n.jsxs("span", { className: "text-[10px] bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-md border border-rose-500/40 font-bold", children: ["❌ ยังไม่เข้าเป้า (", finished.length, " รอบ)"] })
+          ]
+        }),
+        n.jsx("span", { className: "text-[10px] text-gray-400 font-medium", children: "เทียบผลรางวัลจริง กับชุดวิน 4 ตัว" })
+      ]
+    }),
+    n.jsx("div", {
+      className: "grid grid-cols-1 md:grid-cols-3 gap-2.5",
+      children: sessionHits.map(s => n.jsxs("div", {
+        className: "rounded-xl p-3 border transition-all " + (s.hasResult ? (s.isHit ? "bg-gradient-to-b from-emerald-950/40 to-black/60 border-emerald-500/50 shadow-sm shadow-emerald-500/10" : "bg-gradient-to-b from-rose-950/20 to-black/60 border-rose-500/30") : "bg-black/30 border-gray-800"),
+        children: [
+          n.jsxs("div", {
+            className: "flex items-center justify-between gap-1 mb-2",
+            children: [
+              n.jsx("span", { className: "font-extrabold text-xs text-white", children: s.label }),
+              s.hasResult
+                ? (s.isHit
+                    ? n.jsx("span", { className: "text-[10px] bg-emerald-500 text-black font-black px-2 py-0.5 rounded-md", children: "✓ เข้าเป้า" })
+                    : n.jsx("span", { className: "text-[10px] bg-rose-500/20 text-rose-300 border border-rose-500/40 font-bold px-1.5 py-0.5 rounded-md", children: "❌ หลุด" }))
+                : n.jsx("span", { className: "text-[10px] bg-gray-800 text-gray-400 border border-gray-700 px-1.5 py-0.5 rounded-md", children: "⏳ รอผล" })
+            ]
+          }),
+          n.jsx("div", {
+            className: "bg-black/60 rounded-lg p-2 border border-white/5 mb-2 text-center",
+            children: s.hasResult
+              ? n.jsxs("div", {
+                  className: "flex items-center justify-around text-xs",
+                  children: [
+                    n.jsxs("div", { children: [n.jsx("span", { className: "text-[10px] text-gray-400 block", children: "3 ตัวบน" }), n.jsx("span", { className: "font-mono font-black text-amber-300 text-sm", children: s.top3 })] }),
+                    n.jsx("div", { className: "w-[1px] h-6 bg-gray-700" }),
+                    n.jsxs("div", { children: [n.jsx("span", { className: "text-[10px] text-gray-400 block", children: "2 ตัวบน" }), n.jsx("span", { className: "font-mono font-bold text-gray-200 text-sm", children: s.top2 })] }),
+                    n.jsx("div", { className: "w-[1px] h-6 bg-gray-700" }),
+                    n.jsxs("div", { children: [n.jsx("span", { className: "text-[10px] text-gray-400 block", children: "2 ตัวล่าง" }), n.jsx("span", { className: "font-mono font-black text-cyan-300 text-sm", children: s.bottom2 })] })
+                  ]
+                })
+              : n.jsx("div", { className: "text-[11px] text-gray-400 py-1", children: "⏳ ยังไม่ออกรางวัล" })
+          }),
+          s.hasResult
+            ? n.jsx("div", {
+                className: "space-y-1",
+                children: s.hits.length > 0
+                  ? n.jsx("div", {
+                      className: "flex flex-wrap gap-1",
+                      children: s.hits.map((h, idx) => n.jsx("span", { key: idx, className: "text-[10px] px-2 py-0.5 rounded-md tracking-tight " + h.badgeClass, children: h.text }))
+                    })
+                  : n.jsx("div", { className: "text-[11px] text-rose-400/80 font-medium text-center py-0.5", children: "❌ ไม่เข้าเป้าในรอบนี้" })
+              })
+            : n.jsx("div", { className: "text-[10px] text-gray-500 text-center py-1", children: "รอยืนยันผลเมื่อออกรางวัล" })
+        ]
+      }, s.key))
+    })
+  ]
+});
+
+console.log('Element successfully built without errors!');

@@ -1,0 +1,248 @@
+{
+  "results": [
+    {
+      "title": "1. หุ้นปกติ รอบเช้า (3 หวย: นิเคอิ เช้า 09:30 ➡️ จีน เช้า 10:30 ➡️ ฮั่งเส็ง เช้า 11:00)",
+      "cards": [
+        {
+          "cardKey": "nikkeiM",
+          "label": "การ์ด นิเคอิ (เช้า)",
+          "totalRounds": 91,
+          "anyRate": "84.6",
+          "missRate": "15.4",
+          "d0Rate": "67.0",
+          "d1Rate": "62.6",
+          "bestDigitType": "เด่นหลัก",
+          "s1Rate": "50.5",
+          "s2Rate": "27.5",
+          "s3Rate": "6.6",
+          "top6Rate": "24.2"
+        },
+        {
+          "cardKey": "chinaM",
+          "label": "การ์ด จีน (เช้า)",
+          "totalRounds": 91,
+          "anyRate": "84.6",
+          "missRate": "15.4",
+          "d0Rate": "59.3",
+          "d1Rate": "65.9",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "51.6",
+          "s2Rate": "24.2",
+          "s3Rate": "8.8",
+          "top6Rate": "29.7"
+        },
+        {
+          "cardKey": "hangsengM",
+          "label": "การ์ด ฮั่งเส็ง (เช้า)",
+          "totalRounds": 91,
+          "anyRate": "95.6",
+          "missRate": "4.4",
+          "d0Rate": "67.0",
+          "d1Rate": "73.6",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "54.9",
+          "s2Rate": "34.1",
+          "s3Rate": "6.6",
+          "top6Rate": "24.2"
+        },
+        {
+          "cardKey": "UNIFIED",
+          "label": "การ์ด รวมสถิติเช้า (3 หวย)",
+          "totalRounds": 94,
+          "anyRate": "88.3",
+          "missRate": "11.7",
+          "d0Rate": "64.9",
+          "d1Rate": "59.6",
+          "bestDigitType": "เด่นหลัก",
+          "s1Rate": "52.1",
+          "s2Rate": "28.7",
+          "s3Rate": "7.4",
+          "top6Rate": "26.6"
+        }
+      ]
+    },
+    {
+      "title": "2. หุ้นปกติ รอบบ่าย (3 หวย: นิเคอิ บ่าย 13:00 ➡️ จีน บ่าย 14:00 ➡️ ฮั่งเส็ง บ่าย 15:30)",
+      "cards": [
+        {
+          "cardKey": "nikkeiA",
+          "label": "การ์ด นิเคอิ (บ่าย)",
+          "totalRounds": 91,
+          "anyRate": "85.7",
+          "missRate": "14.3",
+          "d0Rate": "63.7",
+          "d1Rate": "65.9",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "52.7",
+          "s2Rate": "24.2",
+          "s3Rate": "8.8",
+          "top6Rate": "23.1"
+        },
+        {
+          "cardKey": "chinaA",
+          "label": "การ์ด จีน (บ่าย)",
+          "totalRounds": 91,
+          "anyRate": "91.2",
+          "missRate": "8.8",
+          "d0Rate": "67.0",
+          "d1Rate": "68.1",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "52.7",
+          "s2Rate": "29.7",
+          "s3Rate": "8.8",
+          "top6Rate": "16.5"
+        },
+        {
+          "cardKey": "hangsengA",
+          "label": "การ์ด ฮั่งเส็ง (บ่าย)",
+          "totalRounds": 91,
+          "anyRate": "91.2",
+          "missRate": "8.8",
+          "d0Rate": "73.6",
+          "d1Rate": "65.9",
+          "bestDigitType": "เด่นหลัก",
+          "s1Rate": "53.8",
+          "s2Rate": "31.9",
+          "s3Rate": "5.5",
+          "top6Rate": "22.0"
+        },
+        {
+          "cardKey": "UNIFIED",
+          "label": "การ์ด รวมสถิติบ่าย (3 หวย)",
+          "totalRounds": 94,
+          "anyRate": "84.0",
+          "missRate": "16.0",
+          "d0Rate": "64.9",
+          "d1Rate": "60.6",
+          "bestDigitType": "เด่นหลัก",
+          "s1Rate": "44.7",
+          "s2Rate": "30.9",
+          "s3Rate": "8.5",
+          "top6Rate": "26.6"
+        }
+      ]
+    },
+    {
+      "title": "3. หุ้น VIP รอบเช้า (3 หวย: นิเคอิ VIP เช้า 09:30 ➡️ จีน VIP เช้า 10:30 ➡️ ฮั่งเส็ง VIP เช้า 11:00)",
+      "cards": [
+        {
+          "cardKey": "nikkeiVipM",
+          "label": "การ์ด นิเคอิ VIP (เช้า)",
+          "totalRounds": 129,
+          "anyRate": "92.2",
+          "missRate": "7.8",
+          "d0Rate": "65.1",
+          "d1Rate": "72.1",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "55.8",
+          "s2Rate": "25.6",
+          "s3Rate": "10.9",
+          "top6Rate": "25.6"
+        },
+        {
+          "cardKey": "chinaVipM",
+          "label": "การ์ด จีน VIP (เช้า)",
+          "totalRounds": 129,
+          "anyRate": "90.7",
+          "missRate": "9.3",
+          "d0Rate": "69.0",
+          "d1Rate": "69.8",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "51.2",
+          "s2Rate": "27.9",
+          "s3Rate": "11.6",
+          "top6Rate": "30.2"
+        },
+        {
+          "cardKey": "hangsengVipM",
+          "label": "การ์ด ฮั่งเส็ง VIP (เช้า)",
+          "totalRounds": 129,
+          "anyRate": "87.6",
+          "missRate": "12.4",
+          "d0Rate": "59.7",
+          "d1Rate": "67.4",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "54.3",
+          "s2Rate": "20.2",
+          "s3Rate": "13.2",
+          "top6Rate": "33.3"
+        },
+        {
+          "cardKey": "UNIFIED",
+          "label": "การ์ด รวมสถิติ VIP เช้า (3 หวย)",
+          "totalRounds": 132,
+          "anyRate": "89.4",
+          "missRate": "10.6",
+          "d0Rate": "62.1",
+          "d1Rate": "66.7",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "50.8",
+          "s2Rate": "29.5",
+          "s3Rate": "9.1",
+          "top6Rate": "32.6"
+        }
+      ]
+    },
+    {
+      "title": "4. หุ้น VIP รอบบ่าย (3 หวย: นิเคอิ VIP บ่าย 13:00 ➡️ จีน VIP บ่าย 14:00 ➡️ ฮั่งเส็ง VIP บ่าย 15:30)",
+      "cards": [
+        {
+          "cardKey": "nikkeiVipA",
+          "label": "การ์ด นิเคอิ VIP (บ่าย)",
+          "totalRounds": 129,
+          "anyRate": "91.5",
+          "missRate": "8.5",
+          "d0Rate": "69.0",
+          "d1Rate": "76.7",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "58.1",
+          "s2Rate": "24.8",
+          "s3Rate": "8.5",
+          "top6Rate": "37.2"
+        },
+        {
+          "cardKey": "chinaVipA",
+          "label": "การ์ด จีน VIP (บ่าย)",
+          "totalRounds": 129,
+          "anyRate": "93.0",
+          "missRate": "7.0",
+          "d0Rate": "66.7",
+          "d1Rate": "70.5",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "58.9",
+          "s2Rate": "23.3",
+          "s3Rate": "10.9",
+          "top6Rate": "34.9"
+        },
+        {
+          "cardKey": "hangsengVipA",
+          "label": "การ์ด ฮั่งเส็ง VIP (บ่าย)",
+          "totalRounds": 129,
+          "anyRate": "97.7",
+          "missRate": "2.3",
+          "d0Rate": "70.5",
+          "d1Rate": "79.8",
+          "bestDigitType": "เด่นรอง",
+          "s1Rate": "53.5",
+          "s2Rate": "34.9",
+          "s3Rate": "9.3",
+          "top6Rate": "34.1"
+        },
+        {
+          "cardKey": "UNIFIED",
+          "label": "การ์ด รวมสถิติ VIP บ่าย (3 หวย)",
+          "totalRounds": 132,
+          "anyRate": "92.4",
+          "missRate": "7.6",
+          "d0Rate": "77.3",
+          "d1Rate": "69.7",
+          "bestDigitType": "เด่นหลัก",
+          "s1Rate": "58.3",
+          "s2Rate": "24.2",
+          "s3Rate": "9.8",
+          "top6Rate": "35.6"
+        }
+      ]
+    }
+  ]
+}

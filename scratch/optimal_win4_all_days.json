@@ -1,0 +1,452 @@
+{
+  "Mon": {
+    "regMorning": {
+      "comb": [
+        0,
+        1,
+        5,
+        8
+      ],
+      "digitsStr": "0 - 1 - 5 - 8",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 4,
+        "s2Hits": 10,
+        "s3Hits": 3
+      }
+    },
+    "regAfternoon": {
+      "comb": [
+        1,
+        2,
+        7,
+        9
+      ],
+      "digitsStr": "1 - 2 - 7 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 6,
+        "s2Hits": 8,
+        "s3Hits": 4
+      }
+    },
+    "vipMorning": {
+      "comb": [
+        1,
+        3,
+        8,
+        9
+      ],
+      "digitsStr": "1 - 3 - 8 - 9",
+      "res": {
+        "total": 20,
+        "hits": 17,
+        "misses": 3,
+        "winRate": "85.0",
+        "s1Hits": 11,
+        "s2Hits": 5,
+        "s3Hits": 1
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        1,
+        2,
+        4,
+        8
+      ],
+      "digitsStr": "1 - 2 - 4 - 8",
+      "res": {
+        "total": 20,
+        "hits": 18,
+        "misses": 2,
+        "winRate": "90.0",
+        "s1Hits": 8,
+        "s2Hits": 4,
+        "s3Hits": 6
+      }
+    }
+  },
+  "Tue": {
+    "regMorning": {
+      "comb": [
+        3,
+        5,
+        6,
+        9
+      ],
+      "digitsStr": "3 - 5 - 6 - 9",
+      "res": {
+        "total": 18,
+        "hits": 16,
+        "misses": 2,
+        "winRate": "88.9",
+        "s1Hits": 8,
+        "s2Hits": 4,
+        "s3Hits": 4
+      }
+    },
+    "regAfternoon": {
+      "comb": [
+        2,
+        3,
+        6,
+        7
+      ],
+      "digitsStr": "2 - 3 - 6 - 7",
+      "res": {
+        "total": 18,
+        "hits": 16,
+        "misses": 2,
+        "winRate": "88.9",
+        "s1Hits": 9,
+        "s2Hits": 2,
+        "s3Hits": 5
+      }
+    },
+    "vipMorning": {
+      "comb": [
+        3,
+        4,
+        6,
+        7
+      ],
+      "digitsStr": "3 - 4 - 6 - 7",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 5,
+        "s2Hits": 6,
+        "s3Hits": 7
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        2,
+        5,
+        6,
+        9
+      ],
+      "digitsStr": "2 - 5 - 6 - 9",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 8,
+        "s2Hits": 5,
+        "s3Hits": 4
+      }
+    }
+  },
+  "Wed": {
+    "regMorning": {
+      "comb": [
+        0,
+        2,
+        3,
+        6
+      ],
+      "digitsStr": "0 - 2 - 3 - 6",
+      "res": {
+        "total": 19,
+        "hits": 16,
+        "misses": 3,
+        "winRate": "84.2",
+        "s1Hits": 6,
+        "s2Hits": 6,
+        "s3Hits": 4
+      }
+    },
+    "regAfternoon": {
+      "comb": [
+        0,
+        1,
+        7,
+        9
+      ],
+      "digitsStr": "0 - 1 - 7 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 8,
+        "s2Hits": 7,
+        "s3Hits": 3
+      }
+    },
+    "vipMorning": {
+      "comb": [
+        0,
+        3,
+        6,
+        7
+      ],
+      "digitsStr": "0 - 3 - 6 - 7",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 6,
+        "s2Hits": 5,
+        "s3Hits": 6
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        1,
+        2,
+        3,
+        6
+      ],
+      "digitsStr": "1 - 2 - 3 - 6",
+      "res": {
+        "total": 19,
+        "hits": 16,
+        "misses": 3,
+        "winRate": "84.2",
+        "s1Hits": 6,
+        "s2Hits": 5,
+        "s3Hits": 5
+      }
+    }
+  },
+  "Thu": {
+    "regMorning": {
+      "comb": [
+        1,
+        3,
+        4,
+        9
+      ],
+      "digitsStr": "1 - 3 - 4 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 8,
+        "s2Hits": 6,
+        "s3Hits": 4
+      }
+    },
+    "regAfternoon": {
+      "comb": [
+        0,
+        4,
+        8,
+        9
+      ],
+      "digitsStr": "0 - 4 - 8 - 9",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 9,
+        "s2Hits": 5,
+        "s3Hits": 3
+      }
+    },
+    "vipMorning": {
+      "comb": [
+        1,
+        4,
+        6,
+        9
+      ],
+      "digitsStr": "1 - 4 - 6 - 9",
+      "res": {
+        "total": 19,
+        "hits": 16,
+        "misses": 3,
+        "winRate": "84.2",
+        "s1Hits": 9,
+        "s2Hits": 6,
+        "s3Hits": 1
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        0,
+        2,
+        4,
+        6
+      ],
+      "digitsStr": "0 - 2 - 4 - 6",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 8,
+        "s2Hits": 4,
+        "s3Hits": 5
+      }
+    }
+  },
+  "Fri": {
+    "regMorning": {
+      "comb": [
+        1,
+        2,
+        5,
+        7
+      ],
+      "digitsStr": "1 - 2 - 5 - 7",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 7,
+        "s2Hits": 4,
+        "s3Hits": 6
+      }
+    },
+    "regAfternoon": {
+      "comb": [
+        0,
+        4,
+        5,
+        6
+      ],
+      "digitsStr": "0 - 4 - 5 - 6",
+      "res": {
+        "total": 19,
+        "hits": 16,
+        "misses": 3,
+        "winRate": "84.2",
+        "s1Hits": 8,
+        "s2Hits": 1,
+        "s3Hits": 7
+      }
+    },
+    "vipMorning": {
+      "comb": [
+        0,
+        3,
+        4,
+        9
+      ],
+      "digitsStr": "0 - 3 - 4 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 9,
+        "s2Hits": 4,
+        "s3Hits": 5
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        0,
+        6,
+        7,
+        8
+      ],
+      "digitsStr": "0 - 6 - 7 - 8",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 6,
+        "s2Hits": 5,
+        "s3Hits": 6
+      }
+    }
+  },
+  "Sat": {
+    "regMorning": null,
+    "regAfternoon": null,
+    "vipMorning": {
+      "comb": [
+        0,
+        1,
+        2,
+        6
+      ],
+      "digitsStr": "0 - 1 - 2 - 6",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 5,
+        "s2Hits": 7,
+        "s3Hits": 5
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        0,
+        6,
+        8,
+        9
+      ],
+      "digitsStr": "0 - 6 - 8 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 10,
+        "s2Hits": 7,
+        "s3Hits": 1
+      }
+    }
+  },
+  "Sun": {
+    "regMorning": null,
+    "regAfternoon": null,
+    "vipMorning": {
+      "comb": [
+        0,
+        1,
+        5,
+        8
+      ],
+      "digitsStr": "0 - 1 - 5 - 8",
+      "res": {
+        "total": 19,
+        "hits": 17,
+        "misses": 2,
+        "winRate": "89.5",
+        "s1Hits": 6,
+        "s2Hits": 7,
+        "s3Hits": 4
+      }
+    },
+    "vipAfternoon": {
+      "comb": [
+        1,
+        3,
+        7,
+        9
+      ],
+      "digitsStr": "1 - 3 - 7 - 9",
+      "res": {
+        "total": 19,
+        "hits": 18,
+        "misses": 1,
+        "winRate": "94.7",
+        "s1Hits": 11,
+        "s2Hits": 5,
+        "s3Hits": 2
+      }
+    }
+  }
+}

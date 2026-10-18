@@ -1,0 +1,81 @@
+{
+  "Mon": {
+    "combo": [
+      0,
+      1,
+      7,
+      8
+    ],
+    "winRate": "100%",
+    "sampleSize": 6,
+    "candidateCount": 1
+  },
+  "Tue": {
+    "combo": [
+      1,
+      3,
+      7,
+      8
+    ],
+    "winRate": "100%",
+    "sampleSize": 10,
+    "candidateCount": 1,
+    "topHits": 12
+  },
+  "Wed": {
+    "combo": [
+      3,
+      5,
+      6,
+      8
+    ],
+    "winRate": "100%",
+    "sampleSize": 6,
+    "candidateCount": 5
+  },
+  "Thu": {
+    "combo": [
+      3,
+      5,
+      6,
+      9
+    ],
+    "winRate": "100%",
+    "sampleSize": 10,
+    "candidateCount": 1,
+    "topHits": 11
+  },
+  "Fri": {
+    "combo": [
+      1,
+      2,
+      3,
+      8
+    ],
+    "winRate": "100%",
+    "sampleSize": 6,
+    "candidateCount": 5
+  },
+  "Sat": {
+    "combo": [
+      3,
+      5,
+      6,
+      9
+    ],
+    "winRate": "100%",
+    "sampleSize": 6,
+    "candidateCount": 7
+  },
+  "Sun": {
+    "combo": [
+      2,
+      4,
+      6,
+      9
+    ],
+    "winRate": "100%",
+    "sampleSize": 6,
+    "candidateCount": 1
+  }
+}
