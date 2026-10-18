@@ -1485,7 +1485,11 @@ Error generating stack: `+r.message+`
                   children: isNextMode ? "🔥 ชุดคัดเน้นพิเศษ 4 เลข (คำนวณสดจากเลข 6 รางวัลงวดล่าสุด)" : "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สูตรคำนวณเลข 6 รางวัลประจำวัน 100%)"
                 }),
                 n.jsx("h4", {
-                  className: "text-sm sm:text-base font-extrabold text-purple-200",
+                  style: {
+                    color: "#ffffff",
+                    textShadow: "0 0 14px rgba(192, 132, 252, 0.9), 0 1px 3px rgba(0, 0, 0, 0.9)"
+                  },
+                  className: "text-sm sm:text-base font-extrabold text-white",
                   children: isNextMode ? ("ชุดเลขวินเน้น 4 ตัว งวดวัน" + h.dayName + "ที่จะถึง (ฮานอย 3 นอย)") : "ชุดเลขวินเน้น 4 ตัว รอบต่อรอบ (ฮานอย 3 นอย เข้าเป้า 100%)"
                 })
               ]
@@ -1587,12 +1591,14 @@ Error generating stack: `+r.message+`
           className: "grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-purple-500/20 relative z-10",
           children: [
             n.jsxs("div", {
+              style: { border: "1px solid rgba(168, 85, 247, 0.4)" },
               className: "bg-black/40 border border-purple-500/40 rounded-xl p-3 space-y-2",
               children: [
                 n.jsxs("div", {
                   className: "flex items-center justify-between",
                   children: [
                     n.jsxs("span", {
+                      style: { color: "#d8b4fe" },
                       className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                       children: [
                         "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + hanoiPurplePairs2D.length + " ชุด):",
@@ -1659,13 +1665,15 @@ Error generating stack: `+r.message+`
               ]
             }),
             n.jsxs("div", {
-              className: "bg-black/40 border border-fuchsia-500/40 rounded-xl p-3 space-y-2",
+              style: { border: "1px solid rgba(168, 85, 247, 0.4)" },
+              className: "bg-black/40 border border-purple-500/40 rounded-xl p-3 space-y-2",
               children: [
                 n.jsxs("div", {
                   className: "flex items-center justify-between",
                   children: [
                     n.jsxs("span", {
-                      className: "text-xs font-bold text-fuchsia-300 flex items-center gap-1.5",
+                      style: { color: "#d8b4fe" },
+                      className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                       children: [
                         "⚡ ชุดเลขวิน 3 ตัวตรง (" + hanoiPurpleTriples3D.length + " ชุด / 24 โต๊ด):",
                         isNextMode ? n.jsx("span", {
