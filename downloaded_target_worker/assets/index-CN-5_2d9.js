@@ -1812,87 +1812,6 @@ Error generating stack: `+r.message+`
                       style: { color: "#d8b4fe" },
                       className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                       children: [
-                        "🎯 ชุดเจาะเน้น 2 ตัว บน-ล่าง (" + hanoiPurpleDrillPairs.length + " ชุด):",
-                        hanoiPurpleDrillHitCount > 0 ? n.jsxs("span", {
-                          style: {
-                            background: "linear-gradient(90deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
-                            color: "#ffffff",
-                            border: "1px solid rgba(255, 255, 255, 0.7)",
-                            boxShadow: "0 0 10px rgba(168, 85, 247, 0.7)"
-                          },
-                          className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5",
-                          children: ["✓ เข้าเป้า ", hanoiPurpleDrillHitCount, " ชุด"]
-                        }) : (isUpcoming || purpleWin2D.size === 0 ? n.jsx("span", {
-                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
-                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
-                          children: isUpcoming ? ("⏳ รอผลออกรางวัล (วัน" + h.dayName + "ยังมาไม่ถึง)") : "⏳ รอผลออกรางวัล"
-                        }) : (purpleWin2D.size < 6 && purpleWin2D.size > 0 ? n.jsx("span", {
-                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
-                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
-                          children: "⏳ กำลังล่ารอบถัดไป"
-                        }) : null))
-                      ]
-                    }),
-                    n.jsx("button", {
-                      onClick: (e) => {
-                        const btn = e.currentTarget;
-                        if (navigator.clipboard) {
-                          navigator.clipboard.writeText(hanoiPurpleDrillPairs.join(", "));
-                          const oldText = btn.innerText;
-                          btn.innerText = "✓ คัดลอกแล้ว!";
-                          setTimeout(() => { btn.innerText = oldText; }, 1500);
-                        }
-                      },
-                      style: {
-                        color: "#ffffff",
-                        background: "linear-gradient(135deg, rgba(126, 34, 206, 0.9) 0%, rgba(168, 85, 247, 0.7) 100%)",
-                        border: "1px solid rgba(192, 132, 252, 0.6)",
-                        boxShadow: "0 2px 8px rgba(168, 85, 247, 0.3)"
-                      },
-                      className: "text-[10px] text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 win4-btn-copy-purple",
-                      children: "📋 คัดลอกชุดเจาะ"
-                    })
-                  ]
-                }),
-                n.jsx("div", {
-                  className: "flex flex-wrap gap-1.5",
-                  children: hanoiPurpleDrillPairs.map(p => {
-                    const isHit = !isUpcoming && purpleWin2D && purpleWin2D.has(p);
-                    const rTxt = isHit && typeof purpleWin2DRounds !== "undefined" ? _getHitRoundText(p, purpleWin2DRounds) : "";
-                    return n.jsxs("span", {
-                      key: p,
-                      style: isHit ? {
-                        background: "linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
-                        color: "#ffffff",
-                        border: "2px solid #ffffff",
-                        boxShadow: "0 0 16px rgba(168, 85, 247, 0.95), 0 0 6px rgba(192, 132, 252, 0.8)",
-                        textShadow: "0 1px 2px rgba(0,0,0,0.5)"
-                      } : {
-                        background: "rgba(147, 51, 234, 0.18)",
-                        border: "1px solid rgba(192, 132, 252, 0.35)",
-                        color: "#ffffff"
-                      },
-                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-purple-500/30 win4-chip-purple-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
-                      children: [
-                        n.jsx("span", { className: "leading-tight", children: p }),
-                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
-                      ]
-                    });
-                  })
-                })
-              ]
-            }),
-            n.jsxs("div", {
-              style: { border: "1px solid rgba(168, 85, 247, 0.4)" },
-              className: "bg-black/40 border border-purple-500/40 rounded-xl p-3 space-y-2",
-              children: [
-                n.jsxs("div", {
-                  className: "flex items-center justify-between",
-                  children: [
-                    n.jsxs("span", {
-                      style: { color: "#d8b4fe" },
-                      className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
-                      children: [
                         "⚡ ชุดวิน 4 ตัว บน-ล่าง (" + hanoiPurplePairs2D.length + " ชุด):",
                         hanoiPurpleHitCount2D > 0 ? n.jsxs("span", {
                           style: {
@@ -1938,6 +1857,87 @@ Error generating stack: `+r.message+`
                 n.jsx("div", {
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPurplePairs2D.map(p => {
+                    const isHit = !isUpcoming && purpleWin2D && purpleWin2D.has(p);
+                    const rTxt = isHit && typeof purpleWin2DRounds !== "undefined" ? _getHitRoundText(p, purpleWin2DRounds) : "";
+                    return n.jsxs("span", {
+                      key: p,
+                      style: isHit ? {
+                        background: "linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
+                        color: "#ffffff",
+                        border: "2px solid #ffffff",
+                        boxShadow: "0 0 16px rgba(168, 85, 247, 0.95), 0 0 6px rgba(192, 132, 252, 0.8)",
+                        textShadow: "0 1px 2px rgba(0,0,0,0.5)"
+                      } : {
+                        background: "rgba(147, 51, 234, 0.18)",
+                        border: "1px solid rgba(192, 132, 252, 0.35)",
+                        color: "#ffffff"
+                      },
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-purple-500/30 win4-chip-purple-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: p }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
+                    });
+                  })
+                })
+              ]
+            }),
+            n.jsxs("div", {
+              style: { border: "1px solid rgba(168, 85, 247, 0.4)" },
+              className: "bg-black/40 border border-purple-500/40 rounded-xl p-3 space-y-2",
+              children: [
+                n.jsxs("div", {
+                  className: "flex items-center justify-between",
+                  children: [
+                    n.jsxs("span", {
+                      style: { color: "#d8b4fe" },
+                      className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
+                      children: [
+                        "🎯 ชุดเจาะเน้น 2 ตัว บน-ล่าง (" + hanoiPurpleDrillPairs.length + " ชุด):",
+                        hanoiPurpleDrillHitCount > 0 ? n.jsxs("span", {
+                          style: {
+                            background: "linear-gradient(90deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
+                            color: "#ffffff",
+                            border: "1px solid rgba(255, 255, 255, 0.7)",
+                            boxShadow: "0 0 10px rgba(168, 85, 247, 0.7)"
+                          },
+                          className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5",
+                          children: ["✓ เข้าเป้า ", hanoiPurpleDrillHitCount, " ชุด"]
+                        }) : (isUpcoming || purpleWin2D.size === 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: isUpcoming ? ("⏳ รอผลออกรางวัล (วัน" + h.dayName + "ยังมาไม่ถึง)") : "⏳ รอผลออกรางวัล"
+                        }) : (purpleWin2D.size < 6 && purpleWin2D.size > 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: "⏳ กำลังล่ารอบถัดไป"
+                        }) : null))
+                      ]
+                    }),
+                    n.jsx("button", {
+                      onClick: (e) => {
+                        const btn = e.currentTarget;
+                        if (navigator.clipboard) {
+                          navigator.clipboard.writeText(hanoiPurpleDrillPairs.join(", "));
+                          const oldText = btn.innerText;
+                          btn.innerText = "✓ คัดลอกแล้ว!";
+                          setTimeout(() => { btn.innerText = oldText; }, 1500);
+                        }
+                      },
+                      style: {
+                        color: "#ffffff",
+                        background: "linear-gradient(135deg, rgba(126, 34, 206, 0.9) 0%, rgba(168, 85, 247, 0.7) 100%)",
+                        border: "1px solid rgba(192, 132, 252, 0.6)",
+                        boxShadow: "0 2px 8px rgba(168, 85, 247, 0.3)"
+                      },
+                      className: "text-[10px] text-white font-black px-2.5 py-1 rounded-md transition-all cursor-pointer shadow-sm active:scale-95 win4-btn-copy-purple",
+                      children: "📋 คัดลอกชุดเจาะ"
+                    })
+                  ]
+                }),
+                n.jsx("div", {
+                  className: "flex flex-wrap gap-1.5",
+                  children: hanoiPurpleDrillPairs.map(p => {
                     const isHit = !isUpcoming && purpleWin2D && purpleWin2D.has(p);
                     const rTxt = isHit && typeof purpleWin2DRounds !== "undefined" ? _getHitRoundText(p, purpleWin2DRounds) : "";
                     return n.jsxs("span", {
