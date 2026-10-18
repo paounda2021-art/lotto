@@ -1116,10 +1116,10 @@
     };
   }
 
-  function buildChaseLineSlipText(dayCode, filter = 'ALL') {
+  function buildChaseLineSlipText(dayCode, filter = 'ALL', customDateFormatted = null) {
     const cfg = CHASE_SLIPS_DATA[dayCode] || CHASE_SLIPS_DATA['Fri'];
     const dayName = cfg.dayTh;
-    const dateFormatted = getDateForWeekday(dayCode);
+    const dateFormatted = customDateFormatted || getDateForWeekday(dayCode);
 
     const regM = getResolvedSessionData(dayCode, 'regMorning');
     const regA = getResolvedSessionData(dayCode, 'regAfternoon');
@@ -1473,9 +1473,22 @@
      ========================================================================== */
 
   window.openChaseSlipModal = function() {
+    let selectedDateStr = getBangkokTodayDate(); // e.g. "2026-10-18"
     let currentDay = getBangkokDayCode();
-    if (!CHASE_SLIPS_DATA[currentDay]) currentDay = 'Mon';
+    if (!CHASE_SLIPS_DATA[currentDay]) currentDay = 'Sun';
     let currentFilter = 'ALL';
+
+    function formatThaiDate(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length !== 3) return dateStr;
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      const thMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+      const yTh = y + 543;
+      return d + ' ' + thMonths[m] + ' ' + yTh;
+    }
 
     if (!chaseSlipModalOverlay) {
       chaseSlipModalOverlay = document.createElement('div');
@@ -1485,7 +1498,8 @@
     }
 
     function renderModalContent() {
-      const slipText = buildChaseLineSlipText(currentDay, currentFilter);
+      const formattedThaiDate = formatThaiDate(selectedDateStr);
+      const slipText = buildChaseLineSlipText(currentDay, currentFilter, formattedThaiDate);
       const dayNames = { Mon: 'จันทร์', Tue: 'อังคาร', Wed: 'พุธ', Thu: 'พฤหัสฯ', Fri: 'ศุกร์', Sat: 'เสาร์', Sun: 'อาทิตย์' };
 
       const regM = getResolvedSessionData(currentDay, 'regMorning');
@@ -1499,7 +1513,7 @@
       const dayCfg = CHASE_SLIPS_DATA[currentDay] || CHASE_SLIPS_DATA['Fri'];
 
       chaseSlipModalOverlay.innerHTML = `
-        <div style="background: #111827; border: 1px solid #10b981; border-radius: 20px; width: 100%; max-width: 620px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 30px rgba(16, 185, 129, 0.2); overflow: hidden; color: #f3f4f6;">
+        <div style="background: #111827; border: 1.5px solid #10b981; border-radius: 20px; width: 100%; max-width: 620px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 25px 60px rgba(0,0,0,0.9), 0 0 35px rgba(16, 185, 129, 0.25); overflow: hidden; color: #f3f4f6;">
           
           <!-- Header -->
           <div style="padding: 16px 20px; background: linear-gradient(135deg, rgba(6, 199, 85, 0.2), rgba(16, 185, 129, 0.05)); border-bottom: 1px solid rgba(16, 185, 129, 0.3); display: flex; justify-content: space-between; align-items: center;">
@@ -1516,21 +1530,52 @@
                 <span style="font-size: 11px; color: #9ca3af;">คัดลอกข้อความนำไปวางในแชท LINE ได้ทันที ฟอร์แมตสวยงามอ่านง่าย</span>
               </div>
             </div>
-            <button id="chase-modal-close" style="background: none; border: none; color: #9ca3af; font-size: 22px; cursor: pointer; padding: 4px; line-height: 1;">✕</button>
+            <button id="chase-modal-close" style="background: none; border: none; color: #9ca3af; font-size: 22px; cursor: pointer; padding: 4px; line-height: 1;" title="ปิดหน้าต่าง">✕</button>
           </div>
 
-          <!-- Controls: Day Selector + Filter Tabs -->
+          <!-- Controls: Calendar Date Picker + Quick Day Selector + Filter Tabs -->
           <div style="padding: 12px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 10px;">
-            <!-- Day Selection -->
-            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
-              <span style="font-size: 12px; font-weight: 700; color: #d1fae5;">🗓️ เลือกวันทำการ:</span>
-              <div style="display: flex; gap: 4px; flex-wrap: wrap;">
-                ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `
-                  <button type="button" class="day-tab-btn ${currentDay === d ? 'active' : ''}" data-day="${d}" style="padding: 4px 8px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid ${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.1)'}; background: ${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.05)'}; color: ${currentDay === d ? '#000000' : '#d1d5db'}; transition: all 0.2s;">
-                    ${dayNames[d]} (${getDateForWeekday(d).split(' ')[0]} ${getDateForWeekday(d).split(' ')[1]})
-                  </button>
-                `).join('')}
+            
+            <!-- Calendar Picker Section (แบบปฏิทินเลือกสะดวก) -->
+            <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: 12px; padding: 8px 12px; display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px;">
+                <span style="font-size: 12px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 6px;">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: #10b981;">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                    <line x1="16" x2="16" y1="2" y2="6"/>
+                    <line x1="8" x2="8" y1="2" y2="6"/>
+                    <line x1="3" x2="21" y1="10" y2="10"/>
+                  </svg>
+                  เลือกวันที่จากปฏิทิน:
+                </span>
+                <span style="font-size: 11px; font-weight: 800; color: #fde047; background: rgba(234, 179, 8, 0.15); border: 1px solid rgba(234, 179, 8, 0.35); padding: 2px 8px; border-radius: 6px;">
+                  📍 วัน${dayNames[currentDay]}ที่ ${formattedThaiDate}
+                </span>
               </div>
+
+              <!-- Date Picker Input with Native Picker Button -->
+              <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                <input type="date" id="chase-slip-date-picker" value="${selectedDateStr}" style="width: 100%; box-sizing: border-box; background: rgba(17, 24, 39, 0.95); border: 1.5px solid #10b981; border-radius: 10px; padding: 8px 115px 8px 12px; color: #6ee7b7; font-weight: 800; font-size: 13px; outline: none; cursor: pointer; box-shadow: 0 0 12px rgba(16, 185, 129, 0.12) inset;" />
+                <button type="button" id="chase-slip-calendar-btn" style="position: absolute; right: 5px; background: linear-gradient(135deg, #10b981, #059669); border: 1px solid rgba(255,255,255,0.4); color: #000000; padding: 5px 10px; border-radius: 7px; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 800; font-size: 11px; box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);" title="คลิกเปิดปฏิทิน">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
+                    <line x1="16" x2="16" y1="2" y2="6"/>
+                    <line x1="8" x2="8" y1="2" y2="6"/>
+                    <line x1="3" x2="21" y1="10" y2="10"/>
+                  </svg>
+                  <span>เปิดปฏิทิน 📅</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Day Shortcuts (Mon - Sun) -->
+            <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">
+              <span style="font-size: 11px; font-weight: 700; color: #9ca3af; margin-right: 2px;">ลัดเลือกวัน:</span>
+              ${['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(d => `
+                <button type="button" class="day-tab-btn ${currentDay === d ? 'active' : ''}" data-day="${d}" style="padding: 3px 8px; border-radius: 7px; font-size: 11px; font-weight: 700; cursor: pointer; border: 1px solid ${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.1)'}; background: ${currentDay === d ? '#10b981' : 'rgba(255,255,255,0.05)'}; color: ${currentDay === d ? '#000000' : '#d1d5db'}; transition: all 0.2s;">
+                  ${dayNames[d]}
+                </button>
+              `).join('')}
             </div>
 
             <!-- Filter Tabs -->
@@ -1551,10 +1596,10 @@
           </div>
 
           <!-- Visual Quick Win4 Banner -->
-          <div style="margin: 12px 20px 0 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 10px 14px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="margin: 10px 20px 0 20px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(59, 130, 246, 0.12)); border: 1px solid rgba(16, 185, 129, 0.35); border-radius: 12px; padding: 8px 12px; display: flex; flex-direction: column; gap: 6px;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px;">
               <span style="font-size: 11px; font-weight: 800; color: #34d399; display: flex; align-items: center; gap: 4px;">
-                🎲 ชุดวินเด่น 4 ตัว (แยกปกติ และ VIP อิสระ):
+                🎲 ชุดวินเด่น 4 ตัว (ประจำวัน${dayNames[currentDay]}ที่ ${formattedThaiDate}):
               </span>
               <span style="font-size: 10px; color: #9ca3af; font-weight: 600;">(คัดจากตัวรูดเด่น-รอง สเต็ป 1 ➡️ 2 ➡️ 3)</span>
             </div>
@@ -1567,10 +1612,10 @@
                 <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(192, 132, 252, 0.4); color: #e9d5ff; font-weight: 800;">
                   🌙 บ่าย: ${win4VipA ? win4VipA.digitsStr : '-'}
                 </span>
-                <span style="font-size: 10px; color: #ef4444; font-weight: 700;">(🛑 ตลาดปกติปิดเสาร์-อาทิตย์)</span>
+                <span style="font-size: 10px; color: #f59e0b; font-weight: 700;">(🛑 ตลาดหุ้นปกติปิด เสาร์-อาทิตย์)</span>
               </div>
             ` : `
-              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
+              <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
                 <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
                   <span style="font-size: 11px; font-weight: 800; color: #34d399;">🎌 หุ้นปกติ:</span>
                   <span style="font-size: 11px; background: rgba(0,0,0,0.5); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(52, 211, 153, 0.4); color: #6ee7b7; font-weight: 800;">
@@ -1594,7 +1639,7 @@
           </div>
 
           <!-- Body Textarea Preview -->
-          <div style="padding: 16px 20px; flex: 1; overflow-y: auto;">
+          <div style="padding: 12px 20px; flex: 1; overflow-y: auto;">
             <div style="position: relative;">
               <textarea id="chase-slip-textarea" readonly style="width: 100%; box-sizing: border-box; height: 260px; background: rgba(0,0,0,0.6); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 12px; padding: 14px; color: #a7f3d0; font-family: monospace, system-ui; font-size: 12px; line-height: 1.5; resize: none; outline: none; box-shadow: inset 0 2px 8px rgba(0,0,0,0.6); user-select: all;">${slipText}</textarea>
             </div>
@@ -1626,13 +1671,64 @@
         chaseSlipModalOverlay.style.display = 'none';
       };
 
+      // 1. Date Picker Event Listener
+      const dateInput = chaseSlipModalOverlay.querySelector('#chase-slip-date-picker');
+      if (dateInput) {
+        dateInput.onchange = (e) => {
+          if (e.target.value) {
+            selectedDateStr = e.target.value;
+            const parts = selectedDateStr.split('-');
+            if (parts.length === 3) {
+              const dt = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+              const dayCodeMap = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+              currentDay = dayCodeMap[dt.getDay()] || 'Sun';
+            }
+            renderModalContent();
+          }
+        };
+      }
+
+      // 2. Calendar Button Trigger
+      const calBtn = chaseSlipModalOverlay.querySelector('#chase-slip-calendar-btn');
+      if (calBtn && dateInput) {
+        calBtn.onclick = () => {
+          try {
+            if (typeof dateInput.showPicker === 'function') {
+              dateInput.showPicker();
+            } else {
+              dateInput.focus();
+            }
+          } catch(err) {
+            dateInput.focus();
+          }
+        };
+      }
+
+      // 3. Quick Day Buttons
       chaseSlipModalOverlay.querySelectorAll('.day-tab-btn').forEach(btn => {
         btn.onclick = () => {
           currentDay = btn.getAttribute('data-day');
+          const dayOffsets = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
+          const now = new Date();
+          const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+          const bkk = new Date(utc + (3600000 * 7));
+          const currentDayIndex = bkk.getDay();
+          const daysFromMonday = (currentDayIndex === 0) ? 6 : (currentDayIndex - 1);
+          const monday = new Date(bkk);
+          monday.setDate(bkk.getDate() - daysFromMonday);
+          const target = new Date(monday);
+          const offset = dayOffsets[currentDay] !== undefined ? dayOffsets[currentDay] : 0;
+          target.setDate(monday.getDate() + offset);
+
+          const y = target.getFullYear();
+          const m = String(target.getMonth() + 1).padStart(2, '0');
+          const d = String(target.getDate()).padStart(2, '0');
+          selectedDateStr = y + '-' + m + '-' + d;
           renderModalContent();
         };
       });
 
+      // 4. Filter Tab Buttons
       chaseSlipModalOverlay.querySelectorAll('.filter-tab-btn').forEach(btn => {
         btn.onclick = () => {
           currentFilter = btn.getAttribute('data-filter');
@@ -1640,7 +1736,7 @@
         };
       });
 
-      // Copy Button
+      // 5. Copy Button
       const copyBtn = chaseSlipModalOverlay.querySelector('#btn-copy-slip-action');
       copyBtn.onclick = async () => {
         const textarea = chaseSlipModalOverlay.querySelector('#chase-slip-textarea');
@@ -1671,7 +1767,7 @@
         }
       };
 
-      // Direct Send Button
+      // 6. Direct Send Button
       const directSendBtn = chaseSlipModalOverlay.querySelector('#btn-direct-line-send');
       directSendBtn.onclick = async () => {
         const textarea = chaseSlipModalOverlay.querySelector('#chase-slip-textarea');
@@ -1687,28 +1783,35 @@
           const res = await fetch('/api/line/send', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: textToSend, targetId: target })
+            body: JSON.stringify({
+              message: textToSend,
+              to: target
+            })
           });
-          const json = await res.json();
-          if (json.success) {
-            showToast('ส่งโพยล่า 3 หวยเข้ากลุ่ม LINE สำเร็จเรียบร้อย! 🎉');
-            alert('✅ ส่งโพยเข้ากลุ่ม LINE เรียบร้อยแล้ว!');
+
+          const data = await res.json();
+          if (data.success) {
+            directSendBtn.innerText = '✅ ส่งสำเร็จ!';
+            showToast('ส่งสรุปโพยล่า 3 หวยเข้า LINE เรียบร้อยแล้ว! 🚀');
           } else {
-            throw new Error(json.error || 'Failed to send message');
+            directSendBtn.innerText = '❌ ส่งไม่สำเร็จ';
+            showToast('เกิดข้อผิดพลาด: ' + (data.error || 'กรุณาลองใหม่อีกครั้ง'), true);
           }
         } catch(err) {
-          showToast('เกิดข้อผิดพลาดในการส่ง: ' + err.message, true);
-          alert('❌ การส่งล้มเหลว: ' + err.message + '\n\nท่านสามารถกดปุ่ม "📋 คัดลอกโพย" เพื่อนำไปวางใน LINE ด้วยตนเองได้ครับ');
+          directSendBtn.innerText = '❌ ผิดพลาด';
+          showToast('เชื่อมต่อ API ไม่สำเร็จ: ' + err.message, true);
         } finally {
-          directSendBtn.innerText = '📲 ส่งเข้า LINE ทันที';
-          directSendBtn.disabled = false;
+          setTimeout(() => {
+            directSendBtn.innerText = '📲 ส่งเข้า LINE ทันที';
+            directSendBtn.disabled = false;
+          }, 2500);
         }
       };
     }
 
     renderModalContent();
     chaseSlipModalOverlay.style.display = 'flex';
-  };
+  };;
 
   /* ==========================================================================
      LINE SETTINGS MODAL & BUTTON INJECTORS
