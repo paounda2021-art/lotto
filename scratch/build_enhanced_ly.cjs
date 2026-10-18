@@ -297,9 +297,10 @@ const newLy = `Ly=({initialDigits:e})=>{
                         onChange: e => setMmCapital(Math.max(10, parseFloat(e.target.value) || 0)),
                         min: "50",
                         step: "50",
-                        className: "w-full bg-[#121214] border border-gray-600 rounded-lg px-3 py-1.5 text-white font-black text-base focus:outline-none focus:border-amber-400 transition-colors"
+                        style: { color: "#000000", backgroundColor: "#ffffff", fontWeight: "900", border: "2px solid #f59e0b" },
+                        className: "w-full rounded-lg px-3 py-1.5 text-black font-black text-base focus:outline-none transition-colors"
                       }),
-                      n.jsx("span", { className: "absolute right-3 top-2 text-xs text-gray-400 font-bold", children: "฿" })
+                      n.jsx("span", { style: { color: "#000000", fontWeight: "900" }, className: "absolute right-3 top-2 text-xs font-black", children: "฿" })
                     ]
                   }),
                   n.jsx("div", {
@@ -326,11 +327,12 @@ const newLy = `Ly=({initialDigits:e})=>{
                   n.jsxs("select", {
                     value: mmStrategy,
                     onChange: e => setMmStrategy(e.target.value),
-                    className: "w-full bg-[#121214] border border-gray-600 rounded-lg px-2.5 py-1.5 text-xs font-bold text-white focus:outline-none focus:border-emerald-400 transition-colors cursor-pointer",
+                    style: { color: "#000000", backgroundColor: "#ffffff", fontWeight: "800", border: "2px solid #10b981" },
+                    className: "w-full rounded-lg px-2.5 py-1.5 text-xs font-bold text-black focus:outline-none transition-colors cursor-pointer",
                     children: [
-                      n.jsx("option", { value: "martingale", children: "⚡ ล่า 3 สเต็ป ทบเงินกำไรเพิ่ม (1 : 2 : 4)" }),
-                      n.jsx("option", { value: "conservative", children: "🛡️ ล่า 3 สเต็ป ทบคืนทุน+กำไรคงที่ (1 : 2 : 3)" }),
-                      n.jsx("option", { value: "flat", children: "⚖️ แบ่งรอบคงที่ (1 : 1 : 1) ความเสี่ยงต่ำ" })
+                      n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: "martingale", children: "⚡ ล่า 3 สเต็ป ทบเงินกำไรเพิ่ม (1 : 2 : 4)" }),
+                      n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: "conservative", children: "🛡️ ล่า 3 สเต็ป ทบคืนทุน+กำไรคงที่ (1 : 2 : 3)" }),
+                      n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: "flat", children: "⚖️ แบ่งรอบคงที่ (1 : 1 : 1) ความเสี่ยงต่ำ" })
                     ]
                   }),
                   n.jsx("p", { className: "text-[11px] text-gray-400 leading-snug", children: stratDesc }),
@@ -365,12 +367,13 @@ const newLy = `Ly=({initialDigits:e})=>{
                           n.jsxs("select", {
                             value: mmPayoutRate,
                             onChange: e => setMmPayoutRate(parseFloat(e.target.value) || 92),
-                            className: "w-full bg-[#121214] border border-gray-600 rounded-lg px-2 py-1.5 text-xs text-white font-bold focus:outline-none focus:border-cyan-400 cursor-pointer",
+                            style: { color: "#000000", backgroundColor: "#ffffff", fontWeight: "800", border: "2px solid #06b6d4" },
+                            className: "w-full rounded-lg px-2 py-1.5 text-xs text-black font-bold focus:outline-none cursor-pointer",
                             children: [
-                              n.jsx("option", { value: 90, children: "90 บาท" }),
-                              n.jsx("option", { value: 92, children: "92 บาท" }),
-                              n.jsx("option", { value: 95, children: "95 บาท" }),
-                              n.jsx("option", { value: 100, children: "100 บาท" })
+                              n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: 90, children: "90 บาท" }),
+                              n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: 92, children: "92 บาท" }),
+                              n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: 95, children: "95 บาท" }),
+                              n.jsx("option", { style: { color: "#000000", backgroundColor: "#ffffff" }, value: 100, children: "100 บาท" })
                             ]
                           })
                         ]
@@ -384,7 +387,8 @@ const newLy = `Ly=({initialDigits:e})=>{
                             onChange: e => setMmTargetProfit(Math.max(0, parseFloat(e.target.value) || 0)),
                             min: "100",
                             step: "100",
-                            className: "w-full bg-[#121214] border border-gray-600 rounded-lg px-2 py-1 text-xs text-white font-bold focus:outline-none focus:border-emerald-400"
+                            style: { color: "#000000", backgroundColor: "#ffffff", fontWeight: "900", border: "2px solid #10b981" },
+                            className: "w-full rounded-lg px-2 py-1 text-xs text-black font-black focus:outline-none"
                           })
                         ]
                       })
