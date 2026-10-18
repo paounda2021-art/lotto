@@ -555,7 +555,7 @@ const newIIFE = `((()=>{
       ]
     });
 
-    // HANOI 100% 6-PRIZE WIN4 CARD (การ์ดที่ 3 ต่อจากกล่องเขียว - ธีมม่วงกลาส วิเคราะห์จากเลข 6 รางวัลประจำวัน 100%)
+    // HANOI 100% 6-PRIZE WIN4 CARD (การ์ดที่ 3 ต่อจากกล่องเขียว - ธีมม่วงกลาส วิเคราะห์จากเลข 6 รางวัลรอบก่อนหน้า ล็อคแม่นยำไม่เปลี่ยนเลขหลังหวยออก)
     let hanoiPurpleDigits;
     const hanoiPurpleSourcePrizes = [];
 
@@ -574,73 +574,77 @@ const newIIFE = `((()=>{
       }
     } catch(err){}
 
-    if (isNextMode) {
-      // โหมดงวดถัดไป: นำผล 6 รางวัลจากงวดประจำวันล่าสุดมาคำนวณสด
-      const sortedDates = Array.from(new Set(fullHanoiD.map(d => d.date).filter(Boolean))).sort().reverse();
-      const latestDt = sortedDates[0];
-      const latestSessions = fullHanoiD.filter(d => d.date === latestDt);
-      latestSessions.forEach(s => {
-        if (s.top2) hanoiPurpleSourcePrizes.push(s.top2);
-        if (s.bottom2) hanoiPurpleSourcePrizes.push(s.bottom2);
+    // 1. ระบุวันที่เป้าหมาย (targetDate) ที่กำลังแสดงผล
+    const sortedUniqueDates = Array.from(new Set(fullHanoiD.map(d => d.date).filter(Boolean))).sort();
+    const purpleDayCode = r || (O && O[0] ? O[0].dayOfWeek : "Sun");
+    let targetDate = null;
+    if (r) {
+      const datesForDay = sortedUniqueDates.filter(dt => {
+        const match = fullHanoiD.find(d => d.date === dt);
+        return match && match.dayOfWeek === r;
       });
-      if (hanoiPurpleSourcePrizes.length === 0 && allD && allD[0]) {
-        if (allD[0].top2) hanoiPurpleSourcePrizes.push(allD[0].top2);
-        if (allD[0].bottom2) hanoiPurpleSourcePrizes.push(allD[0].bottom2);
+      if (datesForDay.length > 0) targetDate = datesForDay[datesForDay.length - 1];
+    }
+    if (!targetDate) {
+      targetDate = (O && O[0] && O[0].date) ? O[0].date : (sortedUniqueDates.length > 0 ? sortedUniqueDates[sortedUniqueDates.length - 1] : null);
+    }
+
+    // 2. หาวันก่อนหน้า (prevDate) เพื่อนำผลรางวัล 6 ตัวของวันก่อนหน้ามาเป็นฐานคำนวณแท้จริง
+    let prevDate = null;
+    if (targetDate && sortedUniqueDates.length > 0) {
+      const tIdx = sortedUniqueDates.indexOf(targetDate);
+      if (tIdx > 0) {
+        prevDate = sortedUniqueDates[tIdx - 1];
       }
+    }
+    if (!prevDate && sortedUniqueDates.length > 1) {
+      prevDate = sortedUniqueDates[sortedUniqueDates.length - 2];
+    } else if (!prevDate && sortedUniqueDates.length === 1) {
+      prevDate = sortedUniqueDates[0];
+    }
 
-      const freq = {};
-      hanoiPurpleSourcePrizes.forEach(p => p.split("").forEach(ch => { freq[ch] = (freq[ch] || 0) + 1; }));
-      let sumP = 0;
-      hanoiPurpleSourcePrizes.forEach(p => { sumP += parseInt(p, 10) || 0; });
-      const sumDigit = sumP % 10;
-      const shadowDigit = (sumDigit + 5) % 10;
-      const sortedFreq = Object.keys(freq).map(Number).sort((x, y) => freq[y] - freq[x]);
-
-      const chosen = [];
-      const seen = new Set();
-      [sortedFreq[0], sortedFreq[1], sumDigit, shadowDigit].forEach(d => {
-        if (d !== undefined && !isNaN(d) && !seen.has(d)) {
-          seen.add(d); chosen.push(d);
+    // 3. ดึงผลรางวัล 6 ตัวของ prevDate (พิเศษ, ปกติ, VIP)
+    if (prevDate) {
+      const prevSessions = fullHanoiD.filter(d => d.date === prevDate);
+      const sessOrder = ["HANOI_SPECIAL", "HANOI_EVENING", "HANOI_VIP"];
+      sessOrder.forEach(sess => {
+        const s = prevSessions.find(d => d.session === sess);
+        if (s) {
+          if (s.top2) hanoiPurpleSourcePrizes.push(s.top2);
+          if (s.bottom2) hanoiPurpleSourcePrizes.push(s.bottom2);
         }
       });
-      [sortedFreq[2], sortedFreq[3], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(c => {
-        if (chosen.length < 4 && c !== undefined && !isNaN(c) && !seen.has(c)) {
-          seen.add(c); chosen.push(c);
-        }
-      });
-      hanoiPurpleDigits = chosen.slice(0, 4).sort((x, y) => x - y);
-    } else {
-      // โหมดย้อนดูผลรางวัลประจำวัน: นำเลข 6 รางวัลประจำวันนั้นมาคัดเข้าเป้า 100%
-      const targetDayCode = r || (O && O[0] ? O[0].dayOfWeek : "Fri");
-      const activeDayDate = (O && O[0] ? O[0].date : null) || (fullHanoiD.find(d => d.dayOfWeek === targetDayCode)?.date);
-      const daySessions = fullHanoiD.filter(d => d.date === activeDayDate);
-      daySessions.forEach(s => {
-        if (s.top2) hanoiPurpleSourcePrizes.push(s.top2);
-        if (s.bottom2) hanoiPurpleSourcePrizes.push(s.bottom2);
-      });
-      if (hanoiPurpleSourcePrizes.length === 0 && O) {
-        O.forEach(s => {
-          if (s && s.top2) hanoiPurpleSourcePrizes.push(s.top2);
-          if (s && s.bottom2) hanoiPurpleSourcePrizes.push(s.bottom2);
+      if (hanoiPurpleSourcePrizes.length === 0) {
+        prevSessions.forEach(s => {
+          if (s.top2) hanoiPurpleSourcePrizes.push(s.top2);
+          if (s.bottom2) hanoiPurpleSourcePrizes.push(s.bottom2);
         });
       }
-
-      const freq = {};
-      hanoiPurpleSourcePrizes.forEach(p => p.split("").forEach(ch => { freq[ch] = (freq[ch] || 0) + 1; }));
-      const rankOrder = hanoiPurpleSourcePrizes.join("") + "0123456789";
-      const sortedDigits = Object.keys(freq).map(Number).sort((x, y) => {
-        if (freq[y] !== freq[x]) return freq[y] - freq[x];
-        return rankOrder.indexOf(String(x)) - rankOrder.indexOf(String(y));
-      });
-
-      const chosen = sortedDigits.slice(0, 4);
-      const cands = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-      for (const c of cands) {
-        if (chosen.length >= 4) break;
-        if (!chosen.includes(c)) chosen.push(c);
-      }
-      hanoiPurpleDigits = chosen.slice(0, 4).sort((x, y) => x - y);
     }
+
+    // 4. คำนวณ 4 ตัวเด่น (ล็อคแน่นหนา ห้ามเปลี่ยนเลขเด็ดขาดเมื่อผลรางวัลของ targetDate เริ่มทยอยออก)
+    const freq = {};
+    hanoiPurpleSourcePrizes.forEach(p => p.split("").forEach(ch => { freq[ch] = (freq[ch] || 0) + 1; }));
+    let sumP = 0;
+    hanoiPurpleSourcePrizes.forEach(p => { sumP += parseInt(p, 10) || 0; });
+    const sumDigit = sumP % 10;
+    const shadowDigit = (sumDigit + 5) % 10;
+    const sortedFreq = Object.keys(freq).map(Number).sort((x, y) => freq[y] - freq[x]);
+
+    const chosen = [];
+    const seen = new Set();
+    [sortedFreq[0], sortedFreq[1], sumDigit, shadowDigit].forEach(d => {
+      if (d !== undefined && !isNaN(d) && !seen.has(d)) {
+        seen.add(d); chosen.push(d);
+      }
+    });
+    [sortedFreq[2], sortedFreq[3], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9].forEach(c => {
+      if (chosen.length < 4 && c !== undefined && !isNaN(c) && !seen.has(c)) {
+        seen.add(c); chosen.push(c);
+      }
+    });
+    hanoiPurpleDigits = chosen.slice(0, 4).sort((x, y) => x - y);
+    if (hanoiPurpleDigits.length < 4) hanoiPurpleDigits = [3, 4, 7, 9];
 
     const hanoiPurplePairs2D = [];
     for (let i = 0; i < hanoiPurpleDigits.length; i++) {
@@ -657,8 +661,27 @@ const newIIFE = `((()=>{
       }
     }
 
-    const hanoiPurpleHitCount2D = hanoiPurplePairs2D.filter(p => hanoiWin2D && hanoiWin2D.has(p)).length;
-    const hanoiPurpleHitCount3D = hanoiPurpleTriples3D.filter(t => hanoiWin3D && (hanoiWin3D.has(t) || hanoiWin3D.has(t.split("").sort().join("")))).length;
+    // 5. รวบรวมผลรางวัลที่ออกแล้วของ targetDate เพื่อเช็คการเข้าเป้า
+    const purpleWin2D = new Set();
+    const purpleWin3D = new Set();
+    const dayDraws = fullHanoiD.filter(d => d.date === targetDate);
+    if (O && O.length > 0 && (!targetDate || O[0]?.date === targetDate)) {
+      O.forEach(s => {
+        if (s && !dayDraws.some(x => x.session === s.session && x.date === s.date)) dayDraws.push(s);
+      });
+    }
+    dayDraws.forEach(dr => {
+      if (dr && dr.top3 && dr.top3.trim() !== "") {
+        purpleWin3D.add(dr.top3);
+        purpleWin3D.add(dr.top3.split("").sort().join(""));
+      }
+      const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
+      if (t2) purpleWin2D.add(t2);
+      if (dr.bottom2) purpleWin2D.add(dr.bottom2);
+    });
+
+    const hanoiPurpleHitCount2D = hanoiPurplePairs2D.filter(p => purpleWin2D.has(p)).length;
+    const hanoiPurpleHitCount3D = hanoiPurpleTriples3D.filter(t => purpleWin3D.has(t) || purpleWin3D.has(t.split("").sort().join(""))).length;
 
     const card3 = n.jsxs("div", {
       className: "border-2 border-purple-500/50 rounded-2xl p-4 sm:p-5 bg-black/55 shadow-[0_0_20px_rgba(168,85,247,0.22)] relative overflow-hidden space-y-3.5",
@@ -672,7 +695,7 @@ const newIIFE = `((()=>{
               children: [
                 n.jsx("span", {
                   className: "bg-gradient-to-r from-purple-400 via-fuchsia-400 to-indigo-400 text-black text-xs font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider shadow-sm",
-                  children: isNextMode ? "🔥 ชุดคัดเน้นพิเศษ 4 เลข (คำนวณสดจากเลข 6 รางวัลงวดล่าสุด)" : "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สูตรคำนวณเลข 6 รางวัลประจำวัน 100%)"
+                  children: "🔥 ชุดคัดเน้นพิเศษ 4 เลข (สูตรคำนวณจากผลรางวัล 6 ชุดรอบก่อนหน้า)"
                 }),
                 n.jsx("h4", {
                   style: {
@@ -680,7 +703,7 @@ const newIIFE = `((()=>{
                     textShadow: "0 0 14px rgba(192, 132, 252, 0.9), 0 1px 3px rgba(0, 0, 0, 0.9)"
                   },
                   className: "text-sm sm:text-base font-extrabold text-white",
-                  children: isNextMode ? ("ชุดเลขวินเน้น 4 ตัว งวดวัน" + h.dayName + "ที่จะถึง (ฮานอย 3 นอย)") : "ชุดเลขวินเน้น 4 ตัว รอบต่อรอบ (ฮานอย 3 นอย เข้าเป้า 100%)"
+                  children: "ชุดเลขวินเน้น 4 ตัว ล่า 3 รอบ (ฮานอยพิเศษ ➔ ปกติ ➔ VIP)"
                 })
               ]
             }),
@@ -698,13 +721,17 @@ const newIIFE = `((()=>{
               children: [
                 n.jsxs("span", {
                   className: "bg-purple-500/20 text-purple-200 border border-purple-500/40 px-2.5 py-0.5 rounded-md flex items-center gap-1",
-                  children: isNextMode
-                    ? ["🎯 สูตรวิน 4 ตัว ฮานอย: ", n.jsx("strong", { className: "text-purple-300 font-black", children: "คำนวณคัดใหม่สดจาก 6 ผลรางวัลงวดล่าสุด (" + (hanoiPurpleSourcePrizes.length > 0 ? hanoiPurpleSourcePrizes.join(", ") : "45, 12, 56, 98, 66, 04") + ") ➔ ชุดเด่นงวดใหม่" })]
-                    : ["🎯 สูตรวิน 4 ตัว ฮานอย: ", n.jsx("strong", { className: "text-purple-300 font-black", children: "การันตีสถิติเข้าเป้า 100% (คำนวณจากเลข 6 รางวัลประจำวัน)" })]
+                  children: [
+                    "🎯 สูตรวิน 4 ตัว ฮานอย: ",
+                    n.jsx("strong", {
+                      className: "text-purple-300 font-black",
+                      children: "คำนวณจาก 6 ผลรางวัลรอบก่อนหน้า (" + (hanoiPurpleSourcePrizes.length > 0 ? hanoiPurpleSourcePrizes.join(", ") : "-") + ") ➔ ชุดวินล่า 3 รอบ"
+                    })
+                  ]
                 }),
                 n.jsxs("span", {
                   className: "bg-black/40 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-md",
-                  children: ["🗓️ ประจำ: วัน", h.dayName, isNextMode ? " (งวดถัดไป)" : ""]
+                  children: ["🗓️ ประจำ: วัน", h.dayName]
                 })
               ]
             }),
@@ -771,9 +798,7 @@ const newIIFE = `((()=>{
             n.jsx("div", {
               style: { color: "#d8b4fe" },
               className: "text-xs font-semibold pl-1",
-              children: isNextMode
-                ? ("เน้นตัดตรง 4 เลขเด่นคัดใหม่สดจาก 6 ผลรางวัลงวดล่าสุด (" + (hanoiPurpleSourcePrizes.length > 0 ? hanoiPurpleSourcePrizes.join(", ") : "45, 12, 56, 98, 66, 04") + ") ➔ สำหรับงวดวัน" + h.dayName + "ที่จะถึง (พิเศษ ➔ ปกติ ➔ VIP)")
-                : "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ จากเลข 6 รางวัลประจำงวด (สูตรไร้พ่าย เข้าเป้า 100% ล่า 3 นอย)"
+              children: "เน้นตัดตรง 4 เลขเด่นคัดพิเศษ จากสูตรคำนวณ 6 รางวัลรอบก่อนหน้า (สถิติล่า 3 นอย เข้าเป้าต่อเนื่อง)"
             })
           ]
         }),
@@ -792,11 +817,7 @@ const newIIFE = `((()=>{
                       className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                       children: [
                         "⚡ ชุดเลขวิน 2 ตัว บน-ล่าง (" + hanoiPurplePairs2D.length + " ชุด):",
-                        isNextMode ? n.jsx("span", {
-                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
-                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
-                          children: "⏳ รอผลออกรางวัล"
-                        }) : (hanoiPurpleHitCount2D > 0 ? n.jsxs("span", {
+                        hanoiPurpleHitCount2D > 0 ? n.jsxs("span", {
                           style: {
                             background: "linear-gradient(90deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
                             color: "#ffffff",
@@ -805,7 +826,15 @@ const newIIFE = `((()=>{
                           },
                           className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5",
                           children: ["✓ เข้าเป้า ", hanoiPurpleHitCount2D, " ชุด"]
-                        }) : null)
+                        }) : (purpleWin2D.size < 6 && purpleWin2D.size > 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: "⏳ กำลังล่ารอบถัดไป"
+                        }) : (purpleWin2D.size === 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: "⏳ รอผลออกรางวัล"
+                        }) : null))
                       ]
                     }),
                     n.jsx("button", {
@@ -832,7 +861,7 @@ const newIIFE = `((()=>{
                 n.jsx("div", {
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPurplePairs2D.map(p => {
-                    const isHit = hanoiWin2D && hanoiWin2D.has(p);
+                    const isHit = purpleWin2D && purpleWin2D.has(p);
                     return n.jsx("span", {
                       key: p,
                       style: isHit ? {
@@ -866,11 +895,7 @@ const newIIFE = `((()=>{
                       className: "text-xs font-bold text-purple-300 flex items-center gap-1.5",
                       children: [
                         "⚡ ชุดเลขวิน 3 ตัวตรง (" + hanoiPurpleTriples3D.length + " ชุด / 24 โต๊ด):",
-                        isNextMode ? n.jsx("span", {
-                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
-                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
-                          children: "⏳ รอผลออกรางวัล"
-                        }) : (hanoiPurpleHitCount3D > 0 ? n.jsxs("span", {
+                        hanoiPurpleHitCount3D > 0 ? n.jsxs("span", {
                           style: {
                             background: "linear-gradient(90deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
                             color: "#ffffff",
@@ -879,7 +904,15 @@ const newIIFE = `((()=>{
                           },
                           className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5",
                           children: ["✓ เข้าเป้า ", hanoiPurpleHitCount3D, " ชุด"]
-                        }) : null)
+                        }) : (purpleWin3D.size < 3 && purpleWin3D.size > 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: "⏳ กำลังล่ารอบถัดไป"
+                        }) : (purpleWin3D.size === 0 ? n.jsx("span", {
+                          style: { background: "rgba(168, 85, 247, 0.2)", color: "#d8b4fe", border: "1px solid rgba(192, 132, 252, 0.4)" },
+                          className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5",
+                          children: "⏳ รอผลออกรางวัล"
+                        }) : null))
                       ]
                     }),
                     n.jsx("button", {
@@ -906,7 +939,7 @@ const newIIFE = `((()=>{
                 n.jsx("div", {
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPurpleTriples3D.map(t => {
-                    const isHit = hanoiWin3D && (hanoiWin3D.has(t) || hanoiWin3D.has(t.split("").sort().join("")));
+                    const isHit = purpleWin3D && (purpleWin3D.has(t) || purpleWin3D.has(t.split("").sort().join("")));
                     return n.jsx("span", {
                       key: t,
                       style: isHit ? {
