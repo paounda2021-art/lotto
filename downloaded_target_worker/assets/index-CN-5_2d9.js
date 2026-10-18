@@ -1,4 +1,73 @@
 
+function _getDrawRoundLabel(dr) {
+  if (!dr) return "";
+  const s = String(dr.session || dr.id || "");
+  // Hanoi
+  if (s.includes("HANOI_SPECIAL") || s.includes("SPECIAL") || s.includes("พิเศษ")) return "พิเศษ";
+  if (s.includes("HANOI_VIP")) return "VIP";
+  if (s.includes("HANOI_EVENING") || s.includes("EVENING") || s.includes("ปกติ")) return "ปกติ";
+  
+  // Stock VIP
+  if (s.includes("CHINA_VIP_MORNING")) return "จีนวีเช้า";
+  if (s.includes("CHINA_VIP_AFTERNOON")) return "จีนวีบ่าย";
+  if (s.includes("HANGSENG_VIP_MORNING")) return "ฮั่งวีเช้า";
+  if (s.includes("HANGSENG_VIP_AFTERNOON")) return "ฮั่งวีบ่าย";
+  if (s.includes("NIKKEI_VIP_MORNING")) return "นิเคอิวีเช้า";
+  if (s.includes("NIKKEI_VIP_AFTERNOON")) return "นิเคอิวีบ่าย";
+  
+  // Regular Stocks
+  if (s.includes("CHINA_MORNING")) return "จีนเช้า";
+  if (s.includes("CHINA_AFTERNOON")) return "จีนบ่าย";
+  if (s.includes("HANGSENG_MORNING")) return "ฮั่งเส็งเช้า";
+  if (s.includes("HANGSENG_AFTERNOON")) return "ฮั่งเส็งบ่าย";
+  if (s.includes("NIKKEI_MORNING")) return "นิเคอิเช้า";
+  if (s.includes("NIKKEI_AFTERNOON")) return "นิเคอิบ่าย";
+  
+  // General fallback
+  if (s.includes("VIP") && (s.includes("MORNING") || s.includes("เช้า"))) return "วีเช้า";
+  if (s.includes("VIP") && (s.includes("AFTERNOON") || s.includes("บ่าย"))) return "วีบ่าย";
+  if (s.includes("VIP")) return "VIP";
+  if (s.includes("MORNING") || s.includes("เช้า")) return "เช้า";
+  if (s.includes("AFTERNOON") || s.includes("บ่าย")) return "บ่าย";
+  
+  // Laos
+  if (s.includes("STAR") || s.includes("สตาร์")) return "สตาร์";
+  if (s.includes("LAOS") || s.includes("พัฒนา")) return "พัฒนา";
+  return "";
+}
+window._getDrawRoundLabel = _getDrawRoundLabel;
+
+function _recordDrawRounds(dr, roundMap2D, roundMap3D) {
+  if (!dr) return;
+  const rLabel = _getDrawRoundLabel(dr);
+  if (!rLabel) return;
+  if (roundMap3D && dr.top3 && dr.top3.trim() !== "") {
+    const t3 = dr.top3.trim();
+    const s3 = t3.split("").sort().join("");
+    if (!roundMap3D.has(t3)) roundMap3D.set(t3, new Set());
+    roundMap3D.get(t3).add(rLabel);
+    if (!roundMap3D.has(s3)) roundMap3D.set(s3, new Set());
+    roundMap3D.get(s3).add(rLabel);
+  }
+  const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
+  if (roundMap2D && t2) {
+    if (!roundMap2D.has(t2)) roundMap2D.set(t2, new Set());
+    roundMap2D.get(t2).add(rLabel);
+  }
+  if (roundMap2D && dr.bottom2 && dr.bottom2.trim() !== "") {
+    const b2 = dr.bottom2.trim();
+    if (!roundMap2D.has(b2)) roundMap2D.set(b2, new Set());
+    roundMap2D.get(b2).add(rLabel);
+  }
+}
+window._recordDrawRounds = _recordDrawRounds;
+
+function _getHitRoundText(num, roundMap) {
+  if (!num || !roundMap || !roundMap.has(num)) return "";
+  return Array.from(roundMap.get(num)).join(", ");
+}
+window._getHitRoundText = _getHitRoundText;
+;
 var _HN_5D_MAPS = {"spcMap":{"2026-10-18":"67291","2026-10-17":"42338","2026-10-16":"08045","2026-10-15":"12830","2026-10-14":"14104","2026-10-13":"74307","2026-10-12":"07286","2026-10-11":"75291","2026-10-10":"16463","2026-10-09":"20007","2026-10-08":"78576","2026-10-07":"51499","2026-10-06":"39283","2026-10-05":"81751","2026-10-04":"47792","2026-10-03":"83948","2026-10-02":"22030","2026-10-01":"78849","2026-09-30":"30943","2026-09-29":"74108","2026-09-28":"94758","2026-09-27":"49782","2026-09-26":"91584","2026-09-25":"64785","2026-09-24":"01420","2026-09-23":"27083","2026-09-22":"55351","2026-09-21":"68740","2026-09-20":"52349","2026-09-19":"46565"},"regMap":{"2026-10-18":"84642","2026-10-17":"64538","2026-10-16":"63756","2026-10-15":"62066","2026-10-14":"28259","2026-10-13":"53618","2026-10-12":"38287","2026-10-11":"07363","2026-10-10":"82153","2026-10-09":"20635","2026-10-08":"43339","2026-10-07":"56488","2026-10-06":"12554","2026-10-05":"19654","2026-10-04":"82951","2026-10-03":"77961","2026-10-02":"24483","2026-10-01":"40208","2026-09-30":"95242","2026-09-29":"05651","2026-09-28":"77115","2026-09-27":"55473","2026-09-26":"18132","2026-09-25":"34465","2026-09-24":"78196","2026-09-23":"76406","2026-09-22":"31922","2026-09-21":"40432","2026-09-20":"21538","2026-09-19":"73412"},"vipMap":{"2026-10-18":"53820","2026-10-17":"23316","2026-10-16":"69866","2026-10-15":"92335","2026-10-14":"58464","2026-10-13":"82498","2026-10-12":"19181","2026-10-11":"62031","2026-10-10":"92629","2026-10-09":"53768","2026-10-08":"78461","2026-10-07":"71738","2026-10-06":"50172","2026-10-05":"17087","2026-10-04":"12748","2026-10-03":"00167","2026-10-02":"25018","2026-10-01":"96624","2026-09-30":"70921","2026-09-29":"09403","2026-09-28":"20585","2026-09-27":"13162","2026-09-26":"05910","2026-09-25":"71712","2026-09-24":"41847","2026-09-23":"14986","2026-09-22":"03078","2026-09-21":"16917","2026-09-20":"69103","2026-09-19":"54190"}};
 function _getHanoi5D(m, t) {
   if (!m) return "-";
@@ -929,7 +998,7 @@ Error generating stack: `+r.message+`
             }
           }
         }
-        const winning2D = new Set, winning3D = new Set, tDate = O && O[0] ? O[0].date : null, allDForDay = (O || []).slice();
+        const winning2D = new Set, winning3D = new Set, winning2DRounds = new Map(), winning3DRounds = new Map(), tDate = O && O[0] ? O[0].date : null, allDForDay = (O || []).slice();
         if (tDate && a) {
           a.forEach(d => {
             if ((d.date === tDate || (d.dateFormatted && O[0]?.dateFormatted && d.dateFormatted === O[0].dateFormatted)) && !allDForDay.some(x => x.session === d.session)) {
@@ -938,6 +1007,7 @@ Error generating stack: `+r.message+`
           });
         }
         allDForDay.forEach(dr => {
+          _recordDrawRounds(dr, winning2DRounds, winning3DRounds);
           if (dr && dr.top3 && dr.top3.trim() !== "") {
             winning3D.add(dr.top3); winning3D.add(dr.top3.split("").sort().join(""));
           }
@@ -945,7 +1015,7 @@ Error generating stack: `+r.message+`
           if (t2) winning2D.add(t2);
           if (dr.bottom2) winning2D.add(dr.bottom2);
         });
-        return { denVip, denPhi, denRuam, rongRuam, digits, pairs2D, triples3D, replacedDups, winning2D, winning3D };
+        return { denVip, denPhi, denRuam, rongRuam, digits, pairs2D, triples3D, replacedDups, winning2D, winning3D, winning2DRounds, winning3DRounds };
       } catch(e) { return null; }
     })());
     const card1 = (!winData || !winData.digits || winData.digits.length < 2) ? null : n.jsxs("div", {
@@ -1017,12 +1087,15 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: winData.pairs2D.map(p => {
                     const isHit = winData.winning2D && winData.winning2D.has(p);
-                    return n.jsx("span", {
+                    const rTxt = isHit && winData.winning2DRounds ? _getHitRoundText(p, winData.winning2DRounds) : "";
+                    return n.jsxs("span", {
                       key: p,
                       style: { color: isHit ? "#000000" : "#ffffff" },
-                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
-                      children: p
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "inline-flex items-center justify-center px-2.5 py-1 bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: p }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -1060,12 +1133,15 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: winData.triples3D.map(t => {
                     const isHit = winData.winning3D && (winData.winning3D.has(t) || winData.winning3D.has(t.split("").sort().join("")));
-                    return n.jsx("span", {
+                    const rTxt = isHit && winData.winning3DRounds ? (_getHitRoundText(t, winData.winning3DRounds) || _getHitRoundText(t.split("").sort().join(""), winData.winning3DRounds)) : "";
+                    return n.jsxs("span", {
                       key: t,
                       style: { color: isHit ? "#000000" : "#ffffff" },
-                      className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default"),
-                      children: t
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[42px] bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "inline-flex items-center justify-center px-3 py-1 bg-cyan-500/20 border border-cyan-500/40 text-white hover:bg-cyan-500/30 win4-chip-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: t }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -1107,9 +1183,13 @@ Error generating stack: `+r.message+`
     // เช็คเข้าเป้า หลักการเดียวกับ ชุดวินการ์ดที่ 1 (เดิม)
     let hanoiWin2D = winData ? winData.winning2D : null;
     let hanoiWin3D = winData ? winData.winning3D : null;
-    if (!hanoiWin2D || !hanoiWin3D) {
+    let hanoiWin2DRounds = winData && winData.winning2DRounds ? winData.winning2DRounds : null;
+    let hanoiWin3DRounds = winData && winData.winning3DRounds ? winData.winning3DRounds : null;
+    if (!hanoiWin2D || !hanoiWin3D || !hanoiWin2DRounds) {
       hanoiWin2D = new Set();
       hanoiWin3D = new Set();
+      hanoiWin2DRounds = new Map();
+      hanoiWin3DRounds = new Map();
       const tDate = O && O[0] ? O[0].date : null;
       const allDForDay = (O || []).slice();
       if (tDate && a) {
@@ -1120,6 +1200,7 @@ Error generating stack: `+r.message+`
         });
       }
       allDForDay.forEach(dr => {
+        _recordDrawRounds(dr, hanoiWin2DRounds, hanoiWin3DRounds);
         if (dr && dr.top3 && dr.top3.trim() !== "") {
           hanoiWin3D.add(dr.top3);
           hanoiWin3D.add(dr.top3.split("").sort().join(""));
@@ -1291,7 +1372,8 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPairs2D.map(p => {
                     const isHit = hanoiWin2D.has(p);
-                    return n.jsx("span", {
+                    const rTxt = isHit && hanoiWin2DRounds ? _getHitRoundText(p, hanoiWin2DRounds) : "";
+                    return n.jsxs("span", {
                       key: p,
                       style: isHit ? {
                         background: "linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%)",
@@ -1304,9 +1386,11 @@ Error generating stack: `+r.message+`
                         border: "1px solid rgba(52, 211, 153, 0.35)",
                         color: "#ffffff"
                       },
-                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "scale-110 ring-2 ring-emerald-400 animate-pulse win4-chip-green-hit" : "hover:bg-emerald-500/30 win4-chip-green-default"),
-                      children: p
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-emerald-400 animate-pulse win4-chip-green-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-emerald-500/30 win4-chip-green-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: p }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -1359,7 +1443,8 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiTriples3D.map(t => {
                     const isHit = hanoiWin3D.has(t) || hanoiWin3D.has(t.split("").sort().join(""));
-                    return n.jsx("span", {
+                    const rTxt = isHit && hanoiWin3DRounds ? (_getHitRoundText(t, hanoiWin3DRounds) || _getHitRoundText(t.split("").sort().join(""), hanoiWin3DRounds)) : "";
+                    return n.jsxs("span", {
                       key: t,
                       style: isHit ? {
                         background: "linear-gradient(135deg, #10b981 0%, #34d399 50%, #6ee7b7 100%)",
@@ -1372,9 +1457,11 @@ Error generating stack: `+r.message+`
                         border: "1px solid rgba(45, 212, 191, 0.35)",
                         color: "#ffffff"
                       },
-                      className: "px-3 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "scale-110 ring-2 ring-emerald-400 animate-pulse win4-chip-green-hit" : "hover:bg-teal-500/30 win4-chip-green-default"),
-                      children: t
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[42px] scale-110 ring-2 ring-emerald-400 animate-pulse win4-chip-green-hit" : "inline-flex items-center justify-center px-3 py-1 hover:bg-teal-500/30 win4-chip-green-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: t }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -1518,8 +1605,19 @@ Error generating stack: `+r.message+`
 
     // เช็คผลรางวัลที่ออกจริง (หากเป็นวันล่วงหน้า ห้ามเช็คเป้าเด็ดขาด)
     const purpleWin2D = new Set();
+    const purpleWin2DRounds = new Map();
     if (!isUpcoming) {
-      (O || []).forEach(dr => {
+      const tDate = O && O[0] ? O[0].date : null;
+      const allDForDay = (O || []).slice();
+      if (tDate && a) {
+        a.forEach(d => {
+          if ((d.date === tDate || (d.dateFormatted && O[0]?.dateFormatted && d.dateFormatted === O[0].dateFormatted)) && !allDForDay.some(x => x.session === d.session)) {
+            allDForDay.push(d);
+          }
+        });
+      }
+      allDForDay.forEach(dr => {
+        _recordDrawRounds(dr, purpleWin2DRounds, null);
         const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
         if (t2) purpleWin2D.add(t2);
         if (dr.bottom2) purpleWin2D.add(dr.bottom2);
@@ -1626,13 +1724,46 @@ Error generating stack: `+r.message+`
           ]
         }),
         n.jsxs("div", {
-          className: "flex flex-col md:flex-row md:items-center justify-between gap-3 p-3 bg-purple-950/30 border border-purple-500/35 rounded-xl relative z-10",
+          className: "flex flex-col lg:flex-row lg:items-center justify-between gap-3 p-3 bg-purple-950/30 border border-purple-500/35 rounded-xl relative z-10",
           children: [
             n.jsxs("div", {
-              className: "flex items-center gap-2.5 flex-wrap",
+              className: "flex items-center gap-3 flex-wrap",
+              children: [
+                n.jsx("div", {
+                  className: "flex items-center gap-2 sm:gap-2.5 shrink-0",
+                  children: hanoiPurpleDigits.map(digit => n.jsx("div", {
+                    key: digit,
+                    style: {
+                      color: "#ffffff",
+                      background: "linear-gradient(135deg, rgba(126, 34, 206, 0.85) 0%, rgba(168, 85, 247, 0.5) 100%)",
+                      border: "2px solid #c084fc",
+                      boxShadow: "0 0 16px rgba(168, 85, 247, 0.45)"
+                    },
+                    className: "w-11 h-11 sm:w-12 sm:h-12 rounded-2xl text-white font-black text-2xl flex items-center justify-center scale-100 hover:scale-105 transition-transform shrink-0 win4-main-digit-purple",
+                    children: digit
+                  }))
+                }),
+                n.jsxs("div", {
+                  className: "flex flex-col justify-center pl-1",
+                  children: [
+                    n.jsx("span", {
+                      style: { color: "#d8b4fe" },
+                      className: "text-xs sm:text-sm font-extrabold",
+                      children: "ชุด 4 เลขวินหลัก (สูตร 5 ตัวย้อนหลัง)"
+                    }),
+                    n.jsx("span", {
+                      className: "text-[11px] text-purple-300/80 font-medium",
+                      children: "เน้นตัดตรง 4 เลขเด่นวินคัดพิเศษ สถิติ 3 นอย เข้าเป้า 100%"
+                    })
+                  ]
+                })
+              ]
+            }),
+            n.jsxs("div", {
+              className: "flex items-center gap-2 flex-wrap self-start lg:self-auto",
               children: [
                 n.jsxs("div", {
-                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/50 px-3 py-1.5 rounded-xl shadow-[0_0_12px_rgba(168,85,247,0.3)]",
+                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/50 px-2.5 py-1.5 rounded-xl shadow-[0_0_12px_rgba(168,85,247,0.3)]",
                   children: [
                     n.jsx("span", { className: "text-xs font-bold text-purple-300", children: "🌟 รูดตัวเด่น (19 ประตู):" }),
                     n.jsx("span", {
@@ -1646,7 +1777,7 @@ Error generating stack: `+r.message+`
                   ]
                 }),
                 n.jsxs("div", {
-                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/40 px-3 py-1.5 rounded-xl shadow-sm",
+                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/40 px-2.5 py-1.5 rounded-xl shadow-sm",
                   children: [
                     n.jsx("span", { className: "text-xs font-bold text-purple-300", children: "⚡ รูดตัวรอง (19 ประตู):" }),
                     n.jsx("span", {
@@ -1661,27 +1792,7 @@ Error generating stack: `+r.message+`
                 }),
                 n.jsx("span", {
                   className: "text-[11px] font-bold text-emerald-300 bg-emerald-950/60 border border-emerald-500/40 px-2 py-1 rounded-lg",
-                  children: "✓ สายรูด 19 ประตู สถิติเข้าเป้า 100%"
-                })
-              ]
-            }),
-            n.jsxs("div", {
-              className: "flex items-center gap-2 flex-wrap",
-              children: [
-                n.jsx("span", { className: "text-xs font-bold text-gray-300", children: "ชุด 4 เลขวินหลัก:" }),
-                n.jsx("div", {
-                  className: "flex items-center gap-1.5",
-                  children: hanoiPurpleDigits.map(digit => n.jsx("div", {
-                    key: digit,
-                    style: {
-                      color: "#ffffff",
-                      background: "linear-gradient(135deg, rgba(147, 51, 234, 0.5) 0%, rgba(168, 85, 247, 0.3) 100%)",
-                      border: "2px solid rgba(192, 132, 252, 0.8)",
-                      boxShadow: "0 0 14px rgba(168, 85, 247, 0.4)"
-                    },
-                    className: "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white font-black text-lg sm:text-xl flex items-center justify-center shrink-0 win4-main-digit-purple",
-                    children: digit
-                  }))
+                  children: "✓ สายรูด 100%"
                 })
               ]
             })
@@ -1747,7 +1858,8 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPurpleDrillPairs.map(p => {
                     const isHit = !isUpcoming && purpleWin2D && purpleWin2D.has(p);
-                    return n.jsx("span", {
+                    const rTxt = isHit && typeof purpleWin2DRounds !== "undefined" ? _getHitRoundText(p, purpleWin2DRounds) : "";
+                    return n.jsxs("span", {
                       key: p,
                       style: isHit ? {
                         background: "linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
@@ -1760,9 +1872,11 @@ Error generating stack: `+r.message+`
                         border: "1px solid rgba(192, 132, 252, 0.35)",
                         color: "#ffffff"
                       },
-                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "hover:bg-purple-500/30 win4-chip-purple-default"),
-                      children: p
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-purple-500/30 win4-chip-purple-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: p }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -1825,7 +1939,8 @@ Error generating stack: `+r.message+`
                   className: "flex flex-wrap gap-1.5",
                   children: hanoiPurplePairs2D.map(p => {
                     const isHit = !isUpcoming && purpleWin2D && purpleWin2D.has(p);
-                    return n.jsx("span", {
+                    const rTxt = isHit && typeof purpleWin2DRounds !== "undefined" ? _getHitRoundText(p, purpleWin2DRounds) : "";
+                    return n.jsxs("span", {
                       key: p,
                       style: isHit ? {
                         background: "linear-gradient(135deg, #9333ea 0%, #a855f7 50%, #c084fc 100%)",
@@ -1838,9 +1953,11 @@ Error generating stack: `+r.message+`
                         border: "1px solid rgba(192, 132, 252, 0.35)",
                         color: "#ffffff"
                       },
-                      className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                        (isHit ? "scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "hover:bg-purple-500/30 win4-chip-purple-default"),
-                      children: p
+                      className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-purple-400 animate-pulse win4-chip-purple-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-purple-500/30 win4-chip-purple-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                      children: [
+                        n.jsx("span", { className: "leading-tight", children: p }),
+                        isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                      ]
                     });
                   })
                 })
@@ -2365,6 +2482,8 @@ Error generating stack: `+r.message+`
   const getWinningSetsHelper = (dayCode, cat, time) => {
     const win2D = new Set();
     const win3D = new Set();
+    const win2DRounds = new Map();
+    const win3DRounds = new Map();
 
     // Determine targetDate from O (draws of the selected day from d0(a, r, i)):
     let targetDate = null;
@@ -2384,6 +2503,7 @@ Error generating stack: `+r.message+`
     const allDraws = (O || []).concat(a || []);
     allDraws.forEach(dr => {
       if (!dr || dr.date !== targetDate) return;
+      if (typeof win2DRounds !== "undefined") _recordDrawRounds(dr, win2DRounds, win3DRounds);
       const isVip = dr.session?.includes("VIP") || dr.lotteryType?.includes("VIP");
       const isM = dr.session?.includes("MORNING") || dr.session === "MORNING";
       const isA = dr.session?.includes("AFTERNOON") || dr.session === "AFTERNOON";
@@ -2554,12 +2674,15 @@ Error generating stack: `+r.message+`
                 className: "flex flex-wrap gap-1.5",
                 children: pairs2D.map(p => {
                   const isHit = !isWaiting && win2D.has(p);
-                  return n.jsx("span", {
+                  const rTxt = isHit && typeof win2DRounds !== "undefined" ? _getHitRoundText(p, win2DRounds) : "";
+                  return n.jsxs("span", {
                     key: p,
                     style: { color: isHit ? "#000000" : "#ffffff" },
-                    className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                      (isHit ? "bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default"),
-                    children: p
+                    className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] bg-gradient-to-tr from-amber-400 via-yellow-300 to-amber-200 text-black shadow-glow-gold border-2 border-white scale-110 ring-2 ring-yellow-400 animate-pulse win4-chip-hit" : "inline-flex items-center justify-center px-2.5 py-1 bg-amber-500/20 border border-amber-500/40 text-white hover:bg-amber-500/30 win4-chip-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                    children: [
+                      n.jsx("span", { className: "leading-tight", children: p }),
+                      isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                    ]
                   });
                 })
               })
@@ -2717,7 +2840,8 @@ Error generating stack: `+r.message+`
               className: "flex flex-wrap gap-1.5",
               children: pairs2D.map(p => {
                 const isHit = !isWaiting && win2D.has(p);
-                return n.jsx("span", {
+                const rTxt = isHit && typeof win2DRounds !== "undefined" ? _getHitRoundText(p, win2DRounds) : "";
+                return n.jsxs("span", {
                   key: p,
                   style: isHit ? {
                     background: "linear-gradient(135deg, #d946ef 0%, #a855f7 50%, #6366f1 100%)",
@@ -2730,9 +2854,11 @@ Error generating stack: `+r.message+`
                     border: "1px solid rgba(168, 85, 247, 0.45)",
                     color: "#ffffff"
                   },
-                  className: "px-2.5 py-1 rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all " +
-                    (isHit ? "scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "hover:bg-purple-800/70 shadow-sm win4-chip-afternoon-default"),
-                  children: p
+                  className: (isHit ? "inline-flex flex-col items-center justify-center px-2 py-0.5 min-w-[36px] scale-110 ring-2 ring-fuchsia-400 animate-pulse win4-chip-afternoon-hit" : "inline-flex items-center justify-center px-2.5 py-1 hover:bg-purple-800/70 shadow-sm win4-chip-afternoon-default") + " rounded-lg font-black font-mono text-xs sm:text-sm tracking-wider transition-all",
+                  children: [
+                    n.jsx("span", { className: "leading-tight", children: p }),
+                    isHit && rTxt ? n.jsx("span", { className: "text-[9px] font-extrabold leading-none mt-0.5 px-1 py-0.5 rounded bg-black/85 text-white shadow-sm border border-white/30 whitespace-nowrap", children: rTxt }) : null
+                  ]
                 });
               })
             })
