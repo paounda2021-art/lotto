@@ -2485,7 +2485,9 @@ Error generating stack: `+r.message+`
     const win2DRounds = new Map();
     const win3DRounds = new Map();
 
-    // Determine targetDate from O (draws of the selected day from d0(a, r, i)):
+    const timeStr = time.toLowerCase(); // "morning" or "afternoon"
+
+    // 1. Determine targetDate for this dayCode
     let targetDate = null;
     if (O && O.length > 0 && O[0]?.date) {
       const oMatchesDay = O.some(d => d && (d.dayOfWeek === dayCode || !d.dayOfWeek));
@@ -2494,34 +2496,31 @@ Error generating stack: `+r.message+`
       }
     }
 
-    // If day is in future (g === true) or no draws recorded for this day, wait for results
+    // Fallback: If targetDate not in O, inspect stock datasets directly for this dayCode
+    if (!targetDate) {
+      const probeKey = cat === "vip" ? ("lotto_data_nikkei_vip_" + timeStr) : ("lotto_data_nikkei_" + timeStr);
+      let probeList = null;
+      if (typeof window !== "undefined" && window.__KV_DRAWS__ && window.__KV_DRAWS__[probeKey]) {
+        probeList = window.__KV_DRAWS__[probeKey];
+      } else if (typeof localStorage !== "undefined") {
+        try {
+          const raw = localStorage.getItem(probeKey);
+          if (raw) probeList = JSON.parse(raw);
+        } catch(e){}
+      }
+      if (Array.isArray(probeList)) {
+        const match = probeList.find(x => x && x.dayOfWeek === dayCode);
+        if (match) targetDate = match.date;
+      }
+    }
+
     if (!targetDate || (typeof g !== "undefined" && g === true)) {
       return { win2D, win3D, win2DRounds, win3DRounds, isWaiting: true };
     }
 
     let hasActualResultsForSession = false;
-    const allDraws = (O || []).concat(a || []);
-    allDraws.forEach(dr => {
-      if (!dr || dr.date !== targetDate) return;
-      const isVip = dr.session?.includes("VIP") || dr.lotteryType?.includes("VIP");
-      const isM = dr.session?.includes("MORNING") || dr.session === "MORNING";
-      const isA = dr.session?.includes("AFTERNOON") || dr.session === "AFTERNOON";
-      if ((cat === "vip" ? isVip : !isVip) && (time === "Morning" ? isM : isA)) {
-        if (dr.top3 && !dr.top3.includes("งด") && dr.top3 !== "กผล" && dr.top3.trim() !== "") {
-          hasActualResultsForSession = true;
-          _recordDrawRounds(dr, win2DRounds, win3DRounds);
-          win3D.add(dr.top3); win3D.add(dr.top3.split("").sort().join(""));
-          const t2 = dr.top2 || (dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
-          if (t2) win2D.add(t2);
-        }
-        if (dr.bottom2 && !dr.bottom2.includes("งด") && dr.bottom2.trim() !== "") {
-          _recordDrawRounds(dr, win2DRounds, win3DRounds);
-          win2D.add(dr.bottom2);
-        }
-      }
-    });
 
-    const timeStr = time.toLowerCase();
+    // Strictly check ONLY the specified session (รอบเช้า เช็คเฉพาะเช้า / รอบบ่าย เช็คเฉพาะบ่าย - ไม่ปนกัน 100%)
     ["nikkei", "china", "hangseng"].forEach(stk => {
       const key = cat === "vip" ? ("lotto_data_" + stk + "_vip_" + timeStr) : ("lotto_data_" + stk + "_" + timeStr);
       let list = null;
@@ -2537,7 +2536,11 @@ Error generating stack: `+r.message+`
         const match = list.find(d => d && d.date === targetDate);
         if (match && match.top3 && !match.top3.includes("งด") && match.top3 !== "กผล" && match.top3.trim() !== "") {
           hasActualResultsForSession = true;
-          const stkLabel = (stk === "china" ? "จีน" : stk === "nikkei" ? "นิเคอิ" : "ฮั่งเส็ง") + (cat === "vip" ? "วี" : "") + (time === "Morning" ? "เช้า" : "บ่าย");
+          const sessName = (time === "Morning" ? "เช้า" : "บ่าย");
+          const stkLabel = cat === "vip"
+            ? (stk === "hangseng" ? "ฮั่งวี" + sessName : (stk === "china" ? "จีนวี" + sessName : "นิเคอิวี" + sessName))
+            : ((stk === "china" ? "จีน" : stk === "nikkei" ? "นิเคอิ" : "ฮั่งเส็ง") + sessName);
+
           const m3 = match.top3.trim();
           const s3 = m3.split("").sort().join("");
           win3D.add(m3); win3D.add(s3);
