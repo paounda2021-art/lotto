@@ -16,6 +16,7 @@ interface NavbarProps {
   manualCount?: number;
   onOpenManualModal?: () => void;
   onOpenLineModal?: () => void;
+  onOpenAddModal?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -29,7 +30,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onAutoFetch,
   themeMode,
   onSelectThemeMode,
-  onOpenLineModal
+  onOpenLineModal,
+  onOpenAddModal
 }) => {
   return (
     <header className="sticky top-0 z-50 backdrop-blur-xl bg-[#1a0e05]/90 border-b border-amber-500/40 shadow-[0_4px_30px_rgba(245,158,11,0.2)]">
@@ -416,6 +418,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               >
                 <RefreshCcw className="w-3.5 h-3.5 text-emerald-400 animate-spin-slow shrink-0" />
                 <span>ดึงผลรางวัลด่วน (Auto-Sync)</span>
+              </button>
+
+              {/* Manual Entry Button */}
+              <button
+                onClick={() => onOpenAddModal?.()}
+                title="บันทึกผลรางวัลด้วยตนเอง (กรณีเว็บยังไม่มีผลดึงออโต้ หรือผลออกแล้ว)"
+                className="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 text-xs font-black px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all shadow-glow-gold cursor-pointer"
+              >
+                <span>✍️</span>
+                <span>บันทึกผลด้วยมือ</span>
               </button>
 
               {/* Reset Data Button */}

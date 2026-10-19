@@ -238,9 +238,12 @@ export function formatExphuayItem(raw: ExphuayRawItem): DrawResult | null {
 
   // Extract winning numbers
   const fullNumStr = String(raw.lottosNumber).trim();
+  const bottom2Str = String(raw.lottosUnder).trim();
+  if (!/^\d+$/.test(fullNumStr) || !/^\d+$/.test(bottom2Str)) return null;
+
   const top3 = fullNumStr.length >= 3 ? fullNumStr.slice(-3) : fullNumStr.padStart(3, '0');
   const top2 = top3.slice(-2);
-  const bottom2 = String(raw.lottosUnder).trim().padStart(2, '0');
+  const bottom2 = bottom2Str.padStart(2, '0');
 
   return {
     id: `${mapped.lotteryType}_${mapped.session}_${dateIso}`,

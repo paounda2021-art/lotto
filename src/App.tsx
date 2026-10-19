@@ -1759,6 +1759,7 @@ export default function App() {
         manualCount={manualRecords.length}
         onOpenManualModal={() => setIsManualModalOpen(true)}
         onOpenLineModal={() => setIsLineModalOpen(true)}
+        onOpenAddModal={() => { setEditingDraw(null); setIsAddModalOpen(true); }}
       />
 
       {/* Main Container */}
