@@ -2093,30 +2093,20 @@ Error generating stack: `+r.message+`
 
     const card1 = null;
 
-    // LAOS DRAW-BY-DRAW WIN4 CARD (สูตรคำนวณจากเลขชุด 6 ตัว เข้าเป้า 100% ทุกวัน จ-ศ - ธีมสีส้มอ่อนกลาส)
-    const WIN4_LAOS_MAP = {
-      Mon: [2, 5, 7, 9],
-      Tue: [1, 2, 7, 8],
-      Wed: [0, 3, 5, 9],
-      Thu: [5, 6, 8, 9],
-      Fri: [4, 5, 6, 7]
-    };
-
-    let laos100Digits;
-    if (isNextMode && allD && allD[0]) {
-      const latestDr = a[0];
-      const raw6D = (latestDr.full6D || "").trim();
+    const getLaosWin4FromDr = (dr) => {
+      if (!dr) return [0, 2, 5, 6];
+      const raw6D = (dr.full6D || "").trim();
       let sum6D = 0;
       if (raw6D.length > 0) {
         raw6D.split("").filter(c => c >= "0" && c <= "9").forEach(c => { sum6D += parseInt(c, 10); });
       } else {
-        const fallbackStr = (latestDr.top3 || "") + (latestDr.bottom2 || "");
+        const fallbackStr = (dr.top3 || "") + (dr.bottom2 || "");
         fallbackStr.split("").filter(c => c >= "0" && c <= "9").forEach(c => { sum6D += parseInt(c, 10); });
       }
       const sumDigit = sum6D % 10;
       const shadowDigit = (sumDigit + 5) % 10;
-      const t2Digits = (latestDr.top2 || "").split("").map(Number);
-      const b2Digits = (latestDr.bottom2 || "").split("").map(Number);
+      const t2Digits = (dr.top2 || "").split("").map(Number);
+      const b2Digits = (dr.bottom2 || "").split("").map(Number);
 
       const chosen = [];
       const seen = new Set();
@@ -2130,30 +2120,17 @@ Error generating stack: `+r.message+`
           seen.add(c); chosen.push(c);
         }
       });
-      laos100Digits = chosen.slice(0, 4).sort((x, y) => x - y);
+      return chosen.slice(0, 4).sort((x, y) => x - y);
+    };
+
+    let laos100Digits;
+    if (isNextMode) {
+      const sourceDr = (allD && allD[0]) ? allD[0] : null;
+      laos100Digits = getLaosWin4FromDr(sourceDr);
     } else {
-      const targetDayCode = r || (O && O[0] ? O[0].dayOfWeek : "Fri");
-      laos100Digits = WIN4_LAOS_MAP[targetDayCode] || [4, 5, 6, 7];
       const activeDr = O && O[0];
-      if (activeDr && (activeDr.top2 || activeDr.bottom2)) {
-        const activePairs = new Set();
-        for (let i = 0; i < laos100Digits.length; i++) {
-          for (let j = 0; j < laos100Digits.length; j++) {
-            if (i !== j) activePairs.add(String(laos100Digits[i]) + String(laos100Digits[j]));
-          }
-        }
-        const hasHit = (activeDr.top2 && activePairs.has(activeDr.top2)) || (activeDr.bottom2 && activePairs.has(activeDr.bottom2));
-        if (!hasHit) {
-          const dStr = (activeDr.full6D || "") + (activeDr.top3 || "") + (activeDr.bottom2 || "");
-          const dSet = new Set(dStr.split("").filter(c => c >= "0" && c <= "9").map(Number));
-          const cands = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-          for (const c of cands) {
-            if (dSet.size >= 4) break;
-            dSet.add(c);
-          }
-          laos100Digits = Array.from(dSet).slice(0, 4).sort((a, b) => a - b);
-        }
-      }
+      const sourceDr = (activeDr && allD) ? allD.find(d => d.date < activeDr.date) : (allD && allD[1] ? allD[1] : allD[0]);
+      laos100Digits = getLaosWin4FromDr(sourceDr);
     }
 
     const laosPairs2D = [];
@@ -2343,7 +2320,7 @@ Error generating stack: `+r.message+`
                           },
                           className: "text-[10px] font-black px-2 py-0.5 rounded-md shadow-sm animate-pulse ml-1.5",
                           children: ["✓ เข้าเป้า ", laosHitCount2D, " ชุด"]
-                        }) : null)
+                        }) : n.jsx("span", { style: { background: "rgba(239, 68, 68, 0.2)", color: "#fca5a5", border: "1px solid rgba(239, 68, 68, 0.4)" }, className: "text-[10px] font-bold px-2 py-0.5 rounded-md ml-1.5", children: "❌ ไม่เข้าเป้า" }))
                       ]
                     }),
                     n.jsx("button", {
