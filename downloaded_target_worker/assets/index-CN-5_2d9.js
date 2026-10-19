@@ -2483,7 +2483,7 @@ Error generating stack: `+r.message+`
   }
 
   // STOCKS WIN4 CARD: Separate Regular and VIP, Left = Morning / Right = Afternoon in SAME ROW
-  const WIN4_MAP = {
+  const WIN4_MAP = (typeof window !== "undefined" && window.SESSION_WIN4_DATA) ? window.SESSION_WIN4_DATA : {
     Mon: { regMorning: [0, 1, 4, 8], regAfternoon: [0, 2, 5, 9], vipMorning: [1, 4, 8, 9], vipAfternoon: [1, 2, 4, 8] },
     Tue: { regMorning: [3, 5, 6, 9], regAfternoon: [0, 2, 3, 7], vipMorning: [3, 4, 7, 9], vipAfternoon: [0, 4, 6, 7] },
     Wed: { regMorning: [1, 2, 3, 6], regAfternoon: [0, 1, 7, 9], vipMorning: [0, 3, 7, 9], vipAfternoon: [2, 3, 4, 7] },

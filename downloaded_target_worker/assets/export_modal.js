@@ -1062,6 +1062,7 @@
       vipAfternoon: [1, 3, 7, 9]
     }
   };
+  if (typeof window !== "undefined") { window.SESSION_WIN4_DATA = SESSION_WIN4_DATA; }
 
   function computeSessionWin4(dayCode, sessKey, sessObj) {
     if (dayCode === 'Sat' || dayCode === 'Sun') {
