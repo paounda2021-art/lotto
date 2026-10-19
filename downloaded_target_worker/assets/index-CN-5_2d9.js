@@ -1606,9 +1606,10 @@ Error generating stack: `+r.message+`
     // เช็คผลรางวัลที่ออกจริง (หากเป็นวันล่วงหน้า ห้ามเช็คเป้าเด็ดขาด)
     const purpleWin2D = new Set();
     const purpleWin2DRounds = new Map();
+    let allDForDay = [];
     if (!isUpcoming) {
       const tDate = O && O[0] ? O[0].date : null;
-      const allDForDay = (O || []).slice();
+      allDForDay = (O || []).slice();
       if (tDate && a) {
         a.forEach(d => {
           if ((d.date === tDate || (d.dateFormatted && O[0]?.dateFormatted && d.dateFormatted === O[0].dateFormatted)) && !allDForDay.some(x => x.session === d.session)) {
@@ -1623,6 +1624,36 @@ Error generating stack: `+r.message+`
         if (dr.bottom2) purpleWin2D.add(dr.bottom2);
       });
     }
+
+    const _getRoodHitBadge = (digit) => {
+      if (isUpcoming || !allDForDay || allDForDay.length === 0) {
+        return n.jsx("span", { className: "inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap", children: "⏳ รอผล" });
+      }
+      const strD = String(digit);
+      const hits = [];
+      allDForDay.forEach(dr => {
+        const rLabel = (typeof _getDrawRoundLabel !== "undefined" ? _getDrawRoundLabel(dr) : "") || (dr.session && dr.session.includes("VIP") ? "VIP" : dr.session && dr.session.includes("SPECIAL") ? "พิเศษ" : "ปกติ");
+        const t2 = dr.top2 || (dr.top3 && dr.top3.length >= 2 ? dr.top3.slice(-2) : "");
+        const b2 = dr.bottom2 || "";
+        const parts = [];
+        if (t2 && t2.includes(strD)) parts.push("บน " + t2);
+        if (b2 && b2.includes(strD)) parts.push("ล่าง " + b2);
+        if (parts.length > 0) {
+          hits.push((rLabel ? rLabel + " " : "") + parts.join(", "));
+        }
+      });
+      if (hits.length > 0) {
+        return n.jsx("span", { className: "inline-flex items-center gap-1 bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-black text-[10px] font-black px-2 py-0.5 rounded-md shadow-[0_0_10px_rgba(16,185,129,0.8)] border border-white/80 animate-pulse whitespace-nowrap", children: "✓ เข้า [" + hits.join(" | ") + "]" });
+      }
+      const hasVip = allDForDay.some(dr => {
+        const s = String(dr.session || dr.id || "");
+        return s.includes("HANOI_VIP") || s.includes("VIP");
+      });
+      if (hasVip || allDForDay.length >= 3) {
+        return n.jsx("span", { className: "inline-flex items-center gap-1 bg-rose-500/20 text-rose-300 border border-rose-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap", children: "❌ ไม่เข้า" });
+      }
+      return n.jsx("span", { className: "inline-flex items-center gap-1 bg-amber-500/20 text-amber-300 border border-amber-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap", children: allDForDay.length === 2 ? "⏳ รอผล VIP" : allDForDay.length === 1 ? "⏳ รอผล (1/3 รอบ)" : "⏳ รอผล" });
+    };
 
     const hanoiPurpleHitCount2D = isUpcoming ? 0 : hanoiPurplePairs2D.filter(p => purpleWin2D.has(p)).length;
     const hanoiPurpleDrillHitCount = isUpcoming ? 0 : hanoiPurpleDrillPairs.filter(p => purpleWin2D.has(p)).length;
@@ -1763,7 +1794,7 @@ Error generating stack: `+r.message+`
               className: "flex items-center gap-2 flex-wrap self-start lg:self-auto",
               children: [
                 n.jsxs("div", {
-                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/50 px-2.5 py-1.5 rounded-xl shadow-[0_0_12px_rgba(168,85,247,0.3)]",
+                  className: "flex items-center gap-1.5 flex-wrap bg-black/60 border border-purple-400/50 px-2.5 py-1.5 rounded-xl shadow-[0_0_12px_rgba(168,85,247,0.3)]",
                   children: [
                     n.jsx("span", { className: "text-xs font-bold text-purple-300", children: "🌟 รูดตัวเด่น (19 ประตู):" }),
                     n.jsx("span", {
@@ -1773,11 +1804,12 @@ Error generating stack: `+r.message+`
                       },
                       className: "text-xl font-black text-white px-2 py-0.5 bg-purple-600 rounded-lg shadow-sm",
                       children: roodDen
-                    })
+                    }),
+                    _getRoodHitBadge(roodDen)
                   ]
                 }),
                 n.jsxs("div", {
-                  className: "flex items-center gap-1.5 bg-black/60 border border-purple-400/40 px-2.5 py-1.5 rounded-xl shadow-sm",
+                  className: "flex items-center gap-1.5 flex-wrap bg-black/60 border border-purple-400/40 px-2.5 py-1.5 rounded-xl shadow-sm",
                   children: [
                     n.jsx("span", { className: "text-xs font-bold text-purple-300", children: "⚡ รูดตัวรอง (19 ประตู):" }),
                     n.jsx("span", {
@@ -1787,7 +1819,8 @@ Error generating stack: `+r.message+`
                       },
                       className: "text-xl font-black text-white px-2 py-0.5 bg-fuchsia-700 rounded-lg shadow-sm",
                       children: roodRong
-                    })
+                    }),
+                    _getRoodHitBadge(roodRong)
                   ]
                 }),
                 n.jsx("span", {
